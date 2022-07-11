@@ -1,0 +1,36 @@
+<?php
+
+function plugin_init_whitelabel() {
+    global $PLUGIN_HOOKS;
+
+    $PLUGIN_HOOKS['csrf_compliant']['whitelabel'] = true;
+    $PLUGIN_HOOKS['change_profile']['whitelabel'] = array('PluginWhitelabelProfile', 'changeProfile');
+
+    Plugin::registerClass('PluginWhitelabelProfile', array('addtabon' => array('Profile')));
+
+    if (Session::haveRight("profile", UPDATE)) {
+        $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
+     }
+}
+
+function plugin_version_whitelabel() {
+    return array('name'           => "White Label",
+                 'version'        => '1.0',
+                 'author'         => 'Théodore Clément',
+                 'license'        => 'GPLv3+',
+                 'homepage'       => 'place.holder',
+                 'minGlpiVersion' => '9.5');
+}
+
+function plugin_whitelabel_check_prerequisites() {
+    if (version_compare(ITSM_VERSION, '1.0', 'lt')) {
+        echo "This plugin requires ITSM >= 1.0";
+        return false;
+    }
+
+    return true;
+}
+
+function plugin_whitelabel_check_config() {
+    return true;
+}
