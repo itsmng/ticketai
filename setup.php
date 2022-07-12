@@ -10,7 +10,9 @@ function plugin_init_whitelabel() {
 
     if (Session::haveRight("profile", UPDATE)) {
         $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
-     }
+    }
+
+    $PLUGIN_HOOKS['add_css']['whitelabel'] = 'styles/whitelabel_styles.scss';
 }
 
 function plugin_version_whitelabel() {

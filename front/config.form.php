@@ -10,6 +10,7 @@ if ($plugin->isActivated("whitelabel")) {
     if (isset($_POST["update"])) {
         Session::checkRight("config", UPDATE);
         $config->handleWhitelabel($_POST, $_FILES);
+        $config->refreshScss();
     }
 
     Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");

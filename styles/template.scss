@@ -1,0 +1,25 @@
+body {
+  background-color: %brand_color% !important;
+}
+
+.radio .outer {
+  border: 3px solid #7b981d !important;
+}
+
+#firstboxlogin {
+  background-color: %brand_color% !important;
+}
+
+#header_top {
+  background-color: %brand_color% !important;
+}
+
+.x-button.x-button-drop {
+  &.planned:after {
+    color: %brand_color% !important;
+  }
+}
+
+.itilstatus {
+  color: %brand_color% !important;
+}
