@@ -18,7 +18,7 @@ function plugin_version_whitelabel() {
                  'version'        => '1.0',
                  'author'         => 'Théodore Clément',
                  'license'        => 'GPLv3+',
-                 'homepage'       => 'place.holder',
+                 'homepage'       => 'https://github.com/Soulusions/whitelabel',
                  'minGlpiVersion' => '9.5');
 }
 
