@@ -21,6 +21,25 @@ function plugin_whitelabel_install() {
         $DB->error());
     }
 
+    if (!$DB->tableExists("itsm_plugin_whitelabel_profiles")) {
+
+        $query2 = "CREATE TABLE `itsm_plugin_whitelabel_profiles` (
+                    `id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
+                    `right` char(1) collate utf8_unicode_ci default NULL,
+                    PRIMARY KEY  (`id`)
+                    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        $DB->queryOrDie($query2, $DB->error());
+
+        include_once(GLPI_ROOT."/plugins/whitelabel/inc/profile.class.php");
+        PluginWhitelabelProfile::createAdminAccess($_SESSION['glpiactiveprofile']['id']);
+
+        foreach (PluginWhitelabelProfile::getRightsGeneral() as $right) {
+            PluginWhitelabelProfile::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'],
+                [$right['field'] => $right['default']]);
+        }
+
+    }
+
     $migration->executeMigration();
     return true;
 }
@@ -29,13 +48,30 @@ function plugin_whitelabel_uninstall() {
     global $DB;
 
     $tablename = 'itsm_plugin_whitelabel_brand';
-    //Create table only if it doesn't exist yet
     if($DB->tableExists($tablename)) {
         $DB->queryOrDie(
             "DROP TABLE `$tablename`",
             $DB->error()
         );
     }
+
+    $tablename = 'itsm_plugin_whitelabel_profiles';
+    if($DB->tableExists($tablename)) {
+        $DB->queryOrDie(
+            "DROP TABLE `$tablename`",
+            $DB->error()
+        );
+    }
+
+    foreach (PluginWhitelabelProfile::getRightsGeneral() as $right) {
+        $query = "DELETE FROM `glpi_profilerights`
+                  WHERE `name` = '".$right['field']."'";
+        $DB->query($query);
+
+        if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
+           unset($_SESSION['glpiactiveprofile'][$right['field']]);
+        }
+   }
 
     return true;
 }

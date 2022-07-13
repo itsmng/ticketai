@@ -8,11 +8,11 @@ function plugin_init_whitelabel() {
 
     Plugin::registerClass('PluginWhitelabelProfile', array('addtabon' => array('Profile')));
 
-    if (Session::haveRight("profile", UPDATE)) {
+    if (Session::haveRight("profile", UPDATE) && Session::haveRight("plugin_whitelabel_whitelabel", UPDATE)) {
         $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['add_css']['whitelabel'] = 'styles/whitelabel_styles.scss';
+    $PLUGIN_HOOKS['add_css']['whitelabel'] = "whitelabel.css";
 }
 
 function plugin_version_whitelabel() {

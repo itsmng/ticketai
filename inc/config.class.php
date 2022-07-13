@@ -1,7 +1,7 @@
 <?php 
 
 class PluginWhitelabelConfig extends CommonDBTM {
-    private $pathToStore = "/pics/whitelabel";
+    private $pathToStore = "/pics/whitelabel/";
     /**
      * Displays the configuration page for the plugin
      * 
@@ -128,31 +128,27 @@ class PluginWhitelabelConfig extends CommonDBTM {
         global $DB;
         $row = $DB->queryOrDie("SELECT * FROM `itsm_plugin_whitelabel_brand` WHERE id = 1", $DB->error())->fetch_assoc();
         $scssTemplate = "body {
-  background-color: ".$row["brand_color"]." !important;
-}
+  background-color: ".$row["brand_color"]." !important; }
 
 .radio .outer {
-  border: 3px solid ".$row["brand_color"]." !important;
-}
+  border: 3px solid ".$row["brand_color"]." !important; }
 
 #firstboxlogin {
-  background-color: ".$row["brand_color"]." !important;
-}
+  background-color: ".$row["brand_color"]." !important; }
 
 #header_top {
-  background-color: ".$row["brand_color"]." !important;
-}
+  background-color: ".$row["brand_color"]." !important; }
 
-.x-button.x-button-drop {
-  &.planned:after {
-    color: ".$row["brand_color"]." !important;
-  }
-}
+.x-button.x-button-drop.planned:after {
+  color: ".$row["brand_color"]." !important; }
 
 .itilstatus {
-  color: ".$row["brand_color"]." !important;
-}";
-        file_put_contents(GLPI_ROOT."/plugins/whitelabel/styles/template.scss", $scssTemplate);
+  color: ".$row["brand_color"]." !important; }";
+
+        $fstream = fopen("whitelabel.css", 'a+');
+        fwrite($fstream, $scssTemplate);
+        fclose($fstream);
+        // file_put_contents(GLPI_PLUGIN_DOC_DIR."/whitelabel.css", $scssTemplate);
     }
 
     private function handleFile($file) {
