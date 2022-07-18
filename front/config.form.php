@@ -9,12 +9,12 @@ if ($plugin->isActivated("whitelabel")) {
 
     if (isset($_POST["update"])) {
         Session::checkRight("config", UPDATE);
-        $config->handleWhitelabel($_POST, $_FILES);
-        $config->refreshScss();
+        $config->handleWhitelabel();
+        $config->refreshCss();
     }
 
     Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");
-    $config->showConfigForm($_POST);
+    $config->showConfigForm();
 } else {
     Html::header("settings", '', "config", "plugins");
     echo "<div class='center'><br><br>".

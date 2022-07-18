@@ -2,8 +2,6 @@
 
 include ('../../../inc/includes.php');
 
-// Gestion des données du formulaire
-
 Session::haveRight('plugin_whitelabel_whitelabel', UPDATE);
 
 $prof = new PluginWhitelabelProfile();

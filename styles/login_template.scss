@@ -1,0 +1,40 @@
+#contenulogin {
+  color: %brand_color_secondary% !important;
+}
+
+#boxlogin legend {
+  color: %brand_color_secondary% !important;
+}
+
+#boxlogin input {
+  border: 1px solid %brand_color_secondary% !important;
+}
+
+#firstboxlogin {
+  background-color: %brand_color% !important;
+}
+
+#text-login {
+  color: white !important;
+  background-color: %brand_color_secondary% !important;
+}
+
+#logo_login {
+  background: %brand_color_secondary% !important;
+}
+
+input {
+  &[type="image"] {
+    background-color: transparent !important;
+  }
+
+  &.submit {
+    color: %low_contrast_text% !important;
+    background-color: %brand_color_ternary% !important;
+  }
+}
+
+.vsubmit {
+  color: %low_contrast_text% !important;
+  background-color: %brand_color_ternary% !important;
+}

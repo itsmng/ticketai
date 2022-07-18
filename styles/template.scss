@@ -1,9 +1,17 @@
-body {
-  background-color: %brand_color% !important;
-}
+$break_sphones: 490px;
+$break_phones: 700px;
+$break_lphones: 900px;
+$break_menu: 1055px;
+$break_tablets: 1300px;
 
 .radio .outer {
-  border: 3px solid #7b981d !important;
+  border: 3px solid %brand_color% !important;
+}
+
+#header #c_logo {
+  width: %logo_width%px !important;
+  background: url("%logo%") !important;
+  background-size: 100% !important;
 }
 
 #firstboxlogin {
@@ -14,12 +22,270 @@ body {
   background-color: %brand_color% !important;
 }
 
-.x-button.x-button-drop {
-  &.planned:after {
-    color: %brand_color% !important;
-  }
+#c_preference a, #language_link > span {
+  color: #fff !important;
+}
+
+#c_recherche form #champRecherche input {
+  background-color: #131425 !important;
+  color: #fff !important;
+}
+
+#c_recherche form #champRecherche button {
+  background-color: white !important;
+}
+
+.x-button.x-button-drop.planned:after {
+  color: %brand_color% !important;
 }
 
 .itilstatus {
   color: %brand_color% !important;
 }
+
+#logo_login {
+  background: %brand_color_secondary% !important;
+}
+
+#text_login {
+  color: white !important;
+  background-color: %brand_color_secondary% !important;
+}
+
+a, .btn-linkstyled {
+  color: %brand_color_secondary% !important;
+
+  &:link {
+    color: %brand_color_secondary% !important;
+  }
+}
+
+#c_menu {
+  background-color: %brand_color_secondary% !important;
+}
+
+.main_form tr.headerRow th {
+  color: %brand_color_quad% !important;
+}
+
+.primary-fg, .primary-fg:link, .primary-fg:hover {
+  color: white !important;
+}
+
+ul {
+  &#menu {
+    a {
+      &.itemP, &.itemP1 {
+        color: #FFF !important;
+      }
+    }
+
+    > li.active {
+      background-color: %brand_color_quad% !important;
+    }
+  }
+
+  &.ssmenu li.active {
+    background-color: %brand_color_quad% !important;
+  }
+
+  &#menu {
+    > li:hover {
+      background-color: %brand_color_hover_quad% !important;
+    }
+
+    ul li a {
+      &:hover {
+        background: %brand_color_secondary% !important;
+        color: #fff !important;
+      }
+
+      color: #131425 !important;
+    }
+  }
+}
+
+div.progress {
+  .progress-fg {
+    background-color: %brand_color_quad% !important;
+  }
+}
+
+a.copyright {
+  color: #000 !important;
+}
+
+a, a:link {
+  color: %brand_color_secondary% !important;
+}
+
+a:hover {
+  color: black !important;
+}
+
+.showplan {
+  color: %brand_color_secondary% !important;
+}
+
+ul#onglet {
+  border-bottom: 1px solid #ffffff !important;
+}
+
+ul#onglet li {
+  background-color: #eeeeee !important;
+  border-bottom: 1px solid #fff !important;
+}
+
+ul#onglet li.actif {
+  border-bottom: 1px ridge %brand_color_secondary% !important;
+}
+
+ul#onglet li.invisible {
+  border-bottom: 1px solid #fff !important;
+}
+
+ul#onglet li.actif a {
+  color: #000 !important;
+}
+
+#onglet a {
+  color: #666 !important;
+}
+
+#onglet a:hover {
+  color: %brand_color_secondary% !important;
+}
+
+ul#onglet span.fake {
+  color: #666 !important;
+}
+
+#contenulogin {
+  color: %brand_color_secondary% !important;
+}
+
+#boxlogin legend {
+  color: %brand_color_secondary% !important;
+}
+
+#boxlogin input {
+  border: 1px solid %brand_color_secondary% !important;
+}
+
+#logo-login a:hover {
+  color: %brand_color_secondary% !important;
+}
+
+#c_preference {
+  .select2-choice {
+    color: %brand_color_secondary% !important;
+  }
+}
+
+#c_ssmenu2 ul li a {
+  color: #000 !important;
+}
+
+#show_all_menu{
+  dt {
+    color: white !important;
+    background-color: %brand_color% !important;
+  }
+
+  a:hover {
+    background-color: %brand_color_secondary% !important;
+  }
+}
+.primary-fg-inverse {
+  color: %brand_color_secondary% !important;
+
+  &:hover {
+    color: %brand_color_secondary% !important;
+  }
+}
+
+#page .kanban {
+  .kanban-container {
+    .kanban-dropdown {
+      li {
+        &:hover {
+          background-color: %brand_color_secondary% !important;
+        }
+      }
+      li.dropdown-trigger {
+        &.active {
+          background-color: %brand_color_secondary% !important;
+        }
+      }
+    }
+  }
+}
+
+.tab_cadre th, .tab_cadre_fixe th, .tab_cadre_fixehov th, .tab_cadrehov th, h2.header {
+  color: #000 !important;
+}
+
+.order_DESC:before {
+  color: #B3B3B3 !important;
+}
+
+.order_ASC:before {
+  color: #B3B3B3 !important;
+}
+
+@media screen and (min-width: $break_tablets) {
+  .layout_vsplit {
+    .ui-tabs-panel .tab_cadre_fixehov th {
+      background-color: #E6E6E6;
+    }
+  }
+}
+
+input {
+  &[type="image"] {
+    background-color: transparent !important;
+  }
+
+  &.submit {
+    color: %low_contrast_text% !important;
+    background-color: %brand_color_ternary% !important;
+  }
+}
+
+.vsubmit {
+  color: %low_contrast_text% !important;
+  background-color: %brand_color_ternary% !important;
+}
+
+.breadcrumb_item {
+  &:nth-of-type(1), &:nth-of-type(2) {
+    background-color: #F2F2F2 !important;
+
+    &:after {
+      border-left-color: #F2F2F2 !important;
+    }
+  }
+
+  &:nth-of-type(3) {
+    background-color: %brand_color_ternary% !important;
+
+    &:after {
+      border-left-color: %brand_color_ternary% !important;
+    }
+  }
+}
+
+.x-button {
+  color: %low_contrast_text% !important;
+  background-color: %brand_color_ternary% !important;
+
+  &:hover {
+    background-color: %brand_color_hover_ternary% !important;
+  }
+}
+
+.warning {
+  color: %low_contrast_text% !important;
+  background-color: %brand_color_ternary% !important;
+}
+// I am sorry this exists.

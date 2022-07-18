@@ -8,16 +8,16 @@ function plugin_init_whitelabel() {
 
     Plugin::registerClass('PluginWhitelabelProfile', array('addtabon' => array('Profile')));
 
-    if (Session::haveRight("profile", UPDATE) && Session::haveRight("plugin_whitelabel_whitelabel", UPDATE)) {
+    if (Session::haveRight("profile", UPDATE)) {
         $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['add_css']['whitelabel'] = "whitelabel.css";
+    $PLUGIN_HOOKS['add_css']['whitelabel'] = "uploads/whitelabel.css";
 }
 
 function plugin_version_whitelabel() {
     return array('name'           => "White Label",
-                 'version'        => '1.0',
+                 'version'        => '1.0.1',
                  'author'         => 'Théodore Clément',
                  'license'        => 'GPLv3+',
                  'homepage'       => 'https://github.com/Soulusions/whitelabel',

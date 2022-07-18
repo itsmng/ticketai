@@ -9,3 +9,10 @@ deployment, unifying their internal software's appearance.
 
 Installing this plugin is done following the standard process for itsm plugins, simply clone the git or download 
 a release and place it within itsm's `plugins` folder.
+
+## Features
+
+ * Set UI's color
+ * Change logo in header
+ * Change favicon
+ * Change logo in login page

@@ -1,0 +1,1 @@
+This folder contains backups of original ITSM-NG files modified by the plugin

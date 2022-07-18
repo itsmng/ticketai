@@ -4,7 +4,6 @@
 class PluginWhitelabelProfile extends CommonDBTM {
       
    static function canCreate() {
-
       if (isset($_SESSION['profile'])) {
         return ($_SESSION['profile']['whitelabel'] == 'w');
       }
@@ -12,7 +11,6 @@ class PluginWhitelabelProfile extends CommonDBTM {
    }
 
    static function canView() {
-
       if (isset($_SESSION['profile'])) {
         return ($_SESSION['profile']['whitelabel'] == 'w'
                 || $_SESSION['profile']['whitelabel'] == 'r');
@@ -21,13 +19,12 @@ class PluginWhitelabelProfile extends CommonDBTM {
    }
 
    static function createAdminAccess($ID) {
-
       $myProf = new self();
       // Only create profile if it's new
       if (!$myProf->getFromDB($ID)) {
       // Add entry to permissions database giving the user write privileges
-         $myProf->add(array('id' => $ID,
-                            'right'       => 'w'));
+         $myProf->add(array('id'    => $ID,
+                            'right' => 'w'));
       }
    }
 
@@ -47,7 +44,6 @@ class PluginWhitelabelProfile extends CommonDBTM {
    }
 
    static function changeProfile() {
-
       $prof = new self();
       if ($prof->getFromDB($_SESSION['glpiactiveprofile']['id'])) {
          $_SESSION["glpi_plugin_whitelabel_profile"] = $prof->fields;
@@ -56,8 +52,7 @@ class PluginWhitelabelProfile extends CommonDBTM {
       }
    }
 
-   static function getRightsGeneral()
-   {
+   static function getRightsGeneral() {
       $rights = [
           ['itemtype'  => 'PluginWhitelabelProfile',
                 'label'     => __('Use whitelabel', 'whitelabel'),
@@ -69,7 +64,6 @@ class PluginWhitelabelProfile extends CommonDBTM {
 
    function showForm($profiles_id = 0, $openform = true, $closeform = true) {
       global $DB, $CFG_GLPI;
-      
 
       if (!Session::haveRight("profile",READ)) {
          return false;
