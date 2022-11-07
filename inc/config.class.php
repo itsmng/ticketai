@@ -79,7 +79,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $this->endField();
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";
-        echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore Colors', 'whitelabel')."'>";
+        echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore colors', 'whitelabel')."'>";
         echo "</td></tr>";
         echo "</table>";
         Html::closeForm();
