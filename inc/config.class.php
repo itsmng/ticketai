@@ -1,4 +1,34 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * ITSM-NG
+ * Copyright (C) 2022 ITSM-NG and contributors.
+ *
+ * https://www.itsm-ng.org
+ *
+ * based on GLPI - Gestionnaire Libre de Parc Informatique
+ * Copyright (C) 2003-2014 by the INDEPNET Development Team.
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of ITSM-NG.
+ *
+ * ITSM-NG is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * ITSM-NG is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ITSM-NG. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ */
 use ScssPhp\ScssPhp\Compiler;
 
 class PluginWhitelabelConfig extends CommonDBTM {
@@ -7,7 +37,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
      * 
      * @return void
      */
-    function showConfigForm() {
+    public function showConfigForm() {
         global $DB;
 
         if (!Session::haveRight("plugin_whitelabel_whitelabel",UPDATE)) {
@@ -16,12 +46,28 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
         echo "<form enctype='multipart/form-data' action='./config.form.php' method='post'>";
         echo "<table class='tab_cadre' cellpadding='5'>";
-        echo "<tr><th colspan='2'>".__("Whitelabel Settings", 'holidays')."</th></tr>";       
+        echo "<tr><th colspan='2'>".__("Whitelabel Settings", 'whitelabel')."</th></tr>";
         
-        $this->startField("Brand color");
-        Html::showColorField("brand_color", [
-            "value" => $this->getBrandColor(),
-        ]);
+        $colors = $this->getThemeColors();
+
+        $this->startField(__("Primary color", 'whitelabel'));
+        Html::showColorField("primary_color", ["value" => $colors["primary_color"]]);
+        $this->endField();
+
+        $this->startField(__("Menu color", 'whitelabel'));
+        Html::showColorField("menu_color", ["value" => $colors["menu_color"]]);
+        $this->endField();
+
+        $this->startField(__("Active menu color", 'whitelabel'));
+        Html::showColorField("menu_active_color", ["value" => $colors["menu_active_color"]]);
+        $this->endField();
+
+        $this->startField(__("On hover menu color", 'whitelabel'));
+        Html::showColorField("menu_onhover_color", ["value" => $colors["menu_onhover_color"]]);
+        $this->endField();
+
+        $this->startField(__("Button color", 'whitelabel'));
+        Html::showColorField("button_color", ["value" => $colors["button_color"]]);
         $this->endField();
 
         $this->startField(sprintf(__('Favicon (%s)'), Document::getMaxUploadSize()));
@@ -33,14 +79,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $this->endField();
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";
-        echo "<input type='submit' name='update' class='submit'>";
+        echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore Colors', 'whitelabel')."'>";
         echo "</td></tr>";
         echo "</table>";
         Html::closeForm();
     }
 
     /**
-     * Displays an image upload field
+     * Displays image upload field
      *
      * @param string Field name
      *
@@ -49,7 +95,8 @@ class PluginWhitelabelConfig extends CommonDBTM {
     private function showImageUploadField(string $fieldName) {
         global $DB;
         $path = Plugin::getPhpDir("whitelabel", false)."/uploads/";
-        $row = $DB->queryOrDie("SELECT * FROM `itsm_plugin_whitelabel_brand` WHERE id = 1", $DB->error())->fetch_assoc();
+        $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
+
         if (!empty($row[$fieldName])) {
             echo Html::image($path.$row[$fieldName], [
                 'style' => 'max-width: 100px; max-height: 50px;',
@@ -62,15 +109,38 @@ class PluginWhitelabelConfig extends CommonDBTM {
             echo "<input name='$fieldName' type='file' />";
         }
     }
-
-    private function getBrandColor() {
+    
+    /**
+     * Get the primary theme color
+     *
+     * @return string
+     */
+    private function getThemeColors() {
         global $DB;
-        $query = "SELECT brand_color FROM itsm_plugin_whitelabel_brand WHERE id = '1'";
+
+        // Default colors
+        $colors = [
+            'primary_color' => '#7b081d',
+            'menu_color' => '#ae0c2a',
+            'menu_active_color' => '#c70c2f',
+            'menu_onhover_color' => '#d40e33',
+            'button_color' => '#f5b7b1'
+        ];
+
+        $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
         $result = $DB->query($query);
+
         if ($DB->numrows($result) > 0) {
-            return $DB->result($result, 0, 'brand_color');
+            $colors = [
+                'primary_color' => $DB->result($result, 0, 'primary_color'),
+                'menu_color' => $DB->result($result, 0, 'menu_color'),
+                'menu_active_color' => $DB->result($result, 0, 'menu_active_color'),
+                'menu_onhover_color' => $DB->result($result, 0, 'menu_onhover_color'),
+                'button_color' => $DB->result($result, 0, 'button_color')
+            ];
         }
-        return '#7b081d';
+
+        return $colors;
     }
 
     /**
@@ -98,74 +168,80 @@ class PluginWhitelabelConfig extends CommonDBTM {
         echo "</tr>";
     }
 
-    function handleWhitelabel() {
+    public function handleWhitelabel($reset = false) {
         global $DB;
-        $color = $_POST["brand_color"];
-        $DB->queryOrDie("UPDATE `itsm_plugin_whitelabel_brand` SET brand_color = '$color' WHERE id = 1", $DB->error());
 
+        // Update theme colors
+        if($_POST["primary_color"]) {
+            $color = (!$reset) ? $_POST["primary_color"] : '#7b081d';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `primary_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["menu_color"]) {
+            $color = (!$reset) ? $_POST["menu_color"] : '#ae0c2a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["menu_active_color"]) {
+            $color = (!$reset) ? $_POST["menu_active_color"] : '#c70c2f';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_active_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["menu_onhover_color"]) {
+            $color = (!$reset) ? $_POST["menu_onhover_color"] : '#d40e33';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_onhover_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["button_color"]) {
+            $color = (!$reset) ? $_POST["button_color"] : '#f5b7b1';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `button_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+        
         $this->handleFile("favicon", array("image/x-icon"));
-        $this->handleFile("logo_central", array("image/jpeg", "image/gif", "image/png"));
+        $this->handleFile("logo_central", array("image/png"));
 
         if ($this->handleClear("favicon")) {
             copy(Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak", GLPI_ROOT."/pics/favicon.ico");
         }
+
         $this->handleClear("logo_central");
 
-        copy(Plugin::getPhpDir("whitelabel")."/uploads/favicon.ico", GLPI_ROOT."/pics/favicon.ico");
-        chown(GLPI_ROOT."/pics/favicon.ico", 0664);
+        if(file_exists(Plugin::getPhpDir("whitelabel")."/uploads/favicon.ico")) {
+            copy(Plugin::getPhpDir("whitelabel")."/uploads/favicon.ico", GLPI_ROOT."/pics/favicon.ico");
+        } 
     }
 
     /**
      * Generate and install new CSS sheets w/ styles mapped
      */
-    function refreshCss() {
+    public function refreshCss($reset = false) {
         global $DB;
-        $row = $DB->queryOrDie("SELECT * FROM `itsm_plugin_whitelabel_brand` WHERE id = 1", $DB->error())->fetch_assoc();
 
-        list($r, $g, $b) = sscanf($row["brand_color"], "#%02x%02x%02x"); // Magic format parse to do #HEX to RGB
-        // Apply color offsets from the stock theme
-        $secondary     = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r + 13),
-            $this->rgbClamp($g + 4),
-            $this->rgbClamp($b + 23));
-        $ternary       = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r + 122),
-            $this->rgbClamp($g + 124),
-            $this->rgbClamp($b + 148));
-        $ternary_hover = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r + 71),
-            $this->rgbClamp($g + 96),
-            $this->rgbClamp($b + 111));
-        $quad          = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r + 18),
-            $this->rgbClamp($g + 4),
-            $this->rgbClamp($b + 45));
-        $quad_hover    = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r + 8),
-            $this->rgbClamp($g + 2),
-            $this->rgbClamp($b + 23));
-        $low_contrast  = sprintf("#%02x%02x%02x",
-            $this->rgbClamp($r - 19),
-            $this->rgbClamp($g + 20),
-            $this->rgbClamp($b + 45));
-        $logo = "/pics/fd_logo.png";
-        list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logeo.png");
+        $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
+
+        $primaryColor = (!$reset) ? $row["primary_color"] : '#7b081d';
+        $menuColor = (!$reset) ? $row["menu_color"] : '#ae0c2a';
+        $menuActiveColor = (!$reset) ? $row["menu_active_color"] : '#c70c2f';
+        $menuOnHoverColor = (!$reset) ? $row["menu_onhover_color"] : '#d40e33';
+        $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
+
+        list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
+        $logo = "../../../pics/login_logo_whitelabel.png";
+
         if(!empty($row["logo_central"])) {
-            list($logoW, $logoH) = getimagesize(Plugin::getPhpDir("whitelabel", true) . "/uploads/logo_central.png");
-            $logo = $row["logo_central"];
+            list($logoW, $logoH) = getimagesize(Plugin::getPhpDir("whitelabel", true)."/uploads/logo_central.png");
             copy(Plugin::getPhpDir("whitelabel")."/uploads/".$row["logo_central"], GLPI_ROOT."/pics/login_logo_whitelabel.png");
         }
+
         $map = [
-            "%brand_color%"               => $row["brand_color"],
-            "%brand_color_secondary%"     => $secondary,
-            "%brand_color_ternary%"       => $ternary,
-            "%brand_color_hover_ternary%" => $ternary_hover,
-            "%brand_color_quad%"          => $quad,
-            "%brand_color_hover_quad%"    => $quad_hover,
-            "%low_contrast_text%"         => $low_contrast,
-            "%logo%"                      => $logo,
-            "%logo_width%"                => ceil(55 * ($logoW / $logoH))
+            "%primary_color%" => $primaryColor,
+            "%menu_color%" => $menuColor,
+            "%button_color%" => $buttonColor,
+            "%menu_active_color%" => $menuActiveColor,
+            "%menu_onhover_color%" => $menuOnHoverColor,
+            "%logo%" => $logo,
+            "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];
 
         $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/template.scss");
@@ -180,8 +256,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $css = $scssCompiler->compile($style);
         $loginCss = $scssCompiler->compile($login_style);
 
-        unlink(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css");
-        unlink(GLPI_ROOT."/css/whitelabel_login.css");
+        if(file_exists(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css")) {
+            unlink(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css");
+        }
+
+        if(file_exists(GLPI_ROOT."/css/whitelabel_login.css")) {
+            unlink(GLPI_ROOT."/css/whitelabel_login.css");
+        }
+
         // Place compiled CSS
         file_put_contents(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css", $css);
         file_put_contents(GLPI_ROOT."/css/whitelabel_login.css", $loginCss);
@@ -192,12 +274,15 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
         // Clear cache
         $files = glob(GLPI_ROOT."/files/_cache/*");
+
         foreach($files as $file){
             if(is_file($file)) {
                 unlink($file);
             }
         }
+
         $files = glob(GLPI_ROOT."/files/_tmp/*");
+
         foreach($files as $file){
             if(is_file($file)) {
                 unlink($file);
@@ -210,9 +295,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
      */
     private function handleFile(string $file, array $formats) {
         global $DB;
+
         if(empty($_FILES[$file])) {
             return;
         }
+
         // Get error code from file upload action
         switch ($_FILES[$file]["error"]) {
             case UPLOAD_ERR_OK:
@@ -223,9 +310,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 $this->createDirectoryIfNotExist(Plugin::getPhpDir("whitelabel", true)."/uploads/");
                 $ext = pathinfo($_FILES[$file]["name"], PATHINFO_EXTENSION);
                 $uploadfile = Plugin::getPhpDir("whitelabel", true)."/uploads/".$file.".".$ext;
-                unlink($uploadfile);
+
+                if(file_exists($uploadfile)) {
+                    unlink($uploadfile);
+                }
+
                 if (move_uploaded_file($_FILES[$file]["tmp_name"], $uploadfile)) {
-                    $DB->queryOrDie("UPDATE `itsm_plugin_whitelabel_brand` SET $file = '$file.".$ext."' WHERE id = 1", $DB->error());
+                    $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET $file = '$file.".$ext."' WHERE id = 1", $DB->error());
                     chmod($uploadfile, 0664);
                 }
                 break;
@@ -263,29 +354,26 @@ class PluginWhitelabelConfig extends CommonDBTM {
      * @param string $path The path to the folder to create
      * @return bool
      */
-    private function createDirectoryIfNotExist(string $path)
-    {
+    private function createDirectoryIfNotExist(string $path) {
         if (!file_exists($path)) {
            mkdir($path, 0664);
         } elseif (!is_dir($path)) {
             return false;
         }
+
         return true;
     }
 
-    private function handleClear(string $field)
-    {
+    private function handleClear(string $field) {
         global $DB;
+
         if (isset($_POST["_blank_".$field])) {
-            $row = $DB->queryOrDie("SELECT * FROM `itsm_plugin_whitelabel_brand` WHERE id = 1", $DB->error())->fetch_assoc();
+            $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
             unlink(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]);
-            $DB->queryOrDie("UPDATE `itsm_plugin_whitelabel_brand` SET $field = '' WHERE id = 1", $DB->error());
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET $field = '' WHERE `id` = 1", $DB->error());
             return true;
         }
-        return false;
-    }
 
-    private function rgbClamp($value) {
-        return max(0, min(255, $value));
+        return false;
     }
 }
