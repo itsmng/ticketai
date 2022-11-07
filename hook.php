@@ -94,20 +94,35 @@ function plugin_whitelabel_install() {
     // Update 2.0
     if($DB->tableExists("glpi_plugin_whitelabel_brand")) {
         // Rename brand_color column to primary_color
-        $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` CHANGE COLUMN `brand_color` `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d'";
-        $DB->queryOrDie($query, $DB->error());
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'primary_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` CHANGE COLUMN `brand_color` `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
         // Add column menu_color
-        $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a'";
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a'";
         $DB->queryOrDie($query, $DB->error());
+        }
+        
         // Add column menu_active_color
-        $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f'";
-        $DB->queryOrDie($query, $DB->error());
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_active_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+        
         // Add column menu_onhover_color
-        $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_onhover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#d40e33'";
-        $DB->queryOrDie($query, $DB->error());
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_onhover_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_onhover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#d40e33'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+        
         // Add column button_color
-        $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `button_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1'";
-        $DB->queryOrDie($query, $DB->error());
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'button_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `button_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+        
     }
 
     $migration->executeMigration();
