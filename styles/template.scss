@@ -5,7 +5,7 @@ $break_menu: 1055px;
 $break_tablets: 1300px;
 
 .radio .outer {
-  border: 3px solid %brand_color% !important;
+  border: 3px solid %primary_color% !important;
 }
 
 #header #c_logo {
@@ -15,11 +15,11 @@ $break_tablets: 1300px;
 }
 
 #firstboxlogin {
-  background-color: %brand_color% !important;
+  background-color: %primary_color% !important;
 }
 
 #header_top {
-  background-color: %brand_color% !important;
+  background-color: %primary_color% !important;
 }
 
 #c_preference a, #language_link > span {
@@ -36,36 +36,28 @@ $break_tablets: 1300px;
 }
 
 .x-button.x-button-drop.planned:after {
-  color: %brand_color% !important;
+  color: %primary_color% !important;
 }
 
 .itilstatus {
-  color: %brand_color% !important;
+  color: %primary_color% !important;
 }
 
 #logo_login {
-  background: %brand_color_secondary% !important;
+  background: %menu_color% !important;
 }
 
 #text_login {
   color: white !important;
-  background-color: %brand_color_secondary% !important;
-}
-
-a, .btn-linkstyled {
-  color: %brand_color_secondary% !important;
-
-  &:link {
-    color: %brand_color_secondary% !important;
-  }
+  background-color: %menu_color% !important;
 }
 
 #c_menu {
-  background-color: %brand_color_secondary% !important;
+  background-color: %menu_color% !important;
 }
 
 .main_form tr.headerRow th {
-  color: %brand_color_quad% !important;
+  color: %menu_active_color% !important;
 }
 
 .primary-fg, .primary-fg:link, .primary-fg:hover {
@@ -81,22 +73,22 @@ ul {
     }
 
     > li.active {
-      background-color: %brand_color_quad% !important;
+      background-color: %menu_active_color% !important;
     }
   }
 
   &.ssmenu li.active {
-    background-color: %brand_color_quad% !important;
+    background-color: %menu_active_color% !important;
   }
 
   &#menu {
     > li:hover {
-      background-color: %brand_color_hover_quad% !important;
+      background-color: %menu_onhover_color% !important;
     }
 
     ul li a {
       &:hover {
-        background: %brand_color_secondary% !important;
+        background: %menu_color% !important;
         color: #fff !important;
       }
 
@@ -107,7 +99,7 @@ ul {
 
 div.progress {
   .progress-fg {
-    background-color: %brand_color_quad% !important;
+    background-color: %menu_active_color%!important;
   }
 }
 
@@ -115,16 +107,12 @@ a.copyright {
   color: #000 !important;
 }
 
-a, a:link {
-  color: %brand_color_secondary% !important;
-}
-
 a:hover {
   color: black !important;
 }
 
 .showplan {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 ul#onglet {
@@ -137,7 +125,7 @@ ul#onglet li {
 }
 
 ul#onglet li.actif {
-  border-bottom: 1px ridge %brand_color_secondary% !important;
+  border-bottom: 1px ridge %menu_color% !important;
 }
 
 ul#onglet li.invisible {
@@ -153,7 +141,7 @@ ul#onglet li.actif a {
 }
 
 #onglet a:hover {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 ul#onglet span.fake {
@@ -161,24 +149,24 @@ ul#onglet span.fake {
 }
 
 #contenulogin {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 #boxlogin legend {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 #boxlogin input {
-  border: 1px solid %brand_color_secondary% !important;
+  border: 1px solid %menu_color% !important;
 }
 
 #logo-login a:hover {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 #c_preference {
   .select2-choice {
-    color: %brand_color_secondary% !important;
+    color: %menu_color% !important;
   }
 }
 
@@ -189,18 +177,18 @@ ul#onglet span.fake {
 #show_all_menu{
   dt {
     color: white !important;
-    background-color: %brand_color% !important;
+    background-color: %primary_color% !important;
   }
 
   a:hover {
-    background-color: %brand_color_secondary% !important;
+    background-color: %menu_color% !important;
   }
 }
 .primary-fg-inverse {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 
   &:hover {
-    color: %brand_color_secondary% !important;
+    color: %menu_color% !important;
   }
 }
 
@@ -209,12 +197,12 @@ ul#onglet span.fake {
     .kanban-dropdown {
       li {
         &:hover {
-          background-color: %brand_color_secondary% !important;
+          background-color: %menu_color% !important;
         }
       }
       li.dropdown-trigger {
         &.active {
-          background-color: %brand_color_secondary% !important;
+          background-color: %menu_color% !important;
         }
       }
     }
@@ -247,14 +235,12 @@ input {
   }
 
   &.submit {
-    color: %low_contrast_text% !important;
-    background-color: %brand_color_ternary% !important;
+    background-color: %button_color% !important;
   }
 }
 
 .vsubmit {
-  color: %low_contrast_text% !important;
-  background-color: %brand_color_ternary% !important;
+  background-color: %button_color% !important;
 }
 
 .breadcrumb_item {
@@ -267,25 +253,23 @@ input {
   }
 
   &:nth-of-type(3) {
-    background-color: %brand_color_ternary% !important;
+    background-color: %button_color% !important;
 
     &:after {
-      border-left-color: %brand_color_ternary% !important;
+      border-left-color: %button_color% !important;
     }
   }
 }
 
 .x-button {
-  color: %low_contrast_text% !important;
-  background-color: %brand_color_ternary% !important;
+  background-color: %button_color% !important;
 
   &:hover {
-    background-color: %brand_color_hover_ternary% !important;
+    background-color: %button_color% !important;
   }
 }
 
 .warning {
-  color: %low_contrast_text% !important;
-  background-color: %brand_color_ternary% !important;
+  background-color: %button_color% !important;
 }
-// I am sorry this exists.
+

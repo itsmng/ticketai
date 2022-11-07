@@ -1,26 +1,26 @@
 #contenulogin {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 #boxlogin legend {
-  color: %brand_color_secondary% !important;
+  color: %menu_color% !important;
 }
 
 #boxlogin input {
-  border: 1px solid %brand_color_secondary% !important;
+  border: 1px solid %menu_color% !important;
 }
 
 #firstboxlogin {
-  background-color: %brand_color% !important;
+  background-color: %primary_color% !important;
 }
 
 #text-login {
   color: white !important;
-  background-color: %brand_color_secondary% !important;
+  background-color: %menu_color% !important;
 }
 
 #logo_login {
-  background: %brand_color_secondary% !important;
+  background: %menu_color% !important;
 }
 
 input {
@@ -29,12 +29,10 @@ input {
   }
 
   &.submit {
-    color: %low_contrast_text% !important;
-    background-color: %brand_color_ternary% !important;
+    background-color: %button_color% !important;
   }
 }
 
 .vsubmit {
-  color: %low_contrast_text% !important;
-  background-color: %brand_color_ternary% !important;
+  background-color: %button_color% !important;
 }
