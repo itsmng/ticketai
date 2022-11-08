@@ -83,7 +83,7 @@ function plugin_whitelabel_install() {
     $loginPage = file_get_contents(GLPI_ROOT."/index.php");
     // Patch login page (only patched on install, we update the styles through the linked CSS)
     $patchMap = [
-        "echo Html::css('public/lib/base.css');" => "echo Html::css('public/lib/base.css');\n\techo \"<link rel='stylesheet' type='text/css' href='/css/whitelabel_login.css' media='all'>\";\n",
+        "echo Html::css('public/lib/base.css');" => "echo Html::css('public/lib/base.css');\n\techo \"<link rel='stylesheet' type='text/css' href='css/whitelabel_login.css' media='all'>\";\n",
         "login_logo_itsm.png" => "login_logo_whitelabel.png"
     ];
 
