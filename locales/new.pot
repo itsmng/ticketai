@@ -1,0 +1,35 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+
+#: inc/config.class.php:49
+msgid "Whitelabel Settings"
+msgstr ""
+
+#: inc/config.class.php:53
+msgid "Primary color"
+msgstr ""
+
+#: inc/config.class.php:57
+msgid "Menu color"
+msgstr ""
+
+#: inc/config.class.php:61
+msgid "Active menu color"
+msgstr ""
+
+#: inc/config.class.php:65
+msgid "On hover menu color"
+msgstr ""
+
+#: inc/config.class.php:69
+msgid "Button color"
+msgstr ""
+
+#: inc/config.class.php:82
+msgid "Restore colors"
+msgstr ""
