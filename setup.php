@@ -48,7 +48,7 @@ function plugin_init_whitelabel() {
 function plugin_version_whitelabel() {
     return array(
         'name'           => "White Label",
-        'version'        => '2.0.0',
+        'version'        => '2.1.0',
         'author'         => 'ITSM Dev Team, Théodore Clément',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/itsmng/whitelabel',

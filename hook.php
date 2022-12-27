@@ -44,6 +44,9 @@ function plugin_whitelabel_install() {
             `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a',
             `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f',
             `menu_onhover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#d40e33',
+            `dropdown_menu_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
+            `dropdown_menu_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#131425',
+            `dropdown_menu_text_hover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
             `button_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1',
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -52,8 +55,8 @@ function plugin_whitelabel_install() {
 
         // Insert first entry with default itsmng colors
         $query = "INSERT INTO `glpi_plugin_whitelabel_brand`
-                  (`id`,`favicon`,`logo_central`,`primary_color`,`menu_color`,`menu_active_color`,`menu_onhover_color`,`button_color`) 
-                  VALUES (1,'','','#7b081d','#ae0c2a','#c70c2f','#d40e33','#f5b7b1')";
+                  (`id`,`favicon`,`logo_central`,`primary_color`,`menu_color`,`menu_active_color`,`menu_onhover_color`,`dropdown_menu_background_color`,`dropdown_menu_text_color`,`dropdown_menu_text_hover_color`,`button_color`) 
+                  VALUES (1,'','','#7b081d','#ae0c2a','#c70c2f','#d40e33','#ffffff','#131425','#ffffff','#f5b7b1')";
         $DB->queryOrDie($query, $DB->error());
     }
 
@@ -114,6 +117,24 @@ function plugin_whitelabel_install() {
         // Add column menu_onhover_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_onhover_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_onhover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#d40e33'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column dropdown_menu_background_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'dropdown_menu_background_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `dropdown_menu_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column dropdown_menu_text_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'dropdown_menu_text_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `dropdown_menu_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#131425'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column dropdown_menu_text_hover_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'dropdown_menu_text_hover_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `dropdown_menu_text_hover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#131425'";
             $DB->queryOrDie($query, $DB->error());
         }
         
