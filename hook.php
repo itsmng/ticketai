@@ -57,6 +57,8 @@ function plugin_whitelabel_install() {
             `vsubmit_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1',
             `vsubmit_button_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#8f5a0a',
             `vsubmit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999',
+            `table_header_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f8f8f8',
+            `table_header_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a',
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         
@@ -84,7 +86,9 @@ function plugin_whitelabel_install() {
                     `submit_button_box_shadow_color`,
                     `vsubmit_button_background_color`,
                     `vsubmit_button_text_color`,
-                    `vsubmit_button_box_shadow_color`
+                    `vsubmit_button_box_shadow_color`,
+                    `table_header_background_color`,
+                    `table_header_text_color`
                   ) 
                   VALUES
                   (
@@ -107,7 +111,9 @@ function plugin_whitelabel_install() {
                     '#999999', #submit_button_box_shadow_color
                     '#f5b7b1', #vsubmit_button_background_color
                     '#8f5a0a', #vsubmit_button_text_color
-                    '#999999'  #vsubmit_button_box_shadow_color
+                    '#999999',  #vsubmit_button_box_shadow_color
+                    '#f8f8f8',  #table_header_background_color
+                    '#ae0c2a'  #table_header_text_color
                   )";
         $DB->queryOrDie($query, $DB->error());
     }
@@ -247,6 +253,18 @@ function plugin_whitelabel_install() {
         // Add column vsubmit_button_box_shadow_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'vsubmit_button_box_shadow_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `vsubmit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column table_header_background_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'table_header_background_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `table_header_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f8f8f8'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column table_header_text_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'table_header_text_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `table_header_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a'";
             $DB->queryOrDie($query, $DB->error());
         }
         

@@ -78,6 +78,14 @@ msgstr ""
 msgid "Vsubmit button box-shadow color"
 msgstr ""
 
+#: inc/config.class.php:133
+msgid "Table header background color"
+msgstr ""
+
+#: inc/config.class.php:137
+msgid "Table header text color"
+msgstr ""
+
 #: inc/config.class.php:142
 msgid "Restore colors"
 msgstr ""
