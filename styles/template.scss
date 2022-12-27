@@ -221,6 +221,10 @@ ul#onglet span.fake {
   }
 }
 
+.tab_cadre td a, .tab_cadre_fixe td a, .tab_cadre_fixehov td a, .tab_cadrehov td a, h2.header {
+  color: %object_name_color% !important;
+}
+
 .order_DESC:before {
   color: #B3B3B3 !important;
 }
