@@ -54,6 +54,10 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::showColorField("primary_color", ["value" => $colors["primary_color"]]);
         $this->endField();
 
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
         $this->startField(__("Menu color", 'whitelabel'));
         Html::showColorField("menu_color", ["value" => $colors["menu_color"]]);
         $this->endField();
@@ -78,8 +82,40 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::showColorField("dropdown_menu_text_hover_color", ["value" => $colors["dropdown_menu_text_hover_color"]]);
         $this->endField();
 
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
         $this->startField(__("Button color", 'whitelabel'));
         Html::showColorField("button_color", ["value" => $colors["button_color"]]);
+        $this->endField();
+
+        $this->startField(__("Secondary button background color", 'whitelabel'));
+        Html::showColorField("secondary_button_background_color", ["value" => $colors["secondary_button_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Secondary button text color", 'whitelabel'));
+        Html::showColorField("secondary_button_text_color", ["value" => $colors["secondary_button_text_color"]]);
+        $this->endField();
+
+        $this->startField(__("Submit button background color", 'whitelabel'));
+        Html::showColorField("submit_button_background_color", ["value" => $colors["submit_button_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Submit button text color", 'whitelabel'));
+        Html::showColorField("submit_button_text_color", ["value" => $colors["submit_button_text_color"]]);
+        $this->endField();
+
+        $this->startField(__("Vsubmit button background color", 'whitelabel'));
+        Html::showColorField("vsubmit_button_background_color", ["value" => $colors["vsubmit_button_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Vsubmit button text color", 'whitelabel'));
+        Html::showColorField("vsubmit_button_text_color", ["value" => $colors["vsubmit_button_text_color"]]);
+        $this->endField();
+
+        $this->startField("<hr>");
+        echo "<hr>";
         $this->endField();
 
         $this->startField(sprintf(__('Favicon (%s)'), Document::getMaxUploadSize()));
@@ -139,7 +175,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'dropdown_menu_background_color' => '#ffffff',
             'dropdown_menu_text_color' => '#131425',
             'dropdown_menu_text_hover_color' => '#ffffff',
-            'button_color' => '#f5b7b1'
+            'button_color' => '#f5b7b1',
+            'secondary_button_background_color' => "#e6e6e6",
+            'secondary_button_text_color' => "#5f5f5f",
+            'submit_button_background_color' => "#f5b7b1",
+            'submit_button_text_color' => "#8f5a0a",
+            'vsubmit_button_background_color' => "#f5b7b1",
+            'vsubmit_button_text_color' => "#8f5a0a",
         ];
 
         $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
@@ -154,7 +196,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'dropdown_menu_background_color' => $DB->result($result, 0, 'dropdown_menu_background_color'),
                 'dropdown_menu_text_color' => $DB->result($result, 0, 'dropdown_menu_text_color'),
                 'dropdown_menu_text_hover_color' => $DB->result($result, 0, 'dropdown_menu_text_hover_color'),
-                'button_color' => $DB->result($result, 0, 'button_color')
+                'button_color' => $DB->result($result, 0, 'button_color'),
+                'secondary_button_background_color' => $DB->result($result, 0, 'secondary_button_background_color'),
+                'secondary_button_text_color' => $DB->result($result, 0, 'secondary_button_text_color'),
+                'submit_button_background_color' => $DB->result($result, 0, 'submit_button_background_color'),
+                'submit_button_text_color' => $DB->result($result, 0, 'submit_button_text_color'),
+                'vsubmit_button_background_color' => $DB->result($result, 0, 'vsubmit_button_background_color'),
+                'vsubmit_button_text_color' => $DB->result($result, 0, 'vsubmit_button_text_color'),
             ];
         }
 
@@ -229,6 +277,36 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $color = (!$reset) ? $_POST["button_color"] : '#f5b7b1';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `button_color` = '$color' WHERE `id` = 1", $DB->error());
         }
+
+        if($_POST["secondary_button_background_color"]) {
+            $color = (!$reset) ? $_POST["secondary_button_background_color"] : '#e6e6e6';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["secondary_button_text_color"]) {
+            $color = (!$reset) ? $_POST["secondary_button_text_color"] : '#5f5f5f';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["submit_button_background_color"]) {
+            $color = (!$reset) ? $_POST["submit_button_background_color"] : '#f5b7b1';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["submit_button_text_color"]) {
+            $color = (!$reset) ? $_POST["submit_button_text_color"] : '#8f5a0a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["vsubmit_button_background_color"]) {
+            $color = (!$reset) ? $_POST["vsubmit_button_background_color"] : '#f5b7b1';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["vsubmit_button_text_color"]) {
+            $color = (!$reset) ? $_POST["vsubmit_button_text_color"] : '#8f5a0a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
         
         $this->handleFile("favicon", array("image/x-icon"));
         $this->handleFile("logo_central", array("image/png"));
@@ -260,6 +338,12 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $dropdownMenuTextColor = (!$reset) ? $row["dropdown_menu_text_color"] : '#131425';
         $dropdownMenuTextHoverColor = (!$reset) ? $row["dropdown_menu_text_hover_color"] : '#ffffff';
         $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
+        $secondaryButtonBackgroundColor = (!$reset) ? $row["secondary_button_background_color"] : '#e6e6e6';
+        $secondaryButtonTextColor = (!$reset) ? $row["secondary_button_text_color"] : '#5f5f5f';
+        $submitButtonBackgroundColor = (!$reset) ? $row["submit_button_background_color"] : '#f5b7b1';
+        $submitButtonTextColor = (!$reset) ? $row["submit_button_text_color"] : '#8f5a0a';
+        $vsubmitButtonBackgroundColor = (!$reset) ? $row["vsubmit_button_background_color"] : '#f5b7b1';
+        $vsubmitButtonTextColor = (!$reset) ? $row["vsubmit_button_text_color"] : '#8f5a0a';
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
@@ -273,12 +357,18 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $map = [
             "%primary_color%" => $primaryColor,
             "%menu_color%" => $menuColor,
-            "%button_color%" => $buttonColor,
             "%menu_active_color%" => $menuActiveColor,
             "%menu_onhover_color%" => $menuOnHoverColor,
             "%dropdown_menu_background_color%" => $dropdownMenuBackgroundColor,
             "%dropdown_menu_text_color%" => $dropdownMenuTextColor,
             "%dropdown_menu_text_hover_color%" => $dropdownMenuTextHoverColor,
+            "%button_color%" => $buttonColor,
+            "%secondary_button_background_color%" => $secondaryButtonBackgroundColor,
+            "%secondary_button_text_color%" => $secondaryButtonTextColor,
+            "%submit_button_background_color%" => $submitButtonBackgroundColor,
+            "%submit_button_text_color%" => $submitButtonTextColor,
+            "%vsubmit_button_background_color%" => $vsubmitButtonBackgroundColor,
+            "%vsubmit_button_text_color%" => $vsubmitButtonTextColor,
             "%logo%" => $logo,
             "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];

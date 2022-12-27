@@ -233,18 +233,25 @@ ul#onglet span.fake {
   }
 }
 
+.secondary {
+  background-color: %secondary_button_background_color% !important;
+  color: %secondary_button_text_color% !important;
+}
+
 input {
   &[type="image"] {
     background-color: transparent !important;
   }
 
   &.submit {
-    background-color: %button_color% !important;
+    background-color: %submit_button_background_color% !important;
+    color: %submit_button_text_color% !important;
   }
 }
 
 .vsubmit {
-  background-color: %button_color% !important;
+  background-color: %vsubmit_button_background_color% !important;
+  color: %vsubmit_button_text_color% !important;
 }
 
 .breadcrumb_item {
