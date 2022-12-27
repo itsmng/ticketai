@@ -214,7 +214,11 @@ ul#onglet span.fake {
 }
 
 .tab_cadre th, .tab_cadre_fixe th, .tab_cadre_fixehov th, .tab_cadrehov th, h2.header {
-  color: #000 !important;
+  background-color: %table_header_background_color% !important;
+  color: %table_header_text_color% !important;
+  a {
+    color: %table_header_text_color% !important;
+  }
 }
 
 .order_DESC:before {
