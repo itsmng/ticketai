@@ -50,10 +50,13 @@ function plugin_whitelabel_install() {
             `button_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1',
             `secondary_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#e6e6e6',
             `secondary_button_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#5f5f5f',
+            `secondary_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999',
             `submit_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1',
             `submit_button_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#8f5a0a',
+            `submit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999',
             `vsubmit_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1',
             `vsubmit_button_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#8f5a0a',
+            `vsubmit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999',
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         
@@ -75,10 +78,13 @@ function plugin_whitelabel_install() {
                     `button_color`,
                     `secondary_button_background_color`,
                     `secondary_button_text_color`,
+                    `secondary_button_box_shadow_color`,
                     `submit_button_background_color`,
                     `submit_button_text_color`,
+                    `submit_button_box_shadow_color`,
                     `vsubmit_button_background_color`,
-                    `vsubmit_button_text_color`
+                    `vsubmit_button_text_color`,
+                    `vsubmit_button_box_shadow_color`
                   ) 
                   VALUES
                   (
@@ -92,13 +98,16 @@ function plugin_whitelabel_install() {
                     '#ffffff', #dropdown_menu_background_color
                     '#131425', #dropdown_menu_text_color
                     '#ffffff', #dropdown_menu_text_hover_color
-                    '#f5b7b1',  #button_color
-                    '#e6e6e6',  #secondary_button_background_color
-                    '#5f5f5f',  #secondary_button_text_color
-                    '#f5b7b1',  #submit_button_background_color
-                    '#8f5a0a',  #submit_button_text_color
-                    '#f5b7b1',  #vsubmit_button_background_color
-                    '#8f5a0a'  #vsubmit_button_text_color
+                    '#f5b7b1', #button_color
+                    '#e6e6e6', #secondary_button_background_color
+                    '#5f5f5f', #secondary_button_text_color
+                    '#999999', #secondary_button_box_shadow_color
+                    '#f5b7b1', #submit_button_background_color
+                    '#8f5a0a', #submit_button_text_color
+                    '#999999', #submit_button_box_shadow_color
+                    '#f5b7b1', #vsubmit_button_background_color
+                    '#8f5a0a', #vsubmit_button_text_color
+                    '#999999'  #vsubmit_button_box_shadow_color
                   )";
         $DB->queryOrDie($query, $DB->error());
     }
@@ -199,6 +208,12 @@ function plugin_whitelabel_install() {
             $DB->queryOrDie($query, $DB->error());
         }
 
+        // Add column secondary_button_box_shadow_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'secondary_button_box_shadow_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `secondary_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
         // Add column submit_button_background_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'submit_button_background_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `submit_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1'";
@@ -211,6 +226,12 @@ function plugin_whitelabel_install() {
             $DB->queryOrDie($query, $DB->error());
         }
 
+        // Add column submit_button_box_shadow_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'submit_button_box_shadow_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `submit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
         // Add column vsubmit_button_background_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'vsubmit_button_background_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `vsubmit_button_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f5b7b1'";
@@ -220,6 +241,12 @@ function plugin_whitelabel_install() {
         // Add column vsubmit_button_text_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'vsubmit_button_text_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `vsubmit_button_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#8f5a0a'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column vsubmit_button_box_shadow_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'vsubmit_button_box_shadow_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `vsubmit_button_box_shadow_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#999999'";
             $DB->queryOrDie($query, $DB->error());
         }
         
