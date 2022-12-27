@@ -77,6 +77,10 @@ ul {
     }
   }
 
+  &.ssmenu {
+    background-color: %dropdown_menu_background_color% !important;
+  }
+
   &.ssmenu li.active {
     background-color: %menu_active_color% !important;
   }
@@ -89,10 +93,10 @@ ul {
     ul li a {
       &:hover {
         background: %menu_color% !important;
-        color: #fff !important;
+        color: %dropdown_menu_text_hover_color% !important;
       }
 
-      color: #131425 !important;
+      color: %dropdown_menu_text_color% !important;
     }
   }
 }
@@ -272,4 +276,3 @@ input {
 .warning {
   background-color: %button_color% !important;
 }
-

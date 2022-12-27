@@ -38,9 +38,21 @@ msgid "On hover menu color"
 msgstr ""
 
 #: inc/config.class.php:69
+msgid "Dropdown menu background color"
+msgstr ""
+
+#: inc/config.class.php:73
+msgid "Dropdown menu text color"
+msgstr ""
+
+#: inc/config.class.php:77
+msgid "Dropdown menu text hover color"
+msgstr ""
+
+#: inc/config.class.php:81
 msgid "Button color"
 msgstr ""
 
-#: inc/config.class.php:82
+#: inc/config.class.php:94
 msgid "Restore colors"
 msgstr ""

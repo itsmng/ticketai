@@ -66,6 +66,18 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::showColorField("menu_onhover_color", ["value" => $colors["menu_onhover_color"]]);
         $this->endField();
 
+        $this->startField(__("Dropdown menu background color", 'whitelabel'));
+        Html::showColorField("dropdown_menu_background_color", ["value" => $colors["dropdown_menu_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Dropdown menu text color", 'whitelabel'));
+        Html::showColorField("dropdown_menu_text_color", ["value" => $colors["dropdown_menu_text_color"]]);
+        $this->endField();
+
+        $this->startField(__("Dropdown menu text hover color", 'whitelabel'));
+        Html::showColorField("dropdown_menu_text_hover_color", ["value" => $colors["dropdown_menu_text_hover_color"]]);
+        $this->endField();
+
         $this->startField(__("Button color", 'whitelabel'));
         Html::showColorField("button_color", ["value" => $colors["button_color"]]);
         $this->endField();
@@ -124,6 +136,9 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'menu_color' => '#ae0c2a',
             'menu_active_color' => '#c70c2f',
             'menu_onhover_color' => '#d40e33',
+            'dropdown_menu_background_color' => '#ffffff',
+            'dropdown_menu_text_color' => '#131425',
+            'dropdown_menu_text_hover_color' => '#ffffff',
             'button_color' => '#f5b7b1'
         ];
 
@@ -136,6 +151,9 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'menu_color' => $DB->result($result, 0, 'menu_color'),
                 'menu_active_color' => $DB->result($result, 0, 'menu_active_color'),
                 'menu_onhover_color' => $DB->result($result, 0, 'menu_onhover_color'),
+                'dropdown_menu_background_color' => $DB->result($result, 0, 'dropdown_menu_background_color'),
+                'dropdown_menu_text_color' => $DB->result($result, 0, 'dropdown_menu_text_color'),
+                'dropdown_menu_text_hover_color' => $DB->result($result, 0, 'dropdown_menu_text_hover_color'),
                 'button_color' => $DB->result($result, 0, 'button_color')
             ];
         }
@@ -192,6 +210,21 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_onhover_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
+        if($_POST["dropdown_menu_background_color"]) {
+            $color = (!$reset) ? $_POST["dropdown_menu_background_color"] : '#ffffff';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["dropdown_menu_text_color"]) {
+            $color = (!$reset) ? $_POST["dropdown_menu_text_color"] : '#131425';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["dropdown_menu_text_hover_color"]) {
+            $color = (!$reset) ? $_POST["dropdown_menu_text_hover_color"] : '#131425';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_text_hover_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
         if($_POST["button_color"]) {
             $color = (!$reset) ? $_POST["button_color"] : '#f5b7b1';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `button_color` = '$color' WHERE `id` = 1", $DB->error());
@@ -223,6 +256,9 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $menuColor = (!$reset) ? $row["menu_color"] : '#ae0c2a';
         $menuActiveColor = (!$reset) ? $row["menu_active_color"] : '#c70c2f';
         $menuOnHoverColor = (!$reset) ? $row["menu_onhover_color"] : '#d40e33';
+        $dropdownMenuBackgroundColor = (!$reset) ? $row["dropdown_menu_background_color"] : '#ffffff';
+        $dropdownMenuTextColor = (!$reset) ? $row["dropdown_menu_text_color"] : '#131425';
+        $dropdownMenuTextHoverColor = (!$reset) ? $row["dropdown_menu_text_hover_color"] : '#ffffff';
         $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
@@ -240,6 +276,9 @@ class PluginWhitelabelConfig extends CommonDBTM {
             "%button_color%" => $buttonColor,
             "%menu_active_color%" => $menuActiveColor,
             "%menu_onhover_color%" => $menuOnHoverColor,
+            "%dropdown_menu_background_color%" => $dropdownMenuBackgroundColor,
+            "%dropdown_menu_text_color%" => $dropdownMenuTextColor,
+            "%dropdown_menu_text_hover_color%" => $dropdownMenuTextHoverColor,
             "%logo%" => $logo,
             "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];
