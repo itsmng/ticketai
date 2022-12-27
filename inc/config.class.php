@@ -86,6 +86,26 @@ class PluginWhitelabelConfig extends CommonDBTM {
         echo "<hr>";
         $this->endField();
 
+        $this->startField(__("Table header background color", 'whitelabel'));
+        Html::showColorField("table_header_background_color", ["value" => $colors["table_header_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Table header text color", 'whitelabel'));
+        Html::showColorField("table_header_text_color", ["value" => $colors["table_header_text_color"]]);
+        $this->endField();
+
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
+        $this->startField(__("Object name color", 'whitelabel'));
+        Html::showColorField("object_name_color", ["value" => $colors["object_name_color"]]);
+        $this->endField();
+
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
         $this->startField(__("Button color", 'whitelabel'));
         Html::showColorField("button_color", ["value" => $colors["button_color"]]);
         $this->endField();
@@ -124,18 +144,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
         $this->startField(__("Vsubmit button box-shadow color", 'whitelabel'));
         Html::showColorField("vsubmit_button_box_shadow_color", ["value" => $colors["vsubmit_button_box_shadow_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Table header background color", 'whitelabel'));
-        Html::showColorField("table_header_background_color", ["value" => $colors["table_header_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Table header text color", 'whitelabel'));
-        Html::showColorField("table_header_text_color", ["value" => $colors["table_header_text_color"]]);
         $this->endField();
 
         $this->startField("<hr>");
@@ -210,7 +218,8 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'vsubmit_button_text_color' => "#8f5a0a",
             'vsubmit_button_box_shadow_color' => "#8f5a0a",
             'table_header_background_color' => "#f8f8f8",
-            'table_header_text_color' => "#ae0c2a"
+            'table_header_text_color' => "#ae0c2a",
+            'object_name_color' => "#ae0c2a"
         ];
 
         $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
@@ -237,6 +246,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'vsubmit_button_box_shadow_color' => $DB->result($result, 0, 'vsubmit_button_box_shadow_color'),
                 'table_header_background_color' => $DB->result($result, 0, 'table_header_background_color'),
                 'table_header_text_color' => $DB->result($result, 0, 'table_header_text_color'),
+                'object_name_color' => $DB->result($result, 0, 'object_name_color')
             ];
         }
 
@@ -366,6 +376,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $color = (!$reset) ? $_POST["table_header_text_color"] : '#ae0c2a';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
         }
+
+        if($_POST["object_name_color"]) {
+            $color = (!$reset) ? $_POST["object_name_color"] : '#ae0c2a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `object_name_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
         
         $this->handleFile("favicon", array("image/x-icon"));
         $this->handleFile("logo_central", array("image/png"));
@@ -408,6 +423,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $vsubmitButtonBoxShadowColor = (!$reset) ? $row["vsubmit_button_box_shadow_color"] : '#999999';
         $tableHeaderBackgroundColor = (!$reset) ? $row["table_header_background_color"] : '#f8f8f8';
         $tableHeaderTextColor = (!$reset) ? $row["table_header_text_color"] : '#ae0c2a';
+        $objectNameColor = (!$reset) ? $row["object_name_color"] : '#ae0c2a';
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
@@ -438,6 +454,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
             "%vsubmit_button_box_shadow_color%" => $vsubmitButtonBoxShadowColor,
             "%table_header_background_color%" => $tableHeaderBackgroundColor,
             "%table_header_text_color%" => $tableHeaderTextColor,
+            "%object_name_color%" => $objectNameColor,
             "%logo%" => $logo,
             "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];
