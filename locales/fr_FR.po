@@ -53,6 +53,30 @@ msgstr "Couleur du texte au survol du menu déroulant"
 msgid "Button color"
 msgstr "Couleur des boutons"
 
-#: inc/config.class.php:94
+#: inc/config.class.php:85
+msgid "Secondary button background color"
+msgstr "Couleur de fond des bouttons secondaires"
+
+#: inc/config.class.php:89
+msgid "Secondary button text color"
+msgstr "Couleur du texte des boutons secondaires"
+
+#: inc/config.class.php:93
+msgid "Submit button background color"
+msgstr "Couleur de fond des boutons submit"
+
+#: inc/config.class.php:97
+msgid "Submit button text color"
+msgstr "Couleur de texte des boutons submit"
+
+#: inc/config.class.php:101
+msgid "Vsubmit button background color"
+msgstr "Couleur de fond des boutons vsubmit"
+
+#: inc/config.class.php:105
+msgid "Vsubmit button text color"
+msgstr "Couleur de texte des boutons vsubmit"
+
+#: inc/config.class.php:118
 msgid "Restore colors"
 msgstr "Restaurer les couleurs"
