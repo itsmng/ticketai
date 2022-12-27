@@ -98,6 +98,10 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::showColorField("secondary_button_text_color", ["value" => $colors["secondary_button_text_color"]]);
         $this->endField();
 
+        $this->startField(__("Secondary button box-shadow color", 'whitelabel'));
+        Html::showColorField("secondary_button_box_shadow_color", ["value" => $colors["secondary_button_box_shadow_color"]]);
+        $this->endField();
+
         $this->startField(__("Submit button background color", 'whitelabel'));
         Html::showColorField("submit_button_background_color", ["value" => $colors["submit_button_background_color"]]);
         $this->endField();
@@ -106,12 +110,20 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::showColorField("submit_button_text_color", ["value" => $colors["submit_button_text_color"]]);
         $this->endField();
 
+        $this->startField(__("Submit button box-shadow color", 'whitelabel'));
+        Html::showColorField("submit_button_box_shadow_color", ["value" => $colors["submit_button_box_shadow_color"]]);
+        $this->endField();
+
         $this->startField(__("Vsubmit button background color", 'whitelabel'));
         Html::showColorField("vsubmit_button_background_color", ["value" => $colors["vsubmit_button_background_color"]]);
         $this->endField();
 
         $this->startField(__("Vsubmit button text color", 'whitelabel'));
         Html::showColorField("vsubmit_button_text_color", ["value" => $colors["vsubmit_button_text_color"]]);
+        $this->endField();
+
+        $this->startField(__("Vsubmit button box-shadow color", 'whitelabel'));
+        Html::showColorField("vsubmit_button_box_shadow_color", ["value" => $colors["vsubmit_button_box_shadow_color"]]);
         $this->endField();
 
         $this->startField("<hr>");
@@ -178,10 +190,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'button_color' => '#f5b7b1',
             'secondary_button_background_color' => "#e6e6e6",
             'secondary_button_text_color' => "#5f5f5f",
+            'secondary_button_box_shadow_color' => "#8f5a0a",
             'submit_button_background_color' => "#f5b7b1",
             'submit_button_text_color' => "#8f5a0a",
+            'submit_button_box_shadow_color' => "#8f5a0a",
             'vsubmit_button_background_color' => "#f5b7b1",
             'vsubmit_button_text_color' => "#8f5a0a",
+            'vsubmit_button_box_shadow_color' => "#8f5a0a",
         ];
 
         $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
@@ -199,10 +214,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'button_color' => $DB->result($result, 0, 'button_color'),
                 'secondary_button_background_color' => $DB->result($result, 0, 'secondary_button_background_color'),
                 'secondary_button_text_color' => $DB->result($result, 0, 'secondary_button_text_color'),
+                'secondary_button_box_shadow_color' => $DB->result($result, 0, 'secondary_button_box_shadow_color'),
                 'submit_button_background_color' => $DB->result($result, 0, 'submit_button_background_color'),
                 'submit_button_text_color' => $DB->result($result, 0, 'submit_button_text_color'),
+                'submit_button_box_shadow_color' => $DB->result($result, 0, 'submit_button_box_shadow_color'),
                 'vsubmit_button_background_color' => $DB->result($result, 0, 'vsubmit_button_background_color'),
                 'vsubmit_button_text_color' => $DB->result($result, 0, 'vsubmit_button_text_color'),
+                'vsubmit_button_box_shadow_color' => $DB->result($result, 0, 'vsubmit_button_box_shadow_color'),
             ];
         }
 
@@ -288,6 +306,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
+        if($_POST["secondary_button_box_shadow_color"]) {
+            $color = (!$reset) ? $_POST["secondary_button_box_shadow_color"] : '#999999';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
         if($_POST["submit_button_background_color"]) {
             $color = (!$reset) ? $_POST["submit_button_background_color"] : '#f5b7b1';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
@@ -298,6 +321,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
+        if($_POST["submit_button_box_shadow_color"]) {
+            $color = (!$reset) ? $_POST["submit_button_box_shadow_color"] : '#999999';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
         if($_POST["vsubmit_button_background_color"]) {
             $color = (!$reset) ? $_POST["vsubmit_button_background_color"] : '#f5b7b1';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
@@ -306,6 +334,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
         if($_POST["vsubmit_button_text_color"]) {
             $color = (!$reset) ? $_POST["vsubmit_button_text_color"] : '#8f5a0a';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["vsubmit_button_box_shadow_color"]) {
+            $color = (!$reset) ? $_POST["vsubmit_button_box_shadow_color"] : '#999999';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
         }
         
         $this->handleFile("favicon", array("image/x-icon"));
@@ -340,10 +373,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
         $secondaryButtonBackgroundColor = (!$reset) ? $row["secondary_button_background_color"] : '#e6e6e6';
         $secondaryButtonTextColor = (!$reset) ? $row["secondary_button_text_color"] : '#5f5f5f';
+        $secondaryButtonBoxShadowColor = (!$reset) ? $row["secondary_button_box_shadow_color"] : '#999999';
         $submitButtonBackgroundColor = (!$reset) ? $row["submit_button_background_color"] : '#f5b7b1';
         $submitButtonTextColor = (!$reset) ? $row["submit_button_text_color"] : '#8f5a0a';
+        $submitButtonBoxShadowColor = (!$reset) ? $row["submit_button_box_shadow_color"] : '#999999';
         $vsubmitButtonBackgroundColor = (!$reset) ? $row["vsubmit_button_background_color"] : '#f5b7b1';
         $vsubmitButtonTextColor = (!$reset) ? $row["vsubmit_button_text_color"] : '#8f5a0a';
+        $vsubmitButtonBoxShadowColor = (!$reset) ? $row["vsubmit_button_box_shadow_color"] : '#999999';
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
@@ -365,10 +401,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             "%button_color%" => $buttonColor,
             "%secondary_button_background_color%" => $secondaryButtonBackgroundColor,
             "%secondary_button_text_color%" => $secondaryButtonTextColor,
+            "%secondary_button_box_shadow_color%" => $secondaryButtonBoxShadowColor,
             "%submit_button_background_color%" => $submitButtonBackgroundColor,
             "%submit_button_text_color%" => $submitButtonTextColor,
+            "%submit_button_box_shadow_color%" => $submitButtonBoxShadowColor,
             "%vsubmit_button_background_color%" => $vsubmitButtonBackgroundColor,
             "%vsubmit_button_text_color%" => $vsubmitButtonTextColor,
+            "%vsubmit_button_box_shadow_color%" => $vsubmitButtonBoxShadowColor,
             "%logo%" => $logo,
             "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];

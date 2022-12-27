@@ -103,7 +103,7 @@ ul {
 
 div.progress {
   .progress-fg {
-    background-color: %menu_active_color%!important;
+    background-color: %menu_active_color% !important;
   }
 }
 
@@ -228,7 +228,7 @@ ul#onglet span.fake {
 @media screen and (min-width: $break_tablets) {
   .layout_vsplit {
     .ui-tabs-panel .tab_cadre_fixehov th {
-      background-color: #E6E6E6;
+      background-color: #E6E6E6 !important;
     }
   }
 }
@@ -236,6 +236,10 @@ ul#onglet span.fake {
 .secondary {
   background-color: %secondary_button_background_color% !important;
   color: %secondary_button_text_color% !important;
+}
+
+.secondary:hover {
+  box-shadow: 0px 1px 1px %secondary_button_box_shadow_color% !important;
 }
 
 input {
@@ -247,11 +251,19 @@ input {
     background-color: %submit_button_background_color% !important;
     color: %submit_button_text_color% !important;
   }
+  
+  &.submit:hover {
+    box-shadow: 0px 1px 1px %submit_button_box_shadow_color% !important;
+  }
 }
 
 .vsubmit {
   background-color: %vsubmit_button_background_color% !important;
   color: %vsubmit_button_text_color% !important;
+}
+
+.vsubmit:hover {
+  box-shadow: 0px 1px 1px %vsubmit_button_box_shadow_color% !important;
 }
 
 .breadcrumb_item {
