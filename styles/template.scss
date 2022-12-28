@@ -213,6 +213,23 @@ ul#onglet span.fake {
   }
 }
 
+.ui-widget-content.message_after_redirect {
+  background: %alert_background_color% !important;
+}
+.message_after_redirect.info_msg div.ui-widget-header {
+  background: %alert_header_background_color%;
+  background-color: %alert_header_background_color%;
+  border-color: %alert_header_background_color%;
+  span {
+    color: %alert_header_text_color%;
+  }
+}
+
+
+.ui-widget-content {
+  color: %alert_text_color% !important;
+}
+
 .tab_cadre th, .tab_cadre_fixe th, .tab_cadre_fixehov th, .tab_cadrehov th, h2.header {
   background-color: %table_header_background_color% !important;
   color: %table_header_text_color% !important;

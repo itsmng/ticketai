@@ -50,57 +50,73 @@ msgid "Dropdown menu text hover color"
 msgstr "Couleur du texte au survol du menu déroulant"
 
 #: inc/config.class.php:89
+msgid "Alert background color"
+msgstr "Couleur du fond des alertes"
+
+#: inc/config.class.php:93
+msgid "Alert text color"
+msgstr "Couleur du contenu des alertes"
+
+#: inc/config.class.php:97
+msgid "Alert header background color"
+msgstr "Couleur du fond du titre des alertes"
+
+#: inc/config.class.php:101
+msgid "Alert header text color"
+msgstr "Couleur du titre des alertes"
+
+#: inc/config.class.php:109
 msgid "Table header background color"
 msgstr "Couleur du fond des titres des tableaux"
 
-#: inc/config.class.php:93
+#: inc/config.class.php:113
 msgid "Table header text color"
 msgstr "Couleur du texte des titres des tableaux"
 
-#: inc/config.class.php:101
+#: inc/config.class.php:121
 msgid "Object name color"
 msgstr "Couleur du nom des objets"
 
-#: inc/config.class.php:109
+#: inc/config.class.php:129
 msgid "Button color"
 msgstr "Couleur des boutons"
 
-#: inc/config.class.php:113
+#: inc/config.class.php:133
 msgid "Secondary button background color"
-msgstr "Couleur de fond des bouttons secondaires"
+msgstr "Couleur de fond des boutons secondaires"
 
-#: inc/config.class.php:117
+#: inc/config.class.php:137
 msgid "Secondary button text color"
 msgstr "Couleur du texte des boutons secondaires"
 
-#: inc/config.class.php:121
+#: inc/config.class.php:141
 msgid "Secondary button box-shadow color"
 msgstr "Couleur de l'ombre des boutons secondaires"
 
-#: inc/config.class.php:125
+#: inc/config.class.php:145
 msgid "Submit button background color"
 msgstr "Couleur de fond des boutons submit"
 
-#: inc/config.class.php:129
+#: inc/config.class.php:149
 msgid "Submit button text color"
 msgstr "Couleur de texte des boutons submit"
 
-#: inc/config.class.php:133
+#: inc/config.class.php:153
 msgid "Submit button box-shadow color"
 msgstr "Couleur de l'ombre des boutons submit"
 
-#: inc/config.class.php:137
+#: inc/config.class.php:157
 msgid "Vsubmit button background color"
 msgstr "Couleur de fond des boutons vsubmit"
 
-#: inc/config.class.php:141
+#: inc/config.class.php:161
 msgid "Vsubmit button text color"
 msgstr "Couleur de texte des boutons vsubmit"
 
-#: inc/config.class.php:145
+#: inc/config.class.php:165
 msgid "Vsubmit button box-shadow color"
 msgstr "Couleur du texte des boutons vsubmit"
 
-#: inc/config.class.php:161
+#: inc/config.class.php:182
 msgid "Restore colors"
 msgstr "Restaurer les couleurs"
