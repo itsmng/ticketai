@@ -86,6 +86,26 @@ class PluginWhitelabelConfig extends CommonDBTM {
         echo "<hr>";
         $this->endField();
 
+        $this->startField(__("Alert background color", 'whitelabel'));
+        Html::showColorField("alert_background_color", ["value" => $colors["alert_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Alert text color", 'whitelabel'));
+        Html::showColorField("alert_text_color", ["value" => $colors["alert_text_color"]]);
+        $this->endField();
+
+        $this->startField(__("Alert header background color", 'whitelabel'));
+        Html::showColorField("alert_header_background_color", ["value" => $colors["alert_header_background_color"]]);
+        $this->endField();
+
+        $this->startField(__("Alert header text color", 'whitelabel'));
+        Html::showColorField("alert_header_text_color", ["value" => $colors["alert_header_text_color"]]);
+        $this->endField();
+
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
         $this->startField(__("Table header background color", 'whitelabel'));
         Html::showColorField("table_header_background_color", ["value" => $colors["table_header_background_color"]]);
         $this->endField();
@@ -207,6 +227,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'dropdown_menu_background_color' => '#ffffff',
             'dropdown_menu_text_color' => '#131425',
             'dropdown_menu_text_hover_color' => '#ffffff',
+            'alert_background_color' => '#dfdfdf',
+            'alert_text_color' => '#333333',
+            'alert_header_background_color' => '#a9a9a9',
+            'alert_header_text_color' => '#ffffff',
+            'table_header_background_color' => "#f8f8f8",
+            'table_header_text_color' => "#ae0c2a",
+            'object_name_color' => "#ae0c2a",
             'button_color' => '#f5b7b1',
             'secondary_button_background_color' => "#e6e6e6",
             'secondary_button_text_color' => "#5f5f5f",
@@ -216,10 +243,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
             'submit_button_box_shadow_color' => "#8f5a0a",
             'vsubmit_button_background_color' => "#f5b7b1",
             'vsubmit_button_text_color' => "#8f5a0a",
-            'vsubmit_button_box_shadow_color' => "#8f5a0a",
-            'table_header_background_color' => "#f8f8f8",
-            'table_header_text_color' => "#ae0c2a",
-            'object_name_color' => "#ae0c2a"
+            'vsubmit_button_box_shadow_color' => "#8f5a0a"
         ];
 
         $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
@@ -234,6 +258,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'dropdown_menu_background_color' => $DB->result($result, 0, 'dropdown_menu_background_color'),
                 'dropdown_menu_text_color' => $DB->result($result, 0, 'dropdown_menu_text_color'),
                 'dropdown_menu_text_hover_color' => $DB->result($result, 0, 'dropdown_menu_text_hover_color'),
+                'alert_background_color' => $DB->result($result, 0, 'alert_background_color'),
+                'alert_text_color' => $DB->result($result, 0, 'alert_text_color'),
+                'alert_header_background_color' => $DB->result($result, 0, 'alert_header_background_color'),
+                'alert_header_text_color' => $DB->result($result, 0, 'alert_header_text_color'),
+                'table_header_background_color' => $DB->result($result, 0, 'table_header_background_color'),
+                'table_header_text_color' => $DB->result($result, 0, 'table_header_text_color'),
+                'object_name_color' => $DB->result($result, 0, 'object_name_color'),
                 'button_color' => $DB->result($result, 0, 'button_color'),
                 'secondary_button_background_color' => $DB->result($result, 0, 'secondary_button_background_color'),
                 'secondary_button_text_color' => $DB->result($result, 0, 'secondary_button_text_color'),
@@ -243,10 +274,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 'submit_button_box_shadow_color' => $DB->result($result, 0, 'submit_button_box_shadow_color'),
                 'vsubmit_button_background_color' => $DB->result($result, 0, 'vsubmit_button_background_color'),
                 'vsubmit_button_text_color' => $DB->result($result, 0, 'vsubmit_button_text_color'),
-                'vsubmit_button_box_shadow_color' => $DB->result($result, 0, 'vsubmit_button_box_shadow_color'),
-                'table_header_background_color' => $DB->result($result, 0, 'table_header_background_color'),
-                'table_header_text_color' => $DB->result($result, 0, 'table_header_text_color'),
-                'object_name_color' => $DB->result($result, 0, 'object_name_color')
+                'vsubmit_button_box_shadow_color' => $DB->result($result, 0, 'vsubmit_button_box_shadow_color')
             ];
         }
 
@@ -317,6 +345,41 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_text_hover_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
+        if($_POST["alert_background_color"]) {
+            $color = (!$reset) ? $_POST["alert_background_color"] : '#dfdfdf';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["alert_text_color"]) {
+            $color = (!$reset) ? $_POST["alert_text_color"] : '#333333';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["alert_header_background_color"]) {
+            $color = (!$reset) ? $_POST["alert_header_background_color"] : '#a9a9a9';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_header_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["alert_header_text_color"]) {
+            $color = (!$reset) ? $_POST["alert_header_text_color"] : '#131425';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["table_header_background_color"]) {
+            $color = (!$reset) ? $_POST["table_header_background_color"] : '#f8f8f8';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_background_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["table_header_text_color"]) {
+            $color = (!$reset) ? $_POST["table_header_text_color"] : '#ae0c2a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["object_name_color"]) {
+            $color = (!$reset) ? $_POST["object_name_color"] : '#ae0c2a';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `object_name_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
         if($_POST["button_color"]) {
             $color = (!$reset) ? $_POST["button_color"] : '#f5b7b1';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `button_color` = '$color' WHERE `id` = 1", $DB->error());
@@ -366,21 +429,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $color = (!$reset) ? $_POST["vsubmit_button_box_shadow_color"] : '#999999';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
         }
-
-        if($_POST["table_header_background_color"]) {
-            $color = (!$reset) ? $_POST["table_header_background_color"] : '#f8f8f8';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["table_header_text_color"]) {
-            $color = (!$reset) ? $_POST["table_header_text_color"] : '#ae0c2a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["object_name_color"]) {
-            $color = (!$reset) ? $_POST["object_name_color"] : '#ae0c2a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `object_name_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
         
         $this->handleFile("favicon", array("image/x-icon"));
         $this->handleFile("logo_central", array("image/png"));
@@ -411,6 +459,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $dropdownMenuBackgroundColor = (!$reset) ? $row["dropdown_menu_background_color"] : '#ffffff';
         $dropdownMenuTextColor = (!$reset) ? $row["dropdown_menu_text_color"] : '#131425';
         $dropdownMenuTextHoverColor = (!$reset) ? $row["dropdown_menu_text_hover_color"] : '#ffffff';
+        $alertBackgroundColor = (!$reset) ? $row["alert_background_color"] : '#dfdfdf';
+        $alertTextColor = (!$reset) ? $row["alert_text_color"] : '#333333';
+        $alertHeaderBackgroundColor = (!$reset) ? $row["alert_header_background_color"] : '#a9a9a9';
+        $alertHeaderTextColor = (!$reset) ? $row["alert_header_text_color"] : '#ffffff';
+        $tableHeaderBackgroundColor = (!$reset) ? $row["table_header_background_color"] : '#f8f8f8';
+        $tableHeaderTextColor = (!$reset) ? $row["table_header_text_color"] : '#ae0c2a';
+        $objectNameColor = (!$reset) ? $row["object_name_color"] : '#ae0c2a';
         $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
         $secondaryButtonBackgroundColor = (!$reset) ? $row["secondary_button_background_color"] : '#e6e6e6';
         $secondaryButtonTextColor = (!$reset) ? $row["secondary_button_text_color"] : '#5f5f5f';
@@ -421,9 +476,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $vsubmitButtonBackgroundColor = (!$reset) ? $row["vsubmit_button_background_color"] : '#f5b7b1';
         $vsubmitButtonTextColor = (!$reset) ? $row["vsubmit_button_text_color"] : '#8f5a0a';
         $vsubmitButtonBoxShadowColor = (!$reset) ? $row["vsubmit_button_box_shadow_color"] : '#999999';
-        $tableHeaderBackgroundColor = (!$reset) ? $row["table_header_background_color"] : '#f8f8f8';
-        $tableHeaderTextColor = (!$reset) ? $row["table_header_text_color"] : '#ae0c2a';
-        $objectNameColor = (!$reset) ? $row["object_name_color"] : '#ae0c2a';
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
@@ -442,6 +494,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             "%dropdown_menu_background_color%" => $dropdownMenuBackgroundColor,
             "%dropdown_menu_text_color%" => $dropdownMenuTextColor,
             "%dropdown_menu_text_hover_color%" => $dropdownMenuTextHoverColor,
+            "%alert_background_color%" => $alertBackgroundColor,
+            "%alert_text_color%" => $alertTextColor,
+            "%alert_header_background_color%" => $alertHeaderBackgroundColor,
+            "%alert_header_text_color%" => $alertHeaderTextColor,
+            "%table_header_background_color%" => $tableHeaderBackgroundColor,
+            "%table_header_text_color%" => $tableHeaderTextColor,
+            "%object_name_color%" => $objectNameColor,
             "%button_color%" => $buttonColor,
             "%secondary_button_background_color%" => $secondaryButtonBackgroundColor,
             "%secondary_button_text_color%" => $secondaryButtonTextColor,
@@ -452,9 +511,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
             "%vsubmit_button_background_color%" => $vsubmitButtonBackgroundColor,
             "%vsubmit_button_text_color%" => $vsubmitButtonTextColor,
             "%vsubmit_button_box_shadow_color%" => $vsubmitButtonBoxShadowColor,
-            "%table_header_background_color%" => $tableHeaderBackgroundColor,
-            "%table_header_text_color%" => $tableHeaderTextColor,
-            "%object_name_color%" => $objectNameColor,
             "%logo%" => $logo,
             "%logo_width%" => ceil(55 * ($logoW / $logoH))
         ];
