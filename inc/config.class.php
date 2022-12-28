@@ -178,6 +178,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $this->showImageUploadField("logo_central");
         $this->endField();
 
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
+        $this->startField(sprintf(__("Import your CSS configuration (%s)", 'whitelabel'), Document::getMaxUploadSize()));
+        $this->showImageUploadField("css_configuration");
+        $this->endField();
+
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";
         echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore colors', 'whitelabel')."'>";
         echo "</td></tr>";
@@ -432,12 +440,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
         
         $this->handleFile("favicon", array("image/x-icon"));
         $this->handleFile("logo_central", array("image/png"));
+        $this->handleFile("css_configuration", array("text/css"));
 
         if ($this->handleClear("favicon")) {
             copy(Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak", GLPI_ROOT."/pics/favicon.ico");
         }
 
         $this->handleClear("logo_central");
+        $this->handleClear("css_configuration");
 
         if(file_exists(Plugin::getPhpDir("whitelabel")."/uploads/favicon.ico")) {
             copy(Plugin::getPhpDir("whitelabel")."/uploads/favicon.ico", GLPI_ROOT."/pics/favicon.ico");

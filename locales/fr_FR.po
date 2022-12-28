@@ -117,6 +117,10 @@ msgstr "Couleur de texte des boutons vsubmit"
 msgid "Vsubmit button box-shadow color"
 msgstr "Couleur du texte des boutons vsubmit"
 
-#: inc/config.class.php:182
+#: inc/config.class.php:185
+msgid "Import your CSS configuration (%s)"
+msgstr "Importez votre configuration CSS (%s)"
+
+#: inc/config.class.php:190
 msgid "Restore colors"
 msgstr "Restaurer les couleurs"

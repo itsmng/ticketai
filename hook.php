@@ -40,6 +40,7 @@ function plugin_whitelabel_install() {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `favicon` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `logo_central` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            `css_configuration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d',
             `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a',
             `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f',
@@ -75,6 +76,7 @@ function plugin_whitelabel_install() {
                     `id`,
                     `favicon`,
                     `logo_central`,
+                    `css_configuration`,
                     `primary_color`,
                     `menu_color`,
                     `menu_active_color`,
@@ -105,6 +107,7 @@ function plugin_whitelabel_install() {
                     1,         #id
                     '',        #favicon
                     '',        #logo_central
+                    '',        #css_configuration
                     '#7b081d', #primary_color
                     '#ae0c2a', #menu_color
                     '#c70c2f', #menu_active_color
