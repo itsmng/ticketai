@@ -42,7 +42,10 @@ function plugin_init_whitelabel() {
         $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['add_css']['whitelabel'] = "uploads/whitelabel.css";
+    $PLUGIN_HOOKS['add_css']['whitelabel'] = [
+        "uploads/whitelabel.css",
+        "uploads/css_configuration.css",
+    ];
 }
 
 function plugin_version_whitelabel() {
