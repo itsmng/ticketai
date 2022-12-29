@@ -41,14 +41,14 @@ if($plugin->isActivated("whitelabel")) {
         Session::checkRight("config", UPDATE);
         $config->handleWhitelabel();
         $config->refreshCss();
-        Session::addMessageAfterRedirect(__('<p><b>Settings applied !</b></p><p><i>If you have any problems, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>'));
+        Session::addMessageAfterRedirect(__('<p><b>Settings applied !</b></p><p><i>If you have any error, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>'));
     }
 
     if(isset($_POST["reset"])) {
         Session::checkRight("config", UPDATE);
         $config->handleWhitelabel(true);
         $config->refreshCss(true);
-        Session::addMessageAfterRedirect(__('<p><b>Default settings applied !</b></p><p><i>If you have any problems, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>'));
+        Session::addMessageAfterRedirect(__('<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>'));
     }
 
     Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");
