@@ -11,7 +11,7 @@ msgid "<p><b>Settings applied !</b></p><p><i>If you have any error, do the comma
 msgstr ""
 
 #: inc/config.form.php:51
-msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the ITSM-NG installation folder : <b>bin/console system:clear_cache</b></i></p>"
 msgstr ""
 
 #: inc/config.class.php:49
