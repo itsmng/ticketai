@@ -19,97 +19,101 @@ msgid "Menu color"
 msgstr ""
 
 #: inc/config.class.php:65
-msgid "Active menu color"
+msgid "Menu text color"
 msgstr ""
 
 #: inc/config.class.php:69
-msgid "On hover menu color"
+msgid "Active menu color"
 msgstr ""
 
 #: inc/config.class.php:73
-msgid "Dropdown menu background color"
+msgid "On hover menu color"
 msgstr ""
 
 #: inc/config.class.php:77
-msgid "Dropdown menu text color"
+msgid "Dropdown menu background color"
 msgstr ""
 
 #: inc/config.class.php:81
+msgid "Dropdown menu text color"
+msgstr ""
+
+#: inc/config.class.php:85
 msgid "Dropdown menu text hover color"
 msgstr ""
 
-#: inc/config.class.php:89
+#: inc/config.class.php:93
 msgid "Alert background color"
 msgstr ""
 
-#: inc/config.class.php:93
+#: inc/config.class.php:97
 msgid "Alert text color"
 msgstr ""
 
-#: inc/config.class.php:97
+#: inc/config.class.php:101
 msgid "Alert header background color"
 msgstr ""
 
-#: inc/config.class.php:101
+#: inc/config.class.php:105
 msgid "Alert header text color"
 msgstr ""
 
-#: inc/config.class.php:109
+#: inc/config.class.php:113
 msgid "Table header background color"
 msgstr ""
 
-#: inc/config.class.php:113
+#: inc/config.class.php:117
 msgid "Table header text color"
 msgstr ""
 
-#: inc/config.class.php:121
+#: inc/config.class.php:125
 msgid "Object name color"
 msgstr ""
 
-#: inc/config.class.php:129
+#: inc/config.class.php:133
 msgid "Button color"
 msgstr ""
 
-#: inc/config.class.php:133
+#: inc/config.class.php:137
 msgid "Secondary button background color"
 msgstr ""
 
-#: inc/config.class.php:137
+#: inc/config.class.php:141
 msgid "Secondary button text color"
 msgstr ""
 
-#: inc/config.class.php:141
+#: inc/config.class.php:145
 msgid "Secondary button box-shadow color"
 msgstr ""
 
-#: inc/config.class.php:145
+#: inc/config.class.php:149
 msgid "Submit button background color"
 msgstr ""
 
-#: inc/config.class.php:149
+#: inc/config.class.php:153
 msgid "Submit button text color"
 msgstr ""
 
-#: inc/config.class.php:153
+#: inc/config.class.php:157
 msgid "Submit button box-shadow color"
 msgstr ""
 
-#: inc/config.class.php:157
+#: inc/config.class.php:161
 msgid "Vsubmit button background color"
 msgstr ""
 
-#: inc/config.class.php:161
+#: inc/config.class.php:165
 msgid "Vsubmit button text color"
 msgstr ""
 
-#: inc/config.class.php:165
+#: inc/config.class.php:169
 msgid "Vsubmit button box-shadow color"
 msgstr ""
 
-#: inc/config.class.php:185
+#: inc/config.class.php:189
 msgid "Import your CSS configuration (%s)"
 msgstr ""
 
-#: inc/config.class.php:190
+#: inc/config.class.php:194
 msgid "Restore colors"
 msgstr ""
