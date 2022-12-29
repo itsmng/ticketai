@@ -17,6 +17,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+#: inc/config.form.php:44
+msgid "<p><b>Settings applied !</b></p><p><i>If you have any error, do the command in the ITSM-NG installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgstr ""
+
+#: inc/config.form.php:51
+msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgstr ""
+
 #: inc/config.class.php:49
 msgid "Whitelabel Settings"
 msgstr ""

@@ -565,23 +565,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
         // Ensure permissions
         chmod(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css", 0664);
         chmod(GLPI_ROOT."/css/whitelabel_login.css", 0664);
-
-        // Clear cache
-        $files = glob(GLPI_ROOT."/files/_cache/*");
-
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-
-        $files = glob(GLPI_ROOT."/files/_tmp/*");
-
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
     }
 
     /**
