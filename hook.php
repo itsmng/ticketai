@@ -43,6 +43,7 @@ function plugin_whitelabel_install() {
             `css_configuration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d',
             `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a',
+            `menu_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
             `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f',
             `menu_onhover_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#d40e33',
             `dropdown_menu_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
@@ -79,6 +80,7 @@ function plugin_whitelabel_install() {
                     `css_configuration`,
                     `primary_color`,
                     `menu_color`,
+                    `menu_text_color`,
                     `menu_active_color`,
                     `menu_onhover_color`,
                     `dropdown_menu_background_color`,
@@ -110,6 +112,7 @@ function plugin_whitelabel_install() {
                     '',        #css_configuration
                     '#7b081d', #primary_color
                     '#ae0c2a', #menu_color
+                    '#ffffff', #menu_text_color
                     '#c70c2f', #menu_active_color
                     '#d40e33', #menu_onhover_color
                     '#ffffff', #dropdown_menu_background_color
@@ -181,6 +184,12 @@ function plugin_whitelabel_install() {
         // Add column menu_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a'";
+        $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column menu_text_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
         $DB->queryOrDie($query, $DB->error());
         }
         
