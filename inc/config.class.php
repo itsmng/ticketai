@@ -335,7 +335,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         }
 
         if($_POST["menu_text_color"]) {
-            $color = (!$reset) ? $_POST["menu_text_color"] : '#ae0c2a';
+            $color = (!$reset) ? $_POST["menu_text_color"] : '#ffffff';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_text_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
