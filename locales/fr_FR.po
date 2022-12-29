@@ -22,7 +22,7 @@ msgid "<p><b>Settings applied !</b></p><p><i>If you have any error, do the comma
 msgstr "<p><b>Paramètres appliqués !</b></p><p><i>Si vous avez des erreurs, éxectuez cette commande dans le dossier d'installation d'ITSM-NG : <b>bin/console system:clear_cache</b></i></p>"
 
 #: inc/config.form.php:51
-msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the root installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the ITSM-NG installation folder : <b>bin/console system:clear_cache</b></i></p>"
 msgstr "<p><b>Paramètres par défaut appliqués !</b></p><p><i>Si vous avez des erreurs, éxectuez cette commande dans le dossier d'installation d'ITSM-NG : <b>bin/console system:clear_cache</b></i></p>"
 
 #: inc/config.class.php:49
