@@ -35,7 +35,7 @@ Don't forget to set Apache rights, and enjoy !
       * Table header background color
       * Table header text color
 
-   *Object colors :
+   * Object colors :
       * Object name color
 
    * Button colors :
