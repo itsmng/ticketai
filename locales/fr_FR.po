@@ -17,6 +17,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+#: inc/config.form.php:44
+msgid "<p><b>Settings applied !</b></p><p><i>If you have any error, do the command in the ITSM-NG installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgstr "<p><b>Paramètres appliqués !</b></p><p><i>Si vous avez des erreurs, exécutez cette commande dans le dossier d'installation d'ITSM-NG : <b>bin/console system:clear_cache</b></i></p>"
+
+#: inc/config.form.php:51
+msgid "<p><b>Default settings applied !</b></p><p><i>If you have any error, do the command in the ITSM-NG installation folder : <b>bin/console system:clear_cache</b></i></p>"
+msgstr "<p><b>Paramètres par défaut appliqués !</b></p><p><i>Si vous avez des erreurs, exécutez cette commande dans le dossier d'installation d'ITSM-NG : <b>bin/console system:clear_cache</b></i></p>"
+
 #: inc/config.class.php:49
 msgid "Whitelabel Settings"
 msgstr "Configuration de Whitelabel"
@@ -25,22 +33,110 @@ msgstr "Configuration de Whitelabel"
 msgid "Primary color"
 msgstr "Couleur principale"
 
-#: inc/config.class.php:57
+#: inc/config.class.php:61
+msgid "Header icons color"
+msgstr "Couleur des icones de l'en-tête"
+
+#: inc/config.class.php:69
 msgid "Menu color"
 msgstr "Couleur du menu"
 
-#: inc/config.class.php:61
+#: inc/config.class.php:73
+msgid "Menu text color"
+msgstr "Couleur du texte du menu"
+
+#: inc/config.class.php:77
 msgid "Active menu color"
 msgstr "Couleur du menu actif"
 
-#: inc/config.class.php:65
+#: inc/config.class.php:81
 msgid "On hover menu color"
 msgstr "Couleur du menu au survol"
 
-#: inc/config.class.php:69
+#: inc/config.class.php:85
+msgid "Dropdown menu background color"
+msgstr "Couleur de fond du menu déroulant"
+
+#: inc/config.class.php:89
+msgid "Dropdown menu text color"
+msgstr "Couleur du texte du menu déroulant"
+
+#: inc/config.class.php:93
+msgid "Dropdown menu text hover color"
+msgstr "Couleur du texte au survol du menu déroulant"
+
+#: inc/config.class.php:101
+msgid "Alert background color"
+msgstr "Couleur du fond des alertes"
+
+#: inc/config.class.php:105
+msgid "Alert text color"
+msgstr "Couleur du contenu des alertes"
+
+#: inc/config.class.php:109
+msgid "Alert header background color"
+msgstr "Couleur du fond du titre des alertes"
+
+#: inc/config.class.php:113
+msgid "Alert header text color"
+msgstr "Couleur du titre des alertes"
+
+#: inc/config.class.php:121
+msgid "Table header background color"
+msgstr "Couleur du fond des en-têtes de tableaux"
+
+#: inc/config.class.php:125
+msgid "Table header text color"
+msgstr "Couleur du texte des en-têtes de tableaux"
+
+#: inc/config.class.php:133
+msgid "Object name color"
+msgstr "Couleur du nom des objets"
+
+#: inc/config.class.php:141
 msgid "Button color"
 msgstr "Couleur des boutons"
 
-#: inc/config.class.php:82
+#: inc/config.class.php:145
+msgid "Secondary button background color"
+msgstr "Couleur de fond des boutons secondaires"
+
+#: inc/config.class.php:149
+msgid "Secondary button text color"
+msgstr "Couleur du texte des boutons secondaires"
+
+#: inc/config.class.php:153
+msgid "Secondary button box-shadow color"
+msgstr "Couleur de l'ombre des boutons secondaires"
+
+#: inc/config.class.php:157
+msgid "Submit button background color"
+msgstr "Couleur de fond des boutons submit"
+
+#: inc/config.class.php:161
+msgid "Submit button text color"
+msgstr "Couleur de texte des boutons submit"
+
+#: inc/config.class.php:165
+msgid "Submit button box-shadow color"
+msgstr "Couleur de l'ombre des boutons submit"
+
+#: inc/config.class.php:169
+msgid "Vsubmit button background color"
+msgstr "Couleur de fond des boutons vsubmit"
+
+#: inc/config.class.php:173
+msgid "Vsubmit button text color"
+msgstr "Couleur de texte des boutons vsubmit"
+
+#: inc/config.class.php:177
+msgid "Vsubmit button box-shadow color"
+msgstr "Couleur de l'ombre des boutons vsubmit"
+
+#: inc/config.class.php:197
+msgid "Import your CSS configuration (%s)"
+msgstr "Importez votre configuration CSS (%s)"
+
+#: inc/config.class.php:202
 msgid "Restore colors"
 msgstr "Restaurer les couleurs"

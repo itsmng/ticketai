@@ -14,6 +14,16 @@ $break_tablets: 1300px;
   background-size: 100% !important;
 }
 
+#header #c_preference {
+  ul {
+    li {
+      a {
+        color: %header_icons_color% !important;
+      }
+    }
+  }
+}
+
 #firstboxlogin {
   background-color: %primary_color% !important;
 }
@@ -68,13 +78,17 @@ ul {
   &#menu {
     a {
       &.itemP, &.itemP1 {
-        color: #FFF !important;
+        color: %menu_text_color% !important;
       }
     }
 
     > li.active {
       background-color: %menu_active_color% !important;
     }
+  }
+
+  &.ssmenu {
+    background-color: %dropdown_menu_background_color% !important;
   }
 
   &.ssmenu li.active {
@@ -89,17 +103,17 @@ ul {
     ul li a {
       &:hover {
         background: %menu_color% !important;
-        color: #fff !important;
+        color: %dropdown_menu_text_hover_color% !important;
       }
 
-      color: #131425 !important;
+      color: %dropdown_menu_text_color% !important;
     }
   }
 }
 
 div.progress {
   .progress-fg {
-    background-color: %menu_active_color%!important;
+    background-color: %menu_active_color% !important;
   }
 }
 
@@ -209,8 +223,33 @@ ul#onglet span.fake {
   }
 }
 
+.ui-widget-content.message_after_redirect {
+  background: %alert_background_color% !important;
+}
+.message_after_redirect.info_msg div.ui-widget-header {
+  background: %alert_header_background_color%;
+  background-color: %alert_header_background_color%;
+  border-color: %alert_header_background_color%;
+  span {
+    color: %alert_header_text_color%;
+  }
+}
+
+
+.ui-widget-content {
+  color: %alert_text_color% !important;
+}
+
 .tab_cadre th, .tab_cadre_fixe th, .tab_cadre_fixehov th, .tab_cadrehov th, h2.header {
-  color: #000 !important;
+  background-color: %table_header_background_color% !important;
+  color: %table_header_text_color% !important;
+  a {
+    color: %table_header_text_color% !important;
+  }
+}
+
+.tab_cadre td a, .tab_cadre_fixe td a, .tab_cadre_fixehov td a, .tab_cadrehov td a, h2.header {
+  color: %object_name_color% !important;
 }
 
 .order_DESC:before {
@@ -224,9 +263,18 @@ ul#onglet span.fake {
 @media screen and (min-width: $break_tablets) {
   .layout_vsplit {
     .ui-tabs-panel .tab_cadre_fixehov th {
-      background-color: #E6E6E6;
+      background-color: #E6E6E6 !important;
     }
   }
+}
+
+.secondary {
+  background-color: %secondary_button_background_color% !important;
+  color: %secondary_button_text_color% !important;
+}
+
+.secondary:hover {
+  box-shadow: 0px 1px 1px %secondary_button_box_shadow_color% !important;
 }
 
 input {
@@ -235,12 +283,22 @@ input {
   }
 
   &.submit {
-    background-color: %button_color% !important;
+    background-color: %submit_button_background_color% !important;
+    color: %submit_button_text_color% !important;
+  }
+  
+  &.submit:hover {
+    box-shadow: 0px 1px 1px %submit_button_box_shadow_color% !important;
   }
 }
 
 .vsubmit {
-  background-color: %button_color% !important;
+  background-color: %vsubmit_button_background_color% !important;
+  color: %vsubmit_button_text_color% !important;
+}
+
+.vsubmit:hover {
+  box-shadow: 0px 1px 1px %vsubmit_button_box_shadow_color% !important;
 }
 
 .breadcrumb_item {

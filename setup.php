@@ -42,13 +42,16 @@ function plugin_init_whitelabel() {
         $PLUGIN_HOOKS['config_page']['whitelabel'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['add_css']['whitelabel'] = "uploads/whitelabel.css";
+    $PLUGIN_HOOKS['add_css']['whitelabel'] = [
+        "uploads/whitelabel.css",
+        "uploads/css_configuration.css",
+    ];
 }
 
 function plugin_version_whitelabel() {
     return array(
         'name'           => "White Label",
-        'version'        => '2.0.0',
+        'version'        => '2.1.0',
         'author'         => 'ITSM Dev Team, Théodore Clément',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/itsmng/whitelabel',
