@@ -42,6 +42,7 @@ function plugin_whitelabel_install() {
             `logo_central` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `css_configuration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d',
+            `header_icons_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
             `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a',
             `menu_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff',
             `menu_active_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#c70c2f',
@@ -79,6 +80,7 @@ function plugin_whitelabel_install() {
                     `logo_central`,
                     `css_configuration`,
                     `primary_color`,
+                    `header_icons_color`,
                     `menu_color`,
                     `menu_text_color`,
                     `menu_active_color`,
@@ -111,6 +113,7 @@ function plugin_whitelabel_install() {
                     '',        #logo_central
                     '',        #css_configuration
                     '#7b081d', #primary_color
+                    '#ffffff', #header_icons_color
                     '#ae0c2a', #menu_color
                     '#ffffff', #menu_text_color
                     '#c70c2f', #menu_active_color
@@ -179,6 +182,12 @@ function plugin_whitelabel_install() {
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'primary_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` CHANGE COLUMN `brand_color` `primary_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#7b081d'";
             $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column header_icons_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'header_icons_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `header_icons_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
+        $DB->queryOrDie($query, $DB->error());
         }
 
         // Add column menu_color
