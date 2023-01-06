@@ -58,6 +58,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
         echo "<hr>";
         $this->endField();
 
+        $this->startField(__("Header icons color", 'whitelabel'));
+        Html::showColorField("header_icons_color", ["value" => $colors["header_icons_color"]]);
+        $this->endField();
+
+        $this->startField("<hr>");
+        echo "<hr>";
+        $this->endField();
+
         $this->startField(__("Menu color", 'whitelabel'));
         Html::showColorField("menu_color", ["value" => $colors["menu_color"]]);
         $this->endField();
@@ -233,6 +241,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         // Default colors
         $colors = [
             'primary_color' => '#7b081d',
+            'header_icons_color' => "#ffffff",
             'menu_color' => '#ae0c2a',
             'menu_text_color' => '#ffffff',
             'menu_active_color' => '#c70c2f',
@@ -265,6 +274,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         if ($DB->numrows($result) > 0) {
             $colors = [
                 'primary_color' => $DB->result($result, 0, 'primary_color'),
+                'header_icons_color' => $DB->result($result, 0, 'header_icons_color'),
                 'menu_color' => $DB->result($result, 0, 'menu_color'),
                 'menu_text_color' => $DB->result($result, 0, 'menu_text_color'),
                 'menu_active_color' => $DB->result($result, 0, 'menu_active_color'),
@@ -327,6 +337,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
         if($_POST["primary_color"]) {
             $color = (!$reset) ? $_POST["primary_color"] : '#7b081d';
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `primary_color` = '$color' WHERE `id` = 1", $DB->error());
+        }
+
+        if($_POST["header_icons_color"]) {
+            $color = (!$reset) ? $_POST["header_icons_color"] : '#ffffff';
+            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `header_icons_color` = '$color' WHERE `id` = 1", $DB->error());
         }
 
         if($_POST["menu_color"]) {
@@ -449,7 +464,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
         }
         
-        $this->handleFile("favicon", array("image/x-icon"));
+        $this->handleFile("favicon", array("image/x-icon", "image/vnd.microsoft.icon"));
         $this->handleFile("logo_central", array("image/png"));
         $this->handleFile("css_configuration", array("text/css"));
 
@@ -474,6 +489,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
 
         $primaryColor = (!$reset) ? $row["primary_color"] : '#7b081d';
+        $headerIconsColor = (!$reset) ? $row["header_icons_color"] : '#ffffff';
         $menuColor = (!$reset) ? $row["menu_color"] : '#ae0c2a';
         $menuTextColor = (!$reset) ? $row["menu_text_color"] : '#ffffff';
         $menuActiveColor = (!$reset) ? $row["menu_active_color"] : '#c70c2f';
@@ -510,6 +526,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
         $map = [
             "%primary_color%" => $primaryColor,
+            "%header_icons_color%" => $headerIconsColor,
             "%menu_color%" => $menuColor,
             "%menu_text_color%" => $menuTextColor,
             "%menu_active_color%" => $menuActiveColor,
