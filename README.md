@@ -13,10 +13,41 @@ Don't forget to set Apache rights, and enjoy !
 ## Features
 
  * Set UI's color : 
-    * Primary color
-    * Menu color
-    * Active menu color
-    * On hover menu color
-    * Button color
- * Change logo in header and login page
- * Change favicon
+   * Header colors :
+      * Primary color
+      * Header icons color
+      * Menu colors
+         * Menu color
+         * Menu text color
+         * Active menu color
+         * On hover menu color
+         * Dropdown menu background color
+         * Dropdown menu text color
+         * Dropdown menu text hover color
+
+   * Alert colors :
+      * Alert background color
+      * Alert text color
+      * Alert header background color
+      * Alert header text color
+
+   * Table colors :
+      * Table header background color
+      * Table header text color
+
+   * Object colors :
+      * Object name color
+
+   * Button colors :
+      * Button color
+      * Secondary button background color
+      * Secondary button text color
+      * Secondary button box-shadow color
+      * Submit button background color
+      * Submit button text color
+      * Submit button box-shadow color
+      * Vsubmit button background color
+      * Vsubmit button text color
+      * Vsubmit button box-shadow color
+   * Change logo in header and login page
+   * Change favicon
