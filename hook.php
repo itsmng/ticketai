@@ -187,19 +187,19 @@ function plugin_whitelabel_install() {
         // Add column header_icons_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'header_icons_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `header_icons_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
-        $DB->queryOrDie($query, $DB->error());
+            $DB->queryOrDie($query, $DB->error());
         }
 
         // Add column menu_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ae0c2a'";
-        $DB->queryOrDie($query, $DB->error());
+            $DB->queryOrDie($query, $DB->error());
         }
 
         // Add column menu_text_color
-        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_color')) {
-            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
-        $DB->queryOrDie($query, $DB->error());
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'menu_text_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `menu_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#ffffff'";
+            $DB->queryOrDie($query, $DB->error());
         }
         
         // Add column menu_active_color
@@ -253,6 +253,12 @@ function plugin_whitelabel_install() {
         // Add column alert_header_text_color
         if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'alert_header_text_color')) {
             $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `alert_header_text_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f8f8f8'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+
+        // Add column table_header_background_color
+        if(!$DB->fieldExists('glpi_plugin_whitelabel_brand', 'table_header_background_color')) {
+            $query = "ALTER TABLE `glpi_plugin_whitelabel_brand` ADD COLUMN `table_header_background_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#f8f8f8'";
             $DB->queryOrDie($query, $DB->error());
         }
 
