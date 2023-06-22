@@ -49,154 +49,79 @@ class PluginWhitelabelConfig extends CommonDBTM {
         echo "<tr><th colspan='2'>".__("Whitelabel Settings", 'whitelabel')."</th></tr>";
         
         $colors = $this->getThemeColors();
+        //define all the form's fields
+        $fields=array("primary_color"=>array("TYPE"=>"color","LBL"=>"Primary color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "header_icons_color"=>array("TYPE"=>"color","LBL"=>"Header icons color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "menu_color"=>array("TYPE"=>"color","LBL"=>"Menu color"),
+                        "menu_text_color"=>array("TYPE"=>"color","LBL"=>"Menu text color"),
+                        "menu_active_color"=>array("TYPE"=>"color","LBL"=>"Active menu color"),
+                        "menu_onhover_color"=>array("TYPE"=>"color","LBL"=>"On hover menu color"),
+                        "dropdown_menu_background_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu background color"),
+                        "dropdown_menu_text_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text color"),
+                        "dropdown_menu_text_hover_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text hover color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "alert_background_color"=>array("TYPE"=>"color","LBL"=>"Alert background color"),
+                        "alert_text_color"=>array("TYPE"=>"color","LBL"=>"Alert text color"),
+                        "alert_header_background_color"=>array("TYPE"=>"color","LBL"=>"Alert header background color"),
+                        "alert_header_text_color"=>array("TYPE"=>"color","LBL"=>"Alert header text color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "table_header_background_color"=>array("TYPE"=>"color","LBL"=>"Table header background color"),
+                        "table_header_text_color"=>array("TYPE"=>"color","LBL"=>"Table header text color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "object_name_color"=>array("TYPE"=>"color","LBL"=>"Object name color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "button_color"=>array("TYPE"=>"color","LBL"=>"Button color"),
+                        "secondary_button_background_color"=>array("TYPE"=>"color","LBL"=>"Secondary button background color"),
+                        "secondary_button_text_color"=>array("TYPE"=>"color","LBL"=>"Secondary button text color"),
+                        "secondary_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Secondary button box-shadow color"),
+                        "submit_button_background_color"=>array("TYPE"=>"color","LBL"=>"Submit button background color"),
+                        "submit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Submit button text color"),
+                        "submit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Submit button box-shadow color"),
+                        "vsubmit_button_background_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button background color"),
+                        "vsubmit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button text color"),
+                        "vsubmit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button box-shadow color"),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "favicon"=>array("TYPE"=>"file","LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize())),
+                        "logo_central"=>array("TYPE"=>"file","LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize())),
+                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "css_configuration"=>array("TYPE"=>"file","LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()))
+                        );
+        //works on the fields
+        foreach ($fields as $k=>$v){
+            //translate the lbl
+            if ($v['TYPE'] == "color")
+                $fields_update[$k]=array("LBL"=>__($v['LBL'], 'whitelabel'),"VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"]);
+            //show <hr>
+            elseif ($v['TYPE'] == "hr")
+                $fields_update[$k]=array("LBL"=>$v['LBL'],"VALUE"=>"","TYPE"=>$v["TYPE"]);
+            //file fields
+            elseif ($v['TYPE'] == "file"){
+                $sql_whitelabel_band = new table_glpi_plugin_whitelabel_brand();
+                $value = $sql_whitelabel_band->select($k);
+                if ($value[$k] == "")
+                    $fields_update[$k]=array("LBL"=>$v['LBL'],"VALUE"=>"","TYPE"=>$v["TYPE"]);
+                else
+                    $fields_update[$k]=array("LBL"=>$v['LBL'],
+                    "VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],
+                    "TYPE"=>"IMG","LBL_A"=>__('Clear'),"ALT"=>$value[$k]);
+            }
+        }
 
-        $this->startField(__("Primary color", 'whitelabel'));
-        Html::showColorField("primary_color", ["value" => $colors["primary_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Header icons color", 'whitelabel'));
-        Html::showColorField("header_icons_color", ["value" => $colors["header_icons_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Menu color", 'whitelabel'));
-        Html::showColorField("menu_color", ["value" => $colors["menu_color"]]);
-        $this->endField();
-
-        $this->startField(__("Menu text color", 'whitelabel'));
-        Html::showColorField("menu_text_color", ["value" => $colors["menu_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Active menu color", 'whitelabel'));
-        Html::showColorField("menu_active_color", ["value" => $colors["menu_active_color"]]);
-        $this->endField();
-
-        $this->startField(__("On hover menu color", 'whitelabel'));
-        Html::showColorField("menu_onhover_color", ["value" => $colors["menu_onhover_color"]]);
-        $this->endField();
-
-        $this->startField(__("Dropdown menu background color", 'whitelabel'));
-        Html::showColorField("dropdown_menu_background_color", ["value" => $colors["dropdown_menu_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Dropdown menu text color", 'whitelabel'));
-        Html::showColorField("dropdown_menu_text_color", ["value" => $colors["dropdown_menu_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Dropdown menu text hover color", 'whitelabel'));
-        Html::showColorField("dropdown_menu_text_hover_color", ["value" => $colors["dropdown_menu_text_hover_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Alert background color", 'whitelabel'));
-        Html::showColorField("alert_background_color", ["value" => $colors["alert_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Alert text color", 'whitelabel'));
-        Html::showColorField("alert_text_color", ["value" => $colors["alert_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Alert header background color", 'whitelabel'));
-        Html::showColorField("alert_header_background_color", ["value" => $colors["alert_header_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Alert header text color", 'whitelabel'));
-        Html::showColorField("alert_header_text_color", ["value" => $colors["alert_header_text_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Table header background color", 'whitelabel'));
-        Html::showColorField("table_header_background_color", ["value" => $colors["table_header_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Table header text color", 'whitelabel'));
-        Html::showColorField("table_header_text_color", ["value" => $colors["table_header_text_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Object name color", 'whitelabel'));
-        Html::showColorField("object_name_color", ["value" => $colors["object_name_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(__("Button color", 'whitelabel'));
-        Html::showColorField("button_color", ["value" => $colors["button_color"]]);
-        $this->endField();
-
-        $this->startField(__("Secondary button background color", 'whitelabel'));
-        Html::showColorField("secondary_button_background_color", ["value" => $colors["secondary_button_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Secondary button text color", 'whitelabel'));
-        Html::showColorField("secondary_button_text_color", ["value" => $colors["secondary_button_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Secondary button box-shadow color", 'whitelabel'));
-        Html::showColorField("secondary_button_box_shadow_color", ["value" => $colors["secondary_button_box_shadow_color"]]);
-        $this->endField();
-
-        $this->startField(__("Submit button background color", 'whitelabel'));
-        Html::showColorField("submit_button_background_color", ["value" => $colors["submit_button_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Submit button text color", 'whitelabel'));
-        Html::showColorField("submit_button_text_color", ["value" => $colors["submit_button_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Submit button box-shadow color", 'whitelabel'));
-        Html::showColorField("submit_button_box_shadow_color", ["value" => $colors["submit_button_box_shadow_color"]]);
-        $this->endField();
-
-        $this->startField(__("Vsubmit button background color", 'whitelabel'));
-        Html::showColorField("vsubmit_button_background_color", ["value" => $colors["vsubmit_button_background_color"]]);
-        $this->endField();
-
-        $this->startField(__("Vsubmit button text color", 'whitelabel'));
-        Html::showColorField("vsubmit_button_text_color", ["value" => $colors["vsubmit_button_text_color"]]);
-        $this->endField();
-
-        $this->startField(__("Vsubmit button box-shadow color", 'whitelabel'));
-        Html::showColorField("vsubmit_button_box_shadow_color", ["value" => $colors["vsubmit_button_box_shadow_color"]]);
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(sprintf(__('Favicon (%s)'), Document::getMaxUploadSize()));
-        $this->showImageUploadField("favicon");
-        $this->endField();
-
-        $this->startField(sprintf(__('Logo (%s)'), Document::getMaxUploadSize()));
-        $this->showImageUploadField("logo_central");
-        $this->endField();
-
-        $this->startField("<hr>");
-        echo "<hr>";
-        $this->endField();
-
-        $this->startField(sprintf(__("Import your CSS configuration (%s)", 'whitelabel'), Document::getMaxUploadSize()));
-        $this->showImageUploadField("css_configuration");
-        $this->endField();
+        //show fields
+        foreach ($fields_update as $k=>$v){
+            $this->startField($v['LBL']);
+            if ($v['TYPE'] == "color")
+                Html::showColorField($k, ["value" => $v['VALUE']]);
+            elseif ($v['TYPE'] == "hr")
+                echo "<hr>";
+            elseif ($v['TYPE'] == "file")
+                $this->showImageUploadField($k);
+            elseif ($v['TYPE'] == "IMG")
+                $this->showImageUploadField($k,$v);
+            $this->endField();
+        }
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";
         echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore colors', 'whitelabel')."'>";
@@ -208,23 +133,19 @@ class PluginWhitelabelConfig extends CommonDBTM {
     /**
      * Displays image upload field
      *
-     * @param string Field name
+     * @param string Field name and $values when image exist
      *
      * @return void
      */
-    private function showImageUploadField(string $fieldName) {
-        global $DB;
-        $path = Plugin::getPhpDir("whitelabel", false)."/uploads/";
-        $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
-
-        if (!empty($row[$fieldName])) {
-            echo Html::image($path.$row[$fieldName], [
+    private function showImageUploadField(string $fieldName, array $values=array()) {
+        if ($values != array()) {           
+            echo Html::image($values["VALUE"], [
                 'style' => 'max-width: 100px; max-height: 50px;',
                 'class' => 'picture_square'
             ]);
             echo "&nbsp;&nbsp;";
             echo "<input type='checkbox' name='_blank_$fieldName' value='No'/>";
-            echo "&nbsp;".__('Clear');
+            echo "&nbsp;".$values["LBL_A"];
         } else {
             echo "<input name='$fieldName' type='file' />";
         }
