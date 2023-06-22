@@ -109,6 +109,88 @@ class table_glpi_plugin_whitelabel_brand
 
 
 }
+
+/**
+ * 
+ * define class for default value
+ * 
+ * 
+ */
+class plugin_whitelabel_const
+{
+    /**
+     * Define default values
+     */
+    const COLORS_DEFAULT = [
+        'primary_color' => '#7b081d',
+        'header_icons_color' => "#ffffff",
+        'menu_color' => '#ae0c2a',
+        'menu_text_color' => '#ffffff',
+        'menu_active_color' => '#c70c2f',
+        'menu_onhover_color' => '#d40e33',
+        'dropdown_menu_background_color' => '#ffffff',
+        'dropdown_menu_text_color' => '#131425',
+        'dropdown_menu_text_hover_color' => '#ffffff',
+        'alert_background_color' => '#dfdfdf',
+        'alert_text_color' => '#333333',
+        'alert_header_background_color' => '#a9a9a9',
+        'alert_header_text_color' => '#ffffff',
+        'table_header_background_color' => "#f8f8f8",
+        'table_header_text_color' => "#ae0c2a",
+        'object_name_color' => "#ae0c2a",
+        'button_color' => '#f5b7b1',
+        'secondary_button_background_color' => "#e6e6e6",
+        'secondary_button_text_color' => "#5f5f5f",
+        'secondary_button_box_shadow_color' => "#8f5a0a",
+        'submit_button_background_color' => "#f5b7b1",
+        'submit_button_text_color' => "#8f5a0a",
+        'submit_button_box_shadow_color' => "#8f5a0a",
+        'vsubmit_button_background_color' => "#f5b7b1",
+        'vsubmit_button_text_color' => "#8f5a0a",
+        'vsubmit_button_box_shadow_color' => "#8f5a0a"
+    ];
+    
+    function showConstant() {
+        print_r(self::COLORS_DEFAULT);
+      }
+    
+    function value_key($key){
+        if (isset(COLORS_DEFAULT[$key]))
+            return self::COLORS_DEFAULT[$key];
+        else
+            return false;
+    }
+    function all_value(){
+        return self::COLORS_DEFAULT;
+    }
+    function all_value_split(){
+        foreach (self::COLORS_DEFAULT as $k=>$v){
+            $data[]=$k;
+        }
+        return $data;
+    }
+    /**
+     * insert default values on database
+     */
+    function insert_default_config(){
+        $insert = new table_glpi_plugin_whitelabel_brand();
+        $default_values=self::COLORS_DEFAULT;
+        $default_values['id']=1;
+        $default_values['favicon']='';
+        $default_values['logo_central']='';
+        $default_values['css_configuration']='';
+        // Insert first entry with default itsmng colors
+        $insert -> insert($default_values);
+    }
+
+
+}
+
+
+
+
+
+
 function plugin_init_whitelabel() {
     global $PLUGIN_HOOKS;
 
