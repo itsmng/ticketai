@@ -30,6 +30,85 @@
  * ---------------------------------------------------------------------
  */
 
+/**
+ * 
+ * New class for action on table_glpi_plugin_whitelabel_band 
+ * 
+ */
+
+class table_glpi_plugin_whitelabel_brand
+{
+    /**
+     * get all column and info on this table
+     * return array
+     */
+    function desc(){
+        global $DB;
+        $query="DESC glpi_plugin_whitelabel_brand";
+        $result = $DB->query($query);
+        if ($DB->numrows($result) > 0) {
+             while ($row=$result->fetch_assoc()){
+                foreach ($row as $k=>$v){
+                    $fields[$k][$v]=$v;
+                }
+            }
+        }
+        return $fields;
+    }
+    /**
+     * Update fields on table
+     */
+    function update($data,$id=1){
+        global $DB;
+        if (is_array($data)){
+            $query = "UPDATE glpi_plugin_whitelabel_brand SET ";
+            foreach ($data as $k=>$v){
+                $query .= $k." = '".$v."',";
+            }
+            $query = substr($query,0,-1);
+            $query.= " WHERE id = '".$id."'";
+            $DB->queryOrDie($query, $DB->error());
+        }
+    }
+
+    /**
+     * delete line
+     */
+    function delete($id=1){
+        global $DB;
+        $query = "DELETE FROM glpi_plugin_whitelabel_brand WHERE id='".$id."'";
+        $DB->queryOrDie($query, $DB->error());
+    }
+
+    /**
+     * insert data (array)
+     */
+    function insert($data){
+        global $DB;
+        $fields=self::desc();
+        foreach ($data as $k=>$v){
+            if (isset($fields['Field'][$k])){
+               $fields2update[] = $k;
+               $values2update[] = "'".$v."'";
+            }
+        }
+        // Insert first entry with default itsmng colors
+        $query = "INSERT INTO glpi_plugin_whitelabel_brand (".implode(',',$fields2update).")     
+            VALUES (".implode(',',$values2update).")";
+         $DB->queryOrDie($query, $DB->error());
+    }
+    /**
+     * select
+     */
+    function select($key='*',$id=1){
+        global $DB;
+        $query="SELECT ".(is_array($key)?implode(',',$key):$key)." FROM glpi_plugin_whitelabel_brand WHERE id = '".$id."'";
+        $row = $DB->queryOrDie($query, $DB->error())->fetch_assoc();
+        return $row;
+    }
+
+
+}
 function plugin_init_whitelabel() {
     global $PLUGIN_HOOKS;
 
