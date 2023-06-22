@@ -202,137 +202,30 @@ class PluginWhitelabelConfig extends CommonDBTM {
     public function handleWhitelabel($reset = false) {
         global $DB;
 
-        // Update theme colors
-        if($_POST["primary_color"]) {
-            $color = (!$reset) ? $_POST["primary_color"] : '#7b081d';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `primary_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["header_icons_color"]) {
-            $color = (!$reset) ? $_POST["header_icons_color"] : '#ffffff';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `header_icons_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["menu_color"]) {
-            $color = (!$reset) ? $_POST["menu_color"] : '#ae0c2a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["menu_text_color"]) {
-            $color = (!$reset) ? $_POST["menu_text_color"] : '#ffffff';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["menu_active_color"]) {
-            $color = (!$reset) ? $_POST["menu_active_color"] : '#c70c2f';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_active_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["menu_onhover_color"]) {
-            $color = (!$reset) ? $_POST["menu_onhover_color"] : '#d40e33';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `menu_onhover_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["dropdown_menu_background_color"]) {
-            $color = (!$reset) ? $_POST["dropdown_menu_background_color"] : '#ffffff';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["dropdown_menu_text_color"]) {
-            $color = (!$reset) ? $_POST["dropdown_menu_text_color"] : '#131425';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["dropdown_menu_text_hover_color"]) {
-            $color = (!$reset) ? $_POST["dropdown_menu_text_hover_color"] : '#131425';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `dropdown_menu_text_hover_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["alert_background_color"]) {
-            $color = (!$reset) ? $_POST["alert_background_color"] : '#dfdfdf';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["alert_text_color"]) {
-            $color = (!$reset) ? $_POST["alert_text_color"] : '#333333';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["alert_header_background_color"]) {
-            $color = (!$reset) ? $_POST["alert_header_background_color"] : '#a9a9a9';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_header_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["alert_header_text_color"]) {
-            $color = (!$reset) ? $_POST["alert_header_text_color"] : '#131425';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `alert_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["table_header_background_color"]) {
-            $color = (!$reset) ? $_POST["table_header_background_color"] : '#f8f8f8';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["table_header_text_color"]) {
-            $color = (!$reset) ? $_POST["table_header_text_color"] : '#ae0c2a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `table_header_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["object_name_color"]) {
-            $color = (!$reset) ? $_POST["object_name_color"] : '#ae0c2a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `object_name_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["button_color"]) {
-            $color = (!$reset) ? $_POST["button_color"] : '#f5b7b1';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `button_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["secondary_button_background_color"]) {
-            $color = (!$reset) ? $_POST["secondary_button_background_color"] : '#e6e6e6';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["secondary_button_text_color"]) {
-            $color = (!$reset) ? $_POST["secondary_button_text_color"] : '#5f5f5f';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["secondary_button_box_shadow_color"]) {
-            $color = (!$reset) ? $_POST["secondary_button_box_shadow_color"] : '#999999';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `secondary_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["submit_button_background_color"]) {
-            $color = (!$reset) ? $_POST["submit_button_background_color"] : '#f5b7b1';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["submit_button_text_color"]) {
-            $color = (!$reset) ? $_POST["submit_button_text_color"] : '#8f5a0a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["submit_button_box_shadow_color"]) {
-            $color = (!$reset) ? $_POST["submit_button_box_shadow_color"] : '#999999';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `submit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["vsubmit_button_background_color"]) {
-            $color = (!$reset) ? $_POST["vsubmit_button_background_color"] : '#f5b7b1';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_background_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["vsubmit_button_text_color"]) {
-            $color = (!$reset) ? $_POST["vsubmit_button_text_color"] : '#8f5a0a';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_text_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-
-        if($_POST["vsubmit_button_box_shadow_color"]) {
-            $color = (!$reset) ? $_POST["vsubmit_button_box_shadow_color"] : '#999999';
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET `vsubmit_button_box_shadow_color` = '$color' WHERE `id` = 1", $DB->error());
-        }
-        
+           //use class to colors values
+           $default_value_css = new plugin_whitelabel_const();
+           //use class to use table
+           $sql = new table_glpi_plugin_whitelabel_brand();
+           //if reset
+           if ($reset){
+               //delete values
+               $sql -> delete();
+               //insert default values
+               $default_value_css -> insert_default_config();
+           }else{
+               //get all fields of color
+               $fields = $default_value_css -> all_value();
+               foreach($fields as $k=>$v){
+                   //if post value exist
+                   if (isset($_POST[$k])){
+                       //put it on array
+                       $data[$k]=$_POST[$k];
+                   }
+               }
+               //update on database color fields values
+               if (isset($data))
+                   $sql -> update($data);
+           }
         $this->handleFile("favicon", array("image/x-icon", "image/vnd.microsoft.icon"));
         $this->handleFile("logo_central", array("image/png"));
         $this->handleFile("css_configuration", array("text/css"));
@@ -353,36 +246,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
      * Generate and install new CSS sheets w/ styles mapped
      */
     public function refreshCss($reset = false) {
-        global $DB;
 
-        $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
-
-        $primaryColor = (!$reset) ? $row["primary_color"] : '#7b081d';
-        $headerIconsColor = (!$reset) ? $row["header_icons_color"] : '#ffffff';
-        $menuColor = (!$reset) ? $row["menu_color"] : '#ae0c2a';
-        $menuTextColor = (!$reset) ? $row["menu_text_color"] : '#ffffff';
-        $menuActiveColor = (!$reset) ? $row["menu_active_color"] : '#c70c2f';
-        $menuOnHoverColor = (!$reset) ? $row["menu_onhover_color"] : '#d40e33';
-        $dropdownMenuBackgroundColor = (!$reset) ? $row["dropdown_menu_background_color"] : '#ffffff';
-        $dropdownMenuTextColor = (!$reset) ? $row["dropdown_menu_text_color"] : '#131425';
-        $dropdownMenuTextHoverColor = (!$reset) ? $row["dropdown_menu_text_hover_color"] : '#ffffff';
-        $alertBackgroundColor = (!$reset) ? $row["alert_background_color"] : '#dfdfdf';
-        $alertTextColor = (!$reset) ? $row["alert_text_color"] : '#333333';
-        $alertHeaderBackgroundColor = (!$reset) ? $row["alert_header_background_color"] : '#a9a9a9';
-        $alertHeaderTextColor = (!$reset) ? $row["alert_header_text_color"] : '#ffffff';
-        $tableHeaderBackgroundColor = (!$reset) ? $row["table_header_background_color"] : '#f8f8f8';
-        $tableHeaderTextColor = (!$reset) ? $row["table_header_text_color"] : '#ae0c2a';
-        $objectNameColor = (!$reset) ? $row["object_name_color"] : '#ae0c2a';
-        $buttonColor = (!$reset) ? $row["button_color"] : '#f5b7b1';
-        $secondaryButtonBackgroundColor = (!$reset) ? $row["secondary_button_background_color"] : '#e6e6e6';
-        $secondaryButtonTextColor = (!$reset) ? $row["secondary_button_text_color"] : '#5f5f5f';
-        $secondaryButtonBoxShadowColor = (!$reset) ? $row["secondary_button_box_shadow_color"] : '#999999';
-        $submitButtonBackgroundColor = (!$reset) ? $row["submit_button_background_color"] : '#f5b7b1';
-        $submitButtonTextColor = (!$reset) ? $row["submit_button_text_color"] : '#8f5a0a';
-        $submitButtonBoxShadowColor = (!$reset) ? $row["submit_button_box_shadow_color"] : '#999999';
-        $vsubmitButtonBackgroundColor = (!$reset) ? $row["vsubmit_button_background_color"] : '#f5b7b1';
-        $vsubmitButtonTextColor = (!$reset) ? $row["vsubmit_button_text_color"] : '#8f5a0a';
-        $vsubmitButtonBoxShadowColor = (!$reset) ? $row["vsubmit_button_box_shadow_color"] : '#999999';
+        $default_value_css = new plugin_whitelabel_const();        
+        $css_default_values=$default_value_css -> all_value();
+        $sql = new table_glpi_plugin_whitelabel_brand();
+        if ($reset)
+            $row=$css_default_values;
+        else
+            $row=$sql->select($default_value_css -> all_value_split());
 
         list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
         copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
@@ -392,38 +263,11 @@ class PluginWhitelabelConfig extends CommonDBTM {
             list($logoW, $logoH) = getimagesize(Plugin::getPhpDir("whitelabel", true)."/uploads/logo_central.png");
             copy(Plugin::getPhpDir("whitelabel")."/uploads/".$row["logo_central"], GLPI_ROOT."/pics/login_logo_whitelabel.png");
         }
-
-        $map = [
-            "%primary_color%" => $primaryColor,
-            "%header_icons_color%" => $headerIconsColor,
-            "%menu_color%" => $menuColor,
-            "%menu_text_color%" => $menuTextColor,
-            "%menu_active_color%" => $menuActiveColor,
-            "%menu_onhover_color%" => $menuOnHoverColor,
-            "%dropdown_menu_background_color%" => $dropdownMenuBackgroundColor,
-            "%dropdown_menu_text_color%" => $dropdownMenuTextColor,
-            "%dropdown_menu_text_hover_color%" => $dropdownMenuTextHoverColor,
-            "%alert_background_color%" => $alertBackgroundColor,
-            "%alert_text_color%" => $alertTextColor,
-            "%alert_header_background_color%" => $alertHeaderBackgroundColor,
-            "%alert_header_text_color%" => $alertHeaderTextColor,
-            "%table_header_background_color%" => $tableHeaderBackgroundColor,
-            "%table_header_text_color%" => $tableHeaderTextColor,
-            "%object_name_color%" => $objectNameColor,
-            "%button_color%" => $buttonColor,
-            "%secondary_button_background_color%" => $secondaryButtonBackgroundColor,
-            "%secondary_button_text_color%" => $secondaryButtonTextColor,
-            "%secondary_button_box_shadow_color%" => $secondaryButtonBoxShadowColor,
-            "%submit_button_background_color%" => $submitButtonBackgroundColor,
-            "%submit_button_text_color%" => $submitButtonTextColor,
-            "%submit_button_box_shadow_color%" => $submitButtonBoxShadowColor,
-            "%vsubmit_button_background_color%" => $vsubmitButtonBackgroundColor,
-            "%vsubmit_button_text_color%" => $vsubmitButtonTextColor,
-            "%vsubmit_button_box_shadow_color%" => $vsubmitButtonBoxShadowColor,
-            "%logo%" => $logo,
-            "%logo_width%" => ceil(55 * ($logoW / $logoH))
-        ];
-
+        foreach ($row as $k=>$v){
+            $map["%".$k."%"] = $v;
+        }
+        $map["%logo%"] = $logo;
+        $map["%logo_width%"] = ceil(55 * ($logoW / $logoH));
         $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/template.scss");
         $login_template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/login_template.scss");
 
