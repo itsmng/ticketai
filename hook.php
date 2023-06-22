@@ -35,6 +35,7 @@ function plugin_whitelabel_install() {
     global $DB;
 
     $migration = new Migration(101);
+    //get default values for fields 
     $default_value_css = new plugin_whitelabel_const();
     if (!$DB->tableExists("glpi_plugin_whitelabel_brand")) {        
         $query = "CREATE TABLE glpi_plugin_whitelabel_brand (

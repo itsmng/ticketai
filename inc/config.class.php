@@ -236,73 +236,21 @@ class PluginWhitelabelConfig extends CommonDBTM {
      * @return string
      */
     private function getThemeColors() {
-        global $DB;
-
-        // Default colors
-        $colors = [
-            'primary_color' => '#7b081d',
-            'header_icons_color' => "#ffffff",
-            'menu_color' => '#ae0c2a',
-            'menu_text_color' => '#ffffff',
-            'menu_active_color' => '#c70c2f',
-            'menu_onhover_color' => '#d40e33',
-            'dropdown_menu_background_color' => '#ffffff',
-            'dropdown_menu_text_color' => '#131425',
-            'dropdown_menu_text_hover_color' => '#ffffff',
-            'alert_background_color' => '#dfdfdf',
-            'alert_text_color' => '#333333',
-            'alert_header_background_color' => '#a9a9a9',
-            'alert_header_text_color' => '#ffffff',
-            'table_header_background_color' => "#f8f8f8",
-            'table_header_text_color' => "#ae0c2a",
-            'object_name_color' => "#ae0c2a",
-            'button_color' => '#f5b7b1',
-            'secondary_button_background_color' => "#e6e6e6",
-            'secondary_button_text_color' => "#5f5f5f",
-            'secondary_button_box_shadow_color' => "#8f5a0a",
-            'submit_button_background_color' => "#f5b7b1",
-            'submit_button_text_color' => "#8f5a0a",
-            'submit_button_box_shadow_color' => "#8f5a0a",
-            'vsubmit_button_background_color' => "#f5b7b1",
-            'vsubmit_button_text_color' => "#8f5a0a",
-            'vsubmit_button_box_shadow_color' => "#8f5a0a"
-        ];
-
-        $query = "SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE id = '1'";
-        $result = $DB->query($query);
-
-        if ($DB->numrows($result) > 0) {
-            $colors = [
-                'primary_color' => $DB->result($result, 0, 'primary_color'),
-                'header_icons_color' => $DB->result($result, 0, 'header_icons_color'),
-                'menu_color' => $DB->result($result, 0, 'menu_color'),
-                'menu_text_color' => $DB->result($result, 0, 'menu_text_color'),
-                'menu_active_color' => $DB->result($result, 0, 'menu_active_color'),
-                'menu_onhover_color' => $DB->result($result, 0, 'menu_onhover_color'),
-                'dropdown_menu_background_color' => $DB->result($result, 0, 'dropdown_menu_background_color'),
-                'dropdown_menu_text_color' => $DB->result($result, 0, 'dropdown_menu_text_color'),
-                'dropdown_menu_text_hover_color' => $DB->result($result, 0, 'dropdown_menu_text_hover_color'),
-                'alert_background_color' => $DB->result($result, 0, 'alert_background_color'),
-                'alert_text_color' => $DB->result($result, 0, 'alert_text_color'),
-                'alert_header_background_color' => $DB->result($result, 0, 'alert_header_background_color'),
-                'alert_header_text_color' => $DB->result($result, 0, 'alert_header_text_color'),
-                'table_header_background_color' => $DB->result($result, 0, 'table_header_background_color'),
-                'table_header_text_color' => $DB->result($result, 0, 'table_header_text_color'),
-                'object_name_color' => $DB->result($result, 0, 'object_name_color'),
-                'button_color' => $DB->result($result, 0, 'button_color'),
-                'secondary_button_background_color' => $DB->result($result, 0, 'secondary_button_background_color'),
-                'secondary_button_text_color' => $DB->result($result, 0, 'secondary_button_text_color'),
-                'secondary_button_box_shadow_color' => $DB->result($result, 0, 'secondary_button_box_shadow_color'),
-                'submit_button_background_color' => $DB->result($result, 0, 'submit_button_background_color'),
-                'submit_button_text_color' => $DB->result($result, 0, 'submit_button_text_color'),
-                'submit_button_box_shadow_color' => $DB->result($result, 0, 'submit_button_box_shadow_color'),
-                'vsubmit_button_background_color' => $DB->result($result, 0, 'vsubmit_button_background_color'),
-                'vsubmit_button_text_color' => $DB->result($result, 0, 'vsubmit_button_text_color'),
-                'vsubmit_button_box_shadow_color' => $DB->result($result, 0, 'vsubmit_button_box_shadow_color')
-            ];
-        }
-
-        return $colors;
+         //use class to select on table 
+         $config = new table_glpi_plugin_whitelabel_brand();
+         $row=$config->select();
+         //if result
+         if (count($row) > 0) {
+              foreach ($row as $k=>$v){
+                 //if the field is a color
+                 if (substr($v,0,1) == '#')
+                     $colors[$k]=$v;
+              }
+         }else{//no color value on table use default values
+             $default_value_css = new plugin_whitelabel_const();
+             $colors = $default_value_css->all_value();
+         }
+         return $colors;
     }
 
     /**
