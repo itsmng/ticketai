@@ -83,10 +83,10 @@ class PluginWhitelabelConfig extends CommonDBTM {
                         "vsubmit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button text color"),
                         "vsubmit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button box-shadow color"),
                         "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
-                        "favicon"=>array("TYPE"=>"file","LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize())),
-                        "logo_central"=>array("TYPE"=>"file","LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize())),
+                        "favicon"=>array("TYPE"=>"file","LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".ico"),
+                        "logo_central"=>array("TYPE"=>"file","LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".png"),
                         "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
-                        "css_configuration"=>array("TYPE"=>"file","LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()))
+                        "css_configuration"=>array("TYPE"=>"file","LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".css")
                         );
         //works on the fields
         foreach ($fields as $k=>$v){
@@ -101,7 +101,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 $sql_whitelabel_band = new table_glpi_plugin_whitelabel_brand();
                 $value = $sql_whitelabel_band->select($k);
                 if ($value[$k] == "")
-                    $fields_update[$k]=array("LBL"=>$v['LBL'],"VALUE"=>"","TYPE"=>$v["TYPE"]);
+                    $fields_update[$k]=$v;
                 else
                     $fields_update[$k]=array("LBL"=>$v['LBL'],
                     "VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],
@@ -116,10 +116,17 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 Html::showColorField($k, ["value" => $v['VALUE']]);
             elseif ($v['TYPE'] == "hr")
                 echo "<hr>";
-            elseif ($v['TYPE'] == "file")
-                $this->showImageUploadField($k);
-            elseif ($v['TYPE'] == "IMG")
-                $this->showImageUploadField($k,$v);
+            elseif ($v['TYPE'] == "file"){
+                echo "<input name='$k' type='file' accept='".$v['ACCEPT']."' />";
+            }elseif ($v['TYPE'] == "IMG"){
+                echo Html::image($v["VALUE"], [
+                    'style' => 'max-width: 100px; max-height: 50px;',
+                    'class' => 'picture_square'
+                ]);
+                echo "&nbsp;&nbsp;";
+                echo "<input type='checkbox' name='_blank_$k' value='No'/>";
+                echo "&nbsp;".$v["LBL_A"];
+            }
             $this->endField();
         }
 
@@ -130,28 +137,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         Html::closeForm();
     }
 
-    /**
-     * Displays image upload field
-     *
-     * @param string Field name and $values when image exist
-     *
-     * @return void
-     */
-    private function showImageUploadField(string $fieldName, array $values=array()) {
-        if ($values != array()) {           
-            echo Html::image($values["VALUE"], [
-                'style' => 'max-width: 100px; max-height: 50px;',
-                'class' => 'picture_square'
-            ]);
-            echo "&nbsp;&nbsp;";
-            echo "<input type='checkbox' name='_blank_$fieldName' value='No'/>";
-            echo "&nbsp;".$values["LBL_A"];
-        } else {
-            echo "<input name='$fieldName' type='file' />";
-        }
-    }
-    
-    /**
+     /**
      * Get the primary theme color
      *
      * @return string
