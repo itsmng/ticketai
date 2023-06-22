@@ -249,25 +249,30 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
         $default_value_css = new plugin_whitelabel_const();        
         $css_default_values=$default_value_css -> all_value();
+        $all_fields_color = $default_value_css -> all_value_split();
+        //we need logo_central central field pour testing is exist or not
+        $all_fields_color[] = "logo_central";
         $sql = new table_glpi_plugin_whitelabel_brand();
         if ($reset)
             $row=$css_default_values;
         else
-            $row=$sql->select($default_value_css -> all_value_split());
-
-        list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/fd_logo.png");
-        copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
+            $row=$sql->select($all_fields_color);        
+            
         $logo = "../../../pics/login_logo_whitelabel.png";
 
-        if(!empty($row["logo_central"])) {
-            list($logoW, $logoH) = getimagesize(Plugin::getPhpDir("whitelabel", true)."/uploads/logo_central.png");
+        if(isset($row["logo_central"]) && $row["logo_central"] != "") {
             copy(Plugin::getPhpDir("whitelabel")."/uploads/".$row["logo_central"], GLPI_ROOT."/pics/login_logo_whitelabel.png");
+        }else{
+            copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
         }
+        list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/login_logo_whitelabel.png");
+
         foreach ($row as $k=>$v){
             $map["%".$k."%"] = $v;
         }
         $map["%logo%"] = $logo;
         $map["%logo_width%"] = ceil(55 * ($logoW / $logoH));
+
         $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/template.scss");
         $login_template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/login_template.scss");
 
