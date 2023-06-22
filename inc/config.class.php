@@ -212,9 +212,16 @@ class PluginWhitelabelConfig extends CommonDBTM {
                if (isset($data))
                    $sql -> update($data);
            }
-        $this->handleFile("favicon", array("image/x-icon", "image/vnd.microsoft.icon"));
-        $this->handleFile("logo_central", array("image/png"));
-        $this->handleFile("css_configuration", array("text/css"));
+        $message="";
+        $files_to_upload = array("favicon" => array("image/x-icon", "image/vnd.microsoft.icon"),
+                                 "logo_central" => array("image/png"),
+                                 "css_configuration" => array("text/css"));
+        foreach ($files_to_upload as $k=>$v)
+            $message .= $this->handleFile($k, $v);
+        
+        if ($message != ""){
+            Session::addMessageAfterRedirect("<font color=red><b>".$message."</b></font>", 'whitelabel');
+        }
 
         if ($this->handleClear("favicon")) {
             copy(Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak", GLPI_ROOT."/pics/favicon.ico");
@@ -295,7 +302,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
         switch ($_FILES[$file]["error"]) {
             case UPLOAD_ERR_OK:
                 if (!in_array($_FILES[$file]["type"], $formats)) {
-                    echo "Only images of mime types: ".implode($formats)." are supported for $file files!";
+                    return "Only images of mime types: ".implode($formats)." are supported for $file files!";
                     exit();
                 }
                 $this->createDirectoryIfNotExist(Plugin::getPhpDir("whitelabel", true)."/uploads/");
@@ -321,7 +328,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 $message = "The uploaded $file file was only partially uploaded";
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $message = "No $file file was uploaded";
+                //$message = "No $file file was uploaded";
                 break;
             case UPLOAD_ERR_NO_TMP_DIR:
                 $message = "Missing a temporary folder";
@@ -337,6 +344,9 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 $message = "Unknown upload error";
                 break;
         }
+        if (isset($message))
+            return $message;
+        return false;
     }
 
     /**
