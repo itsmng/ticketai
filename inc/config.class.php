@@ -257,7 +257,7 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $row=$css_default_values;
         else
             $row=$sql->select($all_fields_color);        
-            
+
         $logo = "../../../pics/login_logo_whitelabel.png";
 
         if(isset($row["logo_central"]) && $row["logo_central"] != "") {
@@ -272,34 +272,27 @@ class PluginWhitelabelConfig extends CommonDBTM {
         }
         $map["%logo%"] = $logo;
         $map["%logo_width%"] = ceil(55 * ($logoW / $logoH));
+        //tab <address to put css>=><scss modele>
+        $style_css=array(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css"=>'template.scss',
+        GLPI_ROOT."/css/whitelabel_login.css"=>'login_template.scss');
 
-        $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/template.scss");
-        $login_template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/login_template.scss");
-
-        // Interpolate SCSS
-        $style = strtr($template, $map);
-        $login_style = strtr($login_template, $map);
-
-        // Compile SCSS to pure CSS
+        // Class Compile SCSS
         $scssCompiler = new Compiler();
-        $css = $scssCompiler->compile($style);
-        $loginCss = $scssCompiler->compile($login_style);
-
-        if(file_exists(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css")) {
-            unlink(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css");
+        foreach ($style_css as $k=>$v){
+            //if a old css file exist => unlink
+            if(file_exists($k))
+                unlink($k);
+            //scss
+            $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/".$v);
+            // Interpolate SCSS
+            $style = strtr($template, $map);
+            // Compile SCSS to pure CSS
+            $css = $scssCompiler->compile($style);
+            //put new css on the right rep
+            file_put_contents($k, $css);
+            //change chmod
+            chmod($k, 0664);
         }
-
-        if(file_exists(GLPI_ROOT."/css/whitelabel_login.css")) {
-            unlink(GLPI_ROOT."/css/whitelabel_login.css");
-        }
-
-        // Place compiled CSS
-        file_put_contents(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css", $css);
-        file_put_contents(GLPI_ROOT."/css/whitelabel_login.css", $loginCss);
-
-        // Ensure permissions
-        chmod(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css", 0664);
-        chmod(GLPI_ROOT."/css/whitelabel_login.css", 0664);
     }
 
     /**
