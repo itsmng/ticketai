@@ -186,8 +186,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
     }
 
     public function handleWhitelabel($reset = false) {
-        global $DB;
-
            //use class to colors values
            $default_value_css = new plugin_whitelabel_const();
            //use class to use table
@@ -292,7 +290,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
      * Handles file upload actions
      */
     private function handleFile(string $file, array $formats) {
-        global $DB;
 
         if(empty($_FILES[$file])) {
             return;
@@ -314,7 +311,8 @@ class PluginWhitelabelConfig extends CommonDBTM {
                 }
 
                 if (move_uploaded_file($_FILES[$file]["tmp_name"], $uploadfile)) {
-                    $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET $file = '$file.".$ext."' WHERE id = 1", $DB->error());
+                    $sql = new table_glpi_plugin_whitelabel_brand();
+                    $sql-> update(array($file => $file.".".$ext));   
                     chmod($uploadfile, 0664);
                 }
                 break;
@@ -361,20 +359,23 @@ class PluginWhitelabelConfig extends CommonDBTM {
         } elseif (!is_dir($path)) {
             return false;
         }
-
         return true;
     }
 
     private function handleClear(string $field) {
-        global $DB;
-
+        //if checkbox selected to delete file
         if (isset($_POST["_blank_".$field])) {
-            $row = $DB->queryOrDie("SELECT * FROM `glpi_plugin_whitelabel_brand` WHERE `id` = 1", $DB->error())->fetch_assoc();
-            unlink(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]);
-            $DB->queryOrDie("UPDATE `glpi_plugin_whitelabel_brand` SET $field = '' WHERE `id` = 1", $DB->error());
-            return true;
+            $sql = new table_glpi_plugin_whitelabel_brand();
+            //check this file exist
+            $row=$sql-> select($field);   
+            if (isset($row[$field])){
+                //unlink file
+                unlink(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]);
+                //update table
+                $sql-> update(array($field=>''));  
+                return true; 
+            }            
         }
-
         return false;
     }
 }
