@@ -150,20 +150,20 @@ class plugin_whitelabel_const
         'vsubmit_button_box_shadow_color' => "#8f5a0a"
     ];
     
-    function showConstant() {
+    public static function showConstant() {
         print_r(self::COLORS_DEFAULT);
       }
     
-    function value_key($key){
+    public static function value_key($key){
         if (isset(COLORS_DEFAULT[$key]))
             return self::COLORS_DEFAULT[$key];
         else
             return false;
     }
-    function all_value(){
+    public static function all_value(){
         return self::COLORS_DEFAULT;
     }
-    function all_value_split(){
+    public static function all_value_split(){
         foreach (self::COLORS_DEFAULT as $k=>$v){
             $data[]=$k;
         }
@@ -172,7 +172,7 @@ class plugin_whitelabel_const
     /**
      * insert default values on database
      */
-    function insert_default_config(){
+    public static function insert_default_config(){
         $insert = new table_glpi_plugin_whitelabel_brand();
         $default_values=self::COLORS_DEFAULT;
         $default_values['id']=1;
