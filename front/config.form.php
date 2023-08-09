@@ -36,7 +36,6 @@ $plugin = new Plugin();
 
 if($plugin->isActivated("whitelabel")) {
     $config = new PluginWhitelabelConfig();
-
     if(isset($_POST["update"])) {
         Session::checkRight("config", UPDATE);
         $config->handleWhitelabel();

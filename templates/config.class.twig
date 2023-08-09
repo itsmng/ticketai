@@ -1,0 +1,24 @@
+{% from 'macros.twig' import button, table %}
+
+<form enctype='multipart/form-data' action='./config.form.php' method='post'>
+ <div id='principal' style='width: 80%; height: 80%; margin: 0 auto;'>
+{{table(
+                { table_name: "whitelabel", checkbox_value : 'id'}, 
+                {   
+                    args: [{visible: "false"},{}, {sortable: "false"},{sortable: "false", checkbox: "true"}],
+                    titles: ['id','Libellé', 'Couleur','Réinitialiser'],
+                    type:['id','lbl','color']
+                },
+                {
+                    args: [],
+                    rows: fields_update
+                }
+                )}}
+{#{{'Vsubmit button box-shadow color'|trans('whitelabel')}}#}
+{{button("submit", "Valider", "update", "submit")}}
+&nbsp;&nbsp;
+{{button("submit", "Réinitialiser", "reset", "init")}}
+ </div>
+<input type="hidden" name="_glpi_csrf_token" value="{{csrf}}" />
+
+</form>

@@ -1,0 +1,102 @@
+{% macro input(type, name, value, class) %}
+    <input type="{{ type }}" name="{{ name }}" id="{{type}}_{{name}}" value="{{ value }}" class="{{ class }}" data-value="{{type}}_{{name}}"/>
+{% endmacro %}
+
+{% macro textarea(name, value, rows = 10, cols = 40) %}
+    <textarea name="{{ name }}" rows="{{ rows }}" cols="{{ cols }}">{{ value }}</textarea>
+{% endmacro %}
+
+{% macro file(name, value_accept = "") %}
+    <input name='{{name}}' type='file' accept='{{value_accept}}'/>
+{% endmacro %}
+
+{% macro img(name, value, alt, class) %}
+   <img name='{{name}}' src='{{value}}' alt='{{alt}}'  class='{{class}}'/>
+{% endmacro %}
+
+
+{% macro button(type = "button", text, name, value) %}
+{% if type != "submit" %}
+    <button type="{{ type }}" name="{{ name }}" value="{{ value|e }}"/></button>
+{% else %}
+    <button type="{{ type }}" name="{{ name }}" value="{{ value|e }}" class="btn btn-warning submit"/><i class="fas fa-circle-o-notch fa-spin" aria-hidden="true"></i>{{text}}</button>
+{% endif %}
+{% endmacro %}
+
+{% macro table( 
+    args    = { table_name : 'table', checkbox_value : ''
+              },
+
+    header  = {
+                    args    :   [],
+                    titles  :   [],
+                    type    :   []
+              },
+    body    = {
+                    args    :   [],
+                    rows    :   []
+              }       
+) %}
+{% set args = { class : "table-container", search : "true", clickable_row : "true", export : "true", "post_name": "selected_rows", post_value: header.titles[0] }|merge(args) %}
+{% set row_length = max(body.rows[0]|length, header.args|length, header.titles|length)  - 1 %}
+
+<div class={{args.class}}>
+    <table
+    {{args.checkbox_value != '' ? 'data-id-field= {{args.checkbox_value}}'}}
+    id="{{args.table_name}}"
+    data-toggle="table"
+    data-height="1px"
+    data-search="{{args.search}}"
+    data-click-to-select="{{args.clickable_row}}"
+    data-show-export="{{args.export}}"
+    data-icons-prefix="fas"
+    data-server-sort="false">
+        <thead>
+            <tr>
+                {% for i in range(0, row_length) %} 
+                    <th data-field="{{header.titles[i]|replace({' ': '_'})}}" 
+                        data-visible="{{(header.args[i].visible ? : 'true')}}" 
+                        data-radio="{{(header.args[i].radio ? : 'false')}}" 
+                        data-checkbox="{{(header.args[i].checkbox ? : 'false')}}" 
+                        data-sortable="{{header.args[i].sortable ? : 'true'}}">
+                    {{header.titles[i]|capitalize}}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in body.rows %}
+                <tr>
+                    {% for cell in row %}                       
+                        {% if cell.TYPE in ["color","text","password"] %}
+                            <td>{{ _self.input(cell.TYPE,cell.NAME, cell.VALUE)}}</td>                          
+                        {% elseif  cell.TYPE == "lbl" %}
+                            <td>{{cell.VALUE|default()}}</td>
+                        {% elseif  cell.TYPE == "file" %}                                
+                            <td> {{_self.file(cell.NAME,cell.VALUE_ACCEPT)}} </td>
+                        {% elseif  cell.TYPE == "img" %}
+                            <td> {{_self.img(cell.NAME, cell.VALUE, cell.NAME)}}</td>
+                        {% elseif  cell.TYPE == args.checkbox_value %}
+                            <td>{{cell.VALUE|default()}}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<input id="table_input" type="hidden" name="{{args.post_name}}" value=''>
+<script>   
+    $('form').on("submit", function() {
+        selection = $('#{{args.table_name}}').bootstrapTable('getSelections');
+        selection.forEach(array => {
+        Object.keys(array).forEach(key => {
+                if (key != "{{args.checkbox_value}}") {
+                    delete array[key];
+                }
+            })
+        });
+    $('#table_input').val(JSON.stringify(selection));
+    });
+</script>
+{% endmacro table %}

@@ -155,7 +155,7 @@ class plugin_whitelabel_const
       }
     
     public static function value_key($key){
-        if (isset(COLORS_DEFAULT[$key]))
+        if (isset(self::COLORS_DEFAULT[$key]))
             return self::COLORS_DEFAULT[$key];
         else
             return false;
@@ -212,7 +212,7 @@ function plugin_init_whitelabel() {
 function plugin_version_whitelabel() {
     return array(
         'name'           => "White Label",
-        'version'        => '2.2.1',
+        'version'        => '3.0.0',
         'author'         => 'ITSM Dev Team, Théodore Clément, Airoine',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/itsmng/whitelabel',
@@ -221,11 +221,10 @@ function plugin_version_whitelabel() {
 }
 
 function plugin_whitelabel_check_prerequisites() {
-    if (version_compare(ITSM_VERSION, '1.0', 'lt')) {
-        echo "This plugin requires ITSM >= 1.0";
+    if (version_compare(ITSM_VERSION, '2.0', 'lt')) {
+        echo "This plugin requires ITSM >= 2.0";
         return false;
     }
-
     return true;
 }
 

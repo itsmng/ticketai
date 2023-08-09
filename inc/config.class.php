@@ -43,35 +43,28 @@ class PluginWhitelabelConfig extends CommonDBTM {
         if (!Session::haveRight("plugin_whitelabel_whitelabel",UPDATE)) {
             return false;
         }
-
-        echo "<form enctype='multipart/form-data' action='./config.form.php' method='post'>";
-        echo "<table class='tab_cadre' cellpadding='5'>";
-        echo "<tr><th colspan='2'>".__("Whitelabel Settings", 'whitelabel')."</th></tr>";
-        
+        require_once GLPI_ROOT . "/ng/twig.function.php";        
+        $template_dir[] = GLPI_ROOT . "/templates";
+        $template_dir[] = Plugin::getPhpDir("whitelabel")."/templates";
+        $twig = Twig::load($template_dir, false);      
         $colors = $this->getThemeColors();
         //define all the form's fields
         $fields=array("primary_color"=>array("TYPE"=>"color","LBL"=>"Primary color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
-                        "header_icons_color"=>array("TYPE"=>"color","LBL"=>"Header icons color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "header_icons_color"=>array("TYPE"=>"color","LBL"=>"Header icons color"),  
                         "menu_color"=>array("TYPE"=>"color","LBL"=>"Menu color"),
                         "menu_text_color"=>array("TYPE"=>"color","LBL"=>"Menu text color"),
                         "menu_active_color"=>array("TYPE"=>"color","LBL"=>"Active menu color"),
                         "menu_onhover_color"=>array("TYPE"=>"color","LBL"=>"On hover menu color"),
                         "dropdown_menu_background_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu background color"),
                         "dropdown_menu_text_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text color"),
-                        "dropdown_menu_text_hover_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text hover color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
+                        "dropdown_menu_text_hover_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text hover color"),   
                         "alert_background_color"=>array("TYPE"=>"color","LBL"=>"Alert background color"),
                         "alert_text_color"=>array("TYPE"=>"color","LBL"=>"Alert text color"),
                         "alert_header_background_color"=>array("TYPE"=>"color","LBL"=>"Alert header background color"),
                         "alert_header_text_color"=>array("TYPE"=>"color","LBL"=>"Alert header text color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
                         "table_header_background_color"=>array("TYPE"=>"color","LBL"=>"Table header background color"),
                         "table_header_text_color"=>array("TYPE"=>"color","LBL"=>"Table header text color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
                         "object_name_color"=>array("TYPE"=>"color","LBL"=>"Object name color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
                         "button_color"=>array("TYPE"=>"color","LBL"=>"Button color"),
                         "secondary_button_background_color"=>array("TYPE"=>"color","LBL"=>"Secondary button background color"),
                         "secondary_button_text_color"=>array("TYPE"=>"color","LBL"=>"Secondary button text color"),
@@ -82,59 +75,28 @@ class PluginWhitelabelConfig extends CommonDBTM {
                         "vsubmit_button_background_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button background color"),
                         "vsubmit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button text color"),
                         "vsubmit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button box-shadow color"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
                         "favicon"=>array("TYPE"=>"file","LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".ico"),
                         "logo_central"=>array("TYPE"=>"file","LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".png"),
-                        "ligne".rand()=>array("TYPE"=>"hr","LBL"=>"<hr>"),
                         "css_configuration"=>array("TYPE"=>"file","LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".css")
                         );
         //works on the fields
         foreach ($fields as $k=>$v){
             //translate the lbl
             if ($v['TYPE'] == "color")
-                $fields_update[$k]=array("LBL"=>__($v['LBL'], 'whitelabel'),"VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"]);
-            //show <hr>
-            elseif ($v['TYPE'] == "hr")
-                $fields_update[$k]=array("LBL"=>$v['LBL'],"VALUE"=>"","TYPE"=>$v["TYPE"]);
+                $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>__($v['LBL'], 'whitelabel'),"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k]);
             //file fields
             elseif ($v['TYPE'] == "file"){
                 $sql_whitelabel_band = new table_glpi_plugin_whitelabel_brand();
                 $value = $sql_whitelabel_band->select($k);
                 if ($value[$k] == "")
-                    $fields_update[$k]=$v;
+                    $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k,"VALUE_ACCEPT"=>$v['ACCEPT']]);
                 else
-                    $fields_update[$k]=array("LBL"=>$v['LBL'],
-                    "VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],
-                    "TYPE"=>"IMG","LBL_A"=>__('Clear'),"ALT"=>$value[$k]);
+                    $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>'lbl'],["VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],"TYPE"=>"img"]);
             }
+           // $fields_update[$k][]=array("TYPE"=>'checkbox',"NAME"=>'checkbox_'.$k,"VALUE"=>$k);
         }
-
-        //show fields
-        foreach ($fields_update as $k=>$v){
-            $this->startField($v['LBL']);
-            if ($v['TYPE'] == "color")
-                Html::showColorField($k, ["value" => $v['VALUE']]);
-            elseif ($v['TYPE'] == "hr")
-                echo "<hr>";
-            elseif ($v['TYPE'] == "file"){
-                echo "<input name='$k' type='file' accept='".$v['ACCEPT']."' />";
-            }elseif ($v['TYPE'] == "IMG"){
-                echo Html::image($v["VALUE"], [
-                    'style' => 'max-width: 100px; max-height: 50px;',
-                    'class' => 'picture_square'
-                ]);
-                echo "&nbsp;&nbsp;";
-                echo "<input type='checkbox' name='_blank_$k' value='No'/>";
-                echo "&nbsp;".$v["LBL_A"];
-            }
-            $this->endField();
-        }
-
-        echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";
-        echo "<input type='submit' name='update' class='submit'>&nbsp;&nbsp;<input type='submit' name='reset' class='submit' value='".__('Restore colors', 'whitelabel')."'>";
-        echo "</td></tr>";
-        echo "</table>";
-        Html::closeForm();
+       //print_r( $fields_update);
+        echo $twig->render('config.class.twig',  ['fields_update' => $fields_update,'csrf' => Session::getNewCSRFToken()]);   
     }
 
      /**
@@ -160,31 +122,6 @@ class PluginWhitelabelConfig extends CommonDBTM {
          return $colors;
     }
 
-    /**
-     * Open HTML field wrapper
-     * 
-     * @param string $label Field label
-     * 
-     * @return void
-     */
-    private function startField(string $label) {
-        echo "<tr class='tab_bg_1'>";
-        echo "<th style='width:40%'>";
-        echo $label;
-        echo "</th>";
-        echo "<td colspan='3'>";
-    }
-
-    /**
-     * Close HTML field wrapper
-     * 
-     * @return void
-     */
-    private function endField() {
-        echo "</td>";
-        echo "</tr>";
-    }
-
     public function handleWhitelabel($reset = false) {
            //use class to colors values
            $default_value_css = new plugin_whitelabel_const();
@@ -192,10 +129,15 @@ class PluginWhitelabelConfig extends CommonDBTM {
            $sql = new table_glpi_plugin_whitelabel_brand();
            //if reset
            if ($reset){
-               //delete values
-               $sql -> delete();
-               //insert default values
-               $default_value_css -> insert_default_config();
+              if (isset($_POST['selected_rows'])){
+                    $replace=str_replace("\\\"","\"",$_POST['selected_rows']);
+                   $replace=json_decode($replace);
+                  foreach ($replace as $k=>$v){
+                    $data[$v -> id]=$default_value_css -> value_key( $v -> id);
+                  }
+                  if (isset($data))
+                        $sql -> update($data);
+              }               
            }else{
                //get all fields of color
                $fields = $default_value_css -> all_value();
