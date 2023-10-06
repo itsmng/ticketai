@@ -43,66 +43,71 @@ class PluginWhitelabelConfig extends CommonDBTM {
         if (!Session::haveRight("plugin_whitelabel_whitelabel",UPDATE)) {
             return false;
         }
-        require_once GLPI_ROOT . "/ng/twig.function.php";        
+        require_once GLPI_ROOT . "/ng/twig.class.php";        
         $template_dir[] = GLPI_ROOT . "/templates";
         $template_dir[] = Plugin::getPhpDir("whitelabel")."/templates";
         $twig = Twig::load($template_dir, false);      
         $colors = $this->getThemeColors();
+        $field_labels = [
+            'primary_color' => __('Primary Color'),
+            'secondary_color' => __('Secondary Color'),
+            'primary_text_color' => __('Primary Text Color'),
+            'secondary_text_color' => __('Secondary Text Color'),
+            'header_background_color' => __('Header Background Color'),
+            'header_text_color' => __('Header Text Color'),
+            'nav_background_color' => __('Nav Background Color'),
+            'nav_text_color' => __('Nav Text Color'),
+            'nav_submenu_color' => __('Nav Submenu Color'),
+            'nav_hover_color' => __('Nav Hover Color'),
+            'favorite_color' => __('Favorite Color'),
+        ];
         //define all the form's fields
-        $fields=array("primary_color"=>array("TYPE"=>"color","LBL"=>"Primary color"),
-                        "header_icons_color"=>array("TYPE"=>"color","LBL"=>"Header icons color"),  
-                        "menu_color"=>array("TYPE"=>"color","LBL"=>"Menu color"),
-                        "menu_text_color"=>array("TYPE"=>"color","LBL"=>"Menu text color"),
-                        "menu_active_color"=>array("TYPE"=>"color","LBL"=>"Active menu color"),
-                        "menu_onhover_color"=>array("TYPE"=>"color","LBL"=>"On hover menu color"),
-                        "dropdown_menu_background_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu background color"),
-                        "dropdown_menu_text_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text color"),
-                        "dropdown_menu_text_hover_color"=>array("TYPE"=>"color","LBL"=>"Dropdown menu text hover color"),   
-                        "alert_background_color"=>array("TYPE"=>"color","LBL"=>"Alert background color"),
-                        "alert_text_color"=>array("TYPE"=>"color","LBL"=>"Alert text color"),
-                        "alert_header_background_color"=>array("TYPE"=>"color","LBL"=>"Alert header background color"),
-                        "alert_header_text_color"=>array("TYPE"=>"color","LBL"=>"Alert header text color"),
-                        "table_header_background_color"=>array("TYPE"=>"color","LBL"=>"Table header background color"),
-                        "table_header_text_color"=>array("TYPE"=>"color","LBL"=>"Table header text color"),
-                        "object_name_color"=>array("TYPE"=>"color","LBL"=>"Object name color"),
-                        "button_color"=>array("TYPE"=>"color","LBL"=>"Button color"),
-                        "secondary_button_background_color"=>array("TYPE"=>"color","LBL"=>"Secondary button background color"),
-                        "secondary_button_text_color"=>array("TYPE"=>"color","LBL"=>"Secondary button text color"),
-                        "secondary_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Secondary button box-shadow color"),
-                        "submit_button_background_color"=>array("TYPE"=>"color","LBL"=>"Submit button background color"),
-                        "submit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Submit button text color"),
-                        "submit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Submit button box-shadow color"),
-                        "vsubmit_button_background_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button background color"),
-                        "vsubmit_button_text_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button text color"),
-                        "vsubmit_button_box_shadow_color"=>array("TYPE"=>"color","LBL"=>"Vsubmit button box-shadow color"),
-                        "favicon"=>array("TYPE"=>"file","LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".ico"),
-                        "logo_central"=>array("TYPE"=>"file","LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".png"),
-                        "css_configuration"=>array("TYPE"=>"file","LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()),"ACCEPT"=>".css")
-                        );
-        //works on the fields
+        foreach ($colors as $name=>$color){
+            $fields[$name]=["TYPE" => "color","LBL" => $field_labels[$name], "VALUE" => $color];
+        }
+        $fields += [
+            "favicon"=>[
+                "TYPE" => "file",
+                "LBL"=>sprintf(__('Favicon (%s)', 'whitelabel'), Document::getMaxUploadSize()),
+                "ACCEPT" => ".ico"
+            ],
+            "logo_central"=>[
+                "TYPE" => "file",
+                "LBL"=>sprintf(__('Logo (%s)', 'whitelabel'), Document::getMaxUploadSize()),
+                "ACCEPT" => ".png"
+            ],
+            "css_configuration"=>[
+                "TYPE" => "file",
+                "LBL"=>sprintf(__('Import your CSS configuration (%s)', 'whitelabel'), Document::getMaxUploadSize()),
+                "ACCEPT" => ".css"]
+        ];
         foreach ($fields as $k=>$v){
             //translate the lbl
             if ($v['TYPE'] == "color")
-                $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>__($v['LBL'], 'whitelabel'),"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k]);
+            $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>__($v['LBL'], 'whitelabel'),"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k]);
             //file fields
             elseif ($v['TYPE'] == "file"){
                 $sql_whitelabel_band = new table_glpi_plugin_whitelabel_brand();
                 $value = $sql_whitelabel_band->select($k);
-                if ($value[$k] == "")
-                    $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k,"VALUE_ACCEPT"=>$v['ACCEPT']]);
+                if ($value[$k] == "" && isset($colors[$k]))
+                $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>"lbl"],["VALUE"=>$colors[$k],"TYPE"=>$v["TYPE"],"NAME"=>$k,"VALUE_ACCEPT"=>$v['ACCEPT']]);
                 else
-                    $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>'lbl'],["VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],"TYPE"=>"img"]);
+                $fields_update[$k]=array(["VALUE"=>$k,"TYPE"=>"id"],["VALUE"=>$v['LBL'],"TYPE"=>'lbl'],["VALUE"=>Plugin::getWebDir("plugin_whitelabel_whitelabel")."/plugins/whitelabel/uploads/".$value[$k],"TYPE"=>"img"]);
             }
-           // $fields_update[$k][]=array("TYPE"=>'checkbox',"NAME"=>'checkbox_'.$k,"VALUE"=>$k);
+            // $fields_update[$k][]=array("TYPE"=>'checkbox',"NAME"=>'checkbox_'.$k,"VALUE"=>$k);
         }
-       //print_r( $fields_update);
-        echo $twig->render('config.class.twig',  ['fields_update' => $fields_update,'csrf' => Session::getNewCSRFToken()]);   
+        //print_r( $fields_update);
+        try {
+            echo $twig->render('config.class.twig',  ['fields_update' => $fields_update,'csrf' => Session::getNewCSRFToken()]);   
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
      /**
      * Get the primary theme color
      *
-     * @return string
+     * @return array
      */
     private function getThemeColors() {
          //use class to select on table 
@@ -123,35 +128,36 @@ class PluginWhitelabelConfig extends CommonDBTM {
     }
 
     public function handleWhitelabel($reset = false) {
-           //use class to colors values
-           $default_value_css = new plugin_whitelabel_const();
-           //use class to use table
-           $sql = new table_glpi_plugin_whitelabel_brand();
-           //if reset
-           if ($reset){
-              if (isset($_POST['selected_rows'])){
-                    $replace=str_replace("\\\"","\"",$_POST['selected_rows']);
-                   $replace=json_decode($replace);
-                  foreach ($replace as $k=>$v){
-                    $data[$v -> id]=$default_value_css -> value_key( $v -> id);
-                  }
-                  if (isset($data))
-                        $sql -> update($data);
-              }               
-           }else{
-               //get all fields of color
-               $fields = $default_value_css -> all_value();
-               foreach($fields as $k=>$v){
-                   //if post value exist
-                   if (isset($_POST[$k])){
-                       //put it on array
-                       $data[$k]=$_POST[$k];
-                   }
-               }
-               //update on database color fields values
-               if (isset($data))
-                   $sql -> update($data);
-           }
+        //use class to colors values
+        $default_value_css = new plugin_whitelabel_const();
+        //use class to use table
+        $sql = new table_glpi_plugin_whitelabel_brand();
+
+        if ($reset) {
+            if ($_POST['selected_rows'] != "") {
+                $toReplace= explode(',',$_POST['selected_rows']);
+                foreach ($toReplace as $v){
+                    $value = $default_value_css->value_key($v);
+                    if ($value != false)
+                        $data[$v]=$value;
+                }
+                if (isset($data)) {
+                    $sql -> update($data);
+                }
+            }
+        } else {
+            $fields = $default_value_css->all_value();
+            foreach($fields as $key => $val){
+                //if post value exist
+                if (isset($_POST[$key])){
+                    //put it on array
+                    $data[$key] = $_POST[$key];
+                }
+            }
+            //update on database color fields values
+            if (isset($data))
+                $sql -> update($data);
+        }
         $message="";
         $files_to_upload = array("favicon" => array("image/x-icon", "image/vnd.microsoft.icon"),
                                  "logo_central" => array("image/png"),
@@ -181,36 +187,26 @@ class PluginWhitelabelConfig extends CommonDBTM {
     public function refreshCss($reset = false) {
 
         $default_value_css = new plugin_whitelabel_const();        
-        $css_default_values=$default_value_css -> all_value();
-        $all_fields_color = $default_value_css -> all_value_split();
+        $css_default_values=$default_value_css->all_value();
+        $all_fields_color = $default_value_css->all_value_split();
         //we need logo_central central field pour testing is exist or not
         $all_fields_color[] = "logo_central";
         $sql = new table_glpi_plugin_whitelabel_brand();
-        if ($reset)
+        if ($reset) {
             $row=$css_default_values;
-        else
+        } else {
             $row=$sql->select($all_fields_color);        
-
-        $logo = "../../../pics/login_logo_whitelabel.png";
-
-        if(isset($row["logo_central"]) && $row["logo_central"] != "") {
-            copy(Plugin::getPhpDir("whitelabel")."/uploads/".$row["logo_central"], GLPI_ROOT."/pics/login_logo_whitelabel.png");
-        }else{
-            copy(GLPI_ROOT."/pics/fd_logo.png", GLPI_ROOT."/pics/login_logo_whitelabel.png");
         }
-        list($logoW, $logoH) = getimagesize(GLPI_ROOT."/pics/login_logo_whitelabel.png");
 
         foreach ($row as $k=>$v){
             $map["%".$k."%"] = $v;
         }
-        $map["%logo%"] = $logo;
-        $map["%logo_width%"] = ceil(55 * ($logoW / $logoH));
         //tab <address to put css>=><scss modele>
-        $style_css=array(Plugin::getPhpDir("whitelabel", true)."/uploads/whitelabel.css"=>'template.scss',
-        GLPI_ROOT."/css/whitelabel_login.css"=>'login_template.scss');
+        $style_css= [
+            GLPI_ROOT."/css/custom.scss"=>'template.scss',
+            //GLPI_ROOT."/css/whitelabel_login.css"=>'login_template.scss'
+        ];
 
-        // Class Compile SCSS
-        $scssCompiler = new Compiler();
         foreach ($style_css as $k=>$v){
             //if a old css file exist => unlink
             if(file_exists($k))
@@ -219,10 +215,13 @@ class PluginWhitelabelConfig extends CommonDBTM {
             $template = file_get_contents(Plugin::getPhpDir("whitelabel")."/styles/".$v);
             // Interpolate SCSS
             $style = strtr($template, $map);
-            // Compile SCSS to pure CSS
-            $css = $scssCompiler->compile($style);
-            //put new css on the right rep
-            file_put_contents($k, $css);
+            if (isset($map['css_configuration']) && $map['css_configuration'] != ""){
+                $style += "\n@import url('".$map['css_configuration']."');\n";
+            }
+            if (isset($map['%logo_central%']) && $map['%logo_central%'] != ""){
+                $style .= "\n\$logo-file: url('"."../plugins/whitelabel/uploads/".$map['%logo_central%']."');\n";
+            }
+            file_put_contents($k, $style);
             //change chmod
             chmod($k, 0664);
         }
@@ -306,13 +305,14 @@ class PluginWhitelabelConfig extends CommonDBTM {
 
     private function handleClear(string $field) {
         //if checkbox selected to delete file
-        if (isset($_POST["_blank_".$field])) {
+        if (in_array($field, explode(',',$_POST["selected_rows"]))) {
             $sql = new table_glpi_plugin_whitelabel_brand();
             //check this file exist
             $row=$sql-> select($field);   
             if (isset($row[$field])){
                 //unlink file
-                unlink(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]);
+                if (isset($row[$field]) && $row[$field] != "" && file_exists(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]))
+                    unlink(Plugin::getPhpDir("whitelabel")."/uploads/".$row[$field]);
                 //update table
                 $sql-> update(array($field=>''));  
                 return true; 

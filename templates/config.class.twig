@@ -1,24 +1,48 @@
 {% from 'macros.twig' import button, table %}
 
-<form enctype='multipart/form-data' action='./config.form.php' method='post'>
- <div id='principal' style='width: 80%; height: 80%; margin: 0 auto;'>
-{{table(
-                { table_name: "whitelabel", checkbox_value : 'id'}, 
-                {   
-                    args: [{visible: "false"},{}, {sortable: "false"},{sortable: "false", checkbox: "true"}],
-                    titles: ['id','Libellé', 'Couleur','Réinitialiser'],
-                    type:['id','lbl','color']
-                },
-                {
-                    args: [],
-                    rows: fields_update
-                }
-                )}}
-{#{{'Vsubmit button box-shadow color'|trans('whitelabel')}}#}
-{{button("submit", "Valider", "update", "submit")}}
-&nbsp;&nbsp;
-{{button("submit", "Réinitialiser", "reset", "init")}}
- </div>
-<input type="hidden" name="_glpi_csrf_token" value="{{csrf}}" />
-
+<form class="m-5" enctype='multipart/form-data' action='./config.form.php' method='post'>
+	<div class='container'>
+		<table id="styles" data-toggle="table" data-search="true" data-click-to-select="false" data-show-export="true" data-icons-prefix="fas" data-server-sort="false" data-height="500" data-virtual-scroll="true">
+			<thead>
+				<tr>
+					<th data-field="id" data-sortable="true" data-visible="false">id</th>
+					<th data-field="name" data-sortable="true">Libellé</th>
+					<th data-field="value" data-sortable="false">Valeur</th>
+					<th data-field="comment" data-sortable="false" data-checkbox="true">Réinitialiser</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for key, row in fields_update %}
+					<tr>
+						{% for cell in row %}
+							{% if (cell.TYPE == 'id' or cell.TYPE == 'lbl') %}
+								<td>{{cell.VALUE}}</td>
+							{% elseif cell.TYPE == 'color' %}
+								<td><input type='color' name='{{key}}' value='{{cell.VALUE|default()}}'/></td>
+							{% elseif cell.TYPE == 'img' %}
+								<td><input type='file' name='{{key}}' value='{{cell.VALUE|default()}}' accept='{{cell.ACCEPT|default()}}'/></td>
+							{% endif %}
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="container d-flex justify-content-around mt-3">
+            <input id="selection" type="hidden" name="selected_rows" value=''/>
+			<button class="btn btn-warning" type="submit" name="update" value="submit">{{"Valider"|trans}}</button>
+			<button class="btn btn-warning" type="submit" name="reset" value='' onClick='loadSelection()'>{{"Réinitialiser"|trans}}</button>
+		</div>
+	</div>
+	<input type="hidden" name="_glpi_csrf_token" value="{{csrf}}"/>
 </form>
+
+<script>
+    function loadSelection() {
+        var table = $('#styles').bootstrapTable('getSelections');
+        var ids = [];
+        for (var i = 0; i < table.length; i++) {
+            ids.push(table[i].id);
+        }
+        $('#selection')[0].value = ids;
+    }
+</script>

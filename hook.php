@@ -70,21 +70,10 @@ function plugin_whitelabel_install() {
     }
 
     // Create backup of resources that will be altered
-    if (!file_exists(Plugin::getPhpDir("whitelabel")."/bak/index.php.bak")) {
-        copy(GLPI_ROOT."/index.php", Plugin::getPhpDir("whitelabel")."/bak/index.php.bak");
+    if (!file_exists(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak")) {
+        copy(GLPI_ROOT."/css/custom.scss", Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak");
         copy(GLPI_ROOT."/pics/favicon.ico", Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak");
     }
-
-    $loginPage = file_get_contents(GLPI_ROOT."/index.php");
-    // Patch login page (only patched on install, we update the styles through the linked CSS)
-    $patchMap = [
-        "echo Html::css('public/lib/base.css');" => "echo Html::css('public/lib/base.css');\n\techo \"<link rel='stylesheet' type='text/css' href='css/whitelabel_login.css' media='all'>\";\n",
-        "login_logo_itsm.png" => "login_logo_whitelabel.png"
-    ];
-
-    $patchedLogin = strtr($loginPage, $patchMap);
-
-    file_put_contents(GLPI_ROOT."/index.php", $patchedLogin);
 
     // Update 2.0
     if($DB->tableExists("glpi_plugin_whitelabel_brand")) {
@@ -135,8 +124,8 @@ function plugin_whitelabel_uninstall() {
     }
 
     // Clear patches
-    if (is_file(Plugin::getPhpDir("whitelabel")."/bak/index.php.bak")) {
-        copy(Plugin::getPhpDir("whitelabel")."/bak/index.php.bak", GLPI_ROOT."/index.php");
+    if (is_file(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak")) {
+        copy(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak", GLPI_ROOT."/css/custom.scss");
         copy(Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak", GLPI_ROOT."/pics/favicon.ico");
     }
 
