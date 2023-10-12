@@ -6,26 +6,24 @@ include('../vendor/autoload.php');
 global $DB;
 
 
-if (!isset($_POST['prompt'])) {
-    die("No prompt");
+if (!isset($_POST['messages'])) {
+    die(json_encode(['message' => 'No messages provided', 'error' => true, 'code' => 400]));
 }
 
-if (!isset($_SESSION['user_openai_client'])) {
-    // Initialize the OpenAI client for the user
-    $config = $DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1")->next();
-    $api_key = $config["api_key"];
-    $prompt = $config["prompt"];
-    $userOpenAiClient = OpenAi::client($api_key);
+$messages = $_POST['messages'];
 
-    // Store the client instance in the session for future use
-    $_SESSION['user_openai_client'] = $userOpenAiClient;
-} else {
-    $userOpenAiClient = $_SESSION['user_openai_client'];
-}
+// Initialize the OpenAI client for the user
+$config = $DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1")->next();
+$api_key = $config["api_key"];
+$prompt = $config["prompt"];
+
+array_unshift($messages, ['role' => 'user', 'content' => $prompt]);
+
+$userOpenAiClient = OpenAi::client($api_key);
+
 $result = $userOpenAiClient->chat()->create([
     "model" => "gpt-4",
-    "messages" => [["role" => 'user', "content" => $prompt . "
-    - " . $_POST['prompt']]],
+    "messages" => $messages,
 ]);
 
 echo json_encode($result->choices[0]->toArray()['message']);

@@ -59,7 +59,7 @@ class PluginTicketaiConfig extends CommonDBTM {
 
         $api_key_label = __("API Key");
         $prompt_label = __("Prompt");
-        $form_action = Plugin::getWebDir("whitelabel")."/front/config.form.php";
+        $form_action = Plugin::getWebDir("ticketai")."/front/config.form.php";
         
         $config = ($DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1"))->next();
         $api_key = $config["api_key"];

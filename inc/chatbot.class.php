@@ -7,7 +7,7 @@ class PluginTicketaiChatbot extends CommonDBTM
     {
         $menu = [
             'title' => 'Ticket AI',
-            'page' => Plugin::getPhpDir('whitelabel', false) . '/front/chatbot.form.php',
+            'page' => Plugin::getPhpDir('ticketai', false) . '/front/chatbot.form.php',
             'icon' => 'fas fa-brain'
         ];
 
@@ -73,7 +73,7 @@ class PluginTicketaiChatbot extends CommonDBTM
             const userInput = document.getElementById("userInput");
             const botResponse = document.getElementById("botResponse");
 
-            var historic = [];
+            var messages = [];
 
             userInput.addEventListener("keyup", function (event) {
                 if (event.key === "Enter") {
@@ -86,20 +86,15 @@ class PluginTicketaiChatbot extends CommonDBTM
                 const message = userInput.value;
                 userInput.value = '';
                 userInput.disabled = true;
-                historic.push(message);
+                messages.push({role: "user", content: message});
                 $("#chatContent").append("<p id='userMessage' class='bg-primary text-white ml-auto mb-1'>" + message + "</p>");
                 $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white mb-1'>...</p>");
-                prompt = ''
-                for(prevMessage of historic) {
-                    prompt += prevMessage + "\u000A";
-                }
-                //while waiting, the three dots animates
 
                 $.ajax({
                     type: "POST",
                     url: "../ajax/prompt.php",
                     data: {
-                        'prompt': prompt
+                        'messages': messages
                     },
                     success: function (data) {
                         $("#chatContent").find("p:last").remove();
@@ -107,6 +102,7 @@ class PluginTicketaiChatbot extends CommonDBTM
                         // write the message character by character
                         var i = 0;
                         response = JSON.parse(data).content;
+                        messages.push({role: data.role, content: data.content})
                         for (const character of response) {
                             setTimeout(function () {
                                 $("#chatContent").find("p:last").append(character);
