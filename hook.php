@@ -45,7 +45,7 @@ function plugin_ticketai_install() {
             ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->queryOrDie($query, $DB->error());
 
-            $query = 'INSERT INTO `glpi_plugin_ticketai_config` (`id`, `api_key`, `prompt`) VALUES (1, "", "'.PluginWhitelabelConfig::DEFAULT_PROMPT.'")';
+            $query = 'INSERT INTO `glpi_plugin_ticketai_config` (`id`, `api_key`, `prompt`) VALUES (1, "", "'.PluginTicketaiConfig::DEFAULT_PROMPT.'")';
             $DB->queryOrDie($query, $DB->error());
     }
     return true;

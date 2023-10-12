@@ -34,8 +34,8 @@ require_once("../inc/config.class.php");
 
 $plugin = new Plugin();
 
-if($plugin->isActivated("whitelabel")) {
-    $config = new PluginWhitelabelConfig();
+if($plugin->isActivated("ticketai")) {
+    $config = new PluginTicketaiConfig();
     if(isset($_POST["api_key"]) || isset($_POST["prompt"])) {
         Session::checkRight("config", UPDATE);
         global $DB;

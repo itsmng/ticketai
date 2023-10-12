@@ -42,7 +42,7 @@ function plugin_init_ticketai() {
         $PLUGIN_HOOKS['config_page']['ticketai'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketAiChatbot');
+    $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketaiChatbot');
 }
 
 function plugin_version_ticketai() {

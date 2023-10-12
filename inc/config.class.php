@@ -29,7 +29,7 @@
  * along with ITSM-NG. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  */
-class PluginTicketAiConfig extends CommonDBTM {
+class PluginTicketaiConfig extends CommonDBTM {
 
     const DEFAULT_PROMPT = '
     nous sommes une société de service en informatique, nous aidons les clients pour depanner leur probleme informatique.

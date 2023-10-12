@@ -1,7 +1,7 @@
 <?php
-require_once(Plugin::getPhpDir('whitelabel') . '/vendor/autoload.php');
+require_once(Plugin::getPhpDir('ticketai') . '/vendor/autoload.php');
 
-class PluginWhitelabelChatbot extends CommonDBTM
+class PluginTicketaiChatbot extends CommonDBTM
 {
     static function getMenuContent()
     {
