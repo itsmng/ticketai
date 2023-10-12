@@ -60,6 +60,35 @@ class PluginTicketaiChatbot extends CommonDBTM
                 padding: 5px;
                 width: 45%;
             }
+
+            .loading {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .loading::after {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                transform: translateX(-100%);
+                background-image: linear-gradient(
+                    70deg,
+                    rgba(255, 255, 255, 0) 0,
+                    rgba(255, 255, 255, 0.2) 20%,
+                    rgba(255, 255, 255, 0.5) 60%,
+                    rgba(255, 255, 255, 0)
+                );
+                animation: shimmer 2s infinite;
+                transform: translateX(-100%);
+                content: '';
+            }
+            @keyframes shimmer {
+                100% {
+                transform: translateX(100%);
+                }
+            }
         </style>
         <div id="chat" class='d-flex flex-column'>
             <div id="chatContent" class="d-flex flex-column py-auto">
@@ -88,7 +117,7 @@ class PluginTicketaiChatbot extends CommonDBTM
                 userInput.disabled = true;
                 messages.push({role: "user", content: message});
                 $("#chatContent").append("<p id='userMessage' class='bg-primary text-white ml-auto mb-1'>" + message + "</p>");
-                $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white mb-1'>...</p>");
+                $("#chatContent").append("<p id='botMessage' class='loading bg-secondary text-white mb-1'>...</p>");
 
                 $.ajax({
                     type: "POST",
@@ -98,7 +127,7 @@ class PluginTicketaiChatbot extends CommonDBTM
                     },
                     success: function (data) {
                         $("#chatContent").find("p:last").remove();
-                        $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white'></p>");
+                        $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white mb-1'></p>");
                         // write the message character by character
                         var i = 0;
                         response = JSON.parse(data).content;
