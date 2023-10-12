@@ -43,7 +43,8 @@ class PluginTicketaiConfig extends CommonDBTM {
     'itemType': '...'
     }
     ou name est le titre du ticket, content une description du problème en détails et itemType l'objet référencé dans le ticket.
-    Le message ne doit contenir que le json pour qu'il puisse être parse directement avec JSON.parse()";
+    Le message ne doit contenir que le json pour qu'il puisse être parse directement avec JSON.parse()
+    Utilises des doubles quotes pour le json.";
 
     /**
      * Displays the configuration page for the plugin

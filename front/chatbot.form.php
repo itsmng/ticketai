@@ -41,7 +41,7 @@ if($plugin->isActivated("ticketai")) {
 
     }
 
-    Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");
+    Html::header("Ticket AI", $_SERVER["PHP_SELF"], "config", "plugins");
     $config->showForm();
 } else {
     Html::header("settings", '', "config", "plugins");
