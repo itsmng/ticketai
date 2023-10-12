@@ -68,6 +68,10 @@ function plugin_ticketai_check_prerequisites() {
         echo "This plugin requires ITSM >= 2.0";
         return false;
     }
+    if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+        echo "Run composer install --no-dev in the plugin directory<br>";
+        return false;
+     }
     return true;
 }
 
