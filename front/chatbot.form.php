@@ -35,15 +35,14 @@ require_once("../inc/config.class.php");
 $plugin = new Plugin();
 
 if($plugin->isActivated("whitelabel")) {
-    $config = new PluginWhitelabelConfig();
+    $config = new PluginWhitelabelChatbot();
     if(isset($_POST["api_key"]) || isset($_POST["prompt"])) {
         Session::checkRight("config", UPDATE);
-        global $DB;
-        $DB->request('UPDATE glpi_plugin_ticketai_config SET api_key = "'.$_POST["api_key"].'", prompt = "'.$_POST["prompt"].'" WHERE id = 1');
+
     }
 
     Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");
-    $config->showConfigForm();
+    $config->showForm();
 } else {
     Html::header("settings", '', "config", "plugins");
     echo "<div class='center'><br><br><img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt='warning'><br><br>";

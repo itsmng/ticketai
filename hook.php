@@ -31,110 +31,34 @@
  */
 
 
-function plugin_whitelabel_install() {
+function plugin_ticketai_install() {
     global $DB;
 
     $migration = new Migration(101);
     //get default values for fields 
-    $default_value_css = new plugin_whitelabel_const();
-    if (!$DB->tableExists("glpi_plugin_whitelabel_brand")) {        
-        $query = "CREATE TABLE glpi_plugin_whitelabel_brand (
+    if (!$DB->tableExists("glpi_plugin_ticketai_config")) {        
+        $query = "CREATE TABLE glpi_plugin_ticketai_config (
             id int(11) NOT NULL AUTO_INCREMENT,
-            favicon varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-            logo_central varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-            css_configuration varchar(255) COLLATE utf8_unicode_ci NOT NULL,";
-        foreach ($default_value_css::all_value() as $k => $v){
-            $query .= $k." varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '".$v."',";
-        }  
-        $query .= "PRIMARY KEY (`id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $DB->queryOrDie($query, $DB->error());
-       
-        $default_value_css->insert_default_config();
-    }
-
-    if (!$DB->tableExists("glpi_plugin_whitelabel_profiles")) {
-        $query = "CREATE TABLE `glpi_plugin_whitelabel_profiles` (
-            `id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
-            `right` char(1) collate utf8_unicode_ci default NULL,
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-
-        $DB->queryOrDie($query, $DB->error());
-
-        include_once(GLPI_ROOT."/plugins/whitelabel/inc/profile.class.php");
-        PluginWhitelabelProfile::createAdminAccess($_SESSION['glpiactiveprofile']['id']);
-
-        foreach (PluginWhitelabelProfile::getRightsGeneral() as $right) {
-            PluginWhitelabelProfile::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'],[$right['field'] => $right['default']]);
-        }
-    }
-
-    // Create backup of resources that will be altered
-    if (!file_exists(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak")) {
-        copy(GLPI_ROOT."/css/custom.scss", Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak");
-        copy(GLPI_ROOT."/pics/favicon.ico", Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak");
-    }
-
-    // Update 2.0
-    if($DB->tableExists("glpi_plugin_whitelabel_brand")) {
-       
-        foreach ($default_value_css::all_value() as $k=>$v){
-            if(!$DB->fieldExists('glpi_plugin_whitelabel_brand',$k)){
-                $query = "ALTER TABLE glpi_plugin_whitelabel_brand ADD COLUMN ".$k." varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '".$v."'";
-                $DB->queryOrDie($query, $DB->error());
-            }
-        }
-        if($DB->fieldExists('glpi_plugin_whitelabel_brand', 'brand_color')) {
-            $query = "ALTER TABLE glpi_plugin_whitelabel_brand DROP COLUMN brand_color";
+            api_key varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            prompt varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+            PRIMARY KEY  (`id`))
+            ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->queryOrDie($query, $DB->error());
-        }
-    }
 
-    $migration->executeMigration();
+            $query = 'INSERT INTO `glpi_plugin_ticketai_config` (`id`, `api_key`, `prompt`) VALUES (1, "", "'.PluginWhitelabelConfig::DEFAULT_PROMPT.'")';
+            $DB->queryOrDie($query, $DB->error());
+    }
     return true;
 }
 
-function plugin_whitelabel_uninstall() {
+function plugin_ticketai_uninstall() {
     global $DB;
 
     // Drop tables
-    if($DB->tableExists('glpi_plugin_whitelabel_brand')) {
-        $DB->queryOrDie("DROP TABLE `glpi_plugin_whitelabel_brand`",$DB->error());
+    if($DB->tableExists('glpi_plugin_ticketai_config')) {
+        $DB->queryOrDie("DROP TABLE `glpi_plugin_ticketai_config`",$DB->error());
     }
 
-    if($DB->tableExists('glpi_plugin_whitelabel_profiles')) {
-        $DB->queryOrDie("DROP TABLE `glpi_plugin_whitelabel_profiles`",$DB->error());
-    }
-
-    // Clear profiles
-    foreach (PluginWhitelabelProfile::getRightsGeneral() as $right) {
-        $query = "DELETE FROM `glpi_profilerights` WHERE `name` = '".$right['field']."'";
-        $DB->query($query);
-
-        if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
-           unset($_SESSION['glpiactiveprofile'][$right['field']]);
-        }
-   }
-
-    // Clear uploads
-    $files = glob(Plugin::getPhpDir("whitelabel")."/uploads/*"); // Get all file names in `uploads`
-
-    foreach($files as $file){ // Iterate files
-        if(is_file($file)) unlink($file); // Delete file
-    }
-
-    // Clear patches
-    if (is_file(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak")) {
-        copy(Plugin::getPhpDir("whitelabel")."/bak/custom.scss.bak", GLPI_ROOT."/css/custom.scss");
-        copy(Plugin::getPhpDir("whitelabel")."/bak/favicon.ico.bak", GLPI_ROOT."/pics/favicon.ico");
-    }
-
-    // Clear bakups
-    $files = glob(Plugin::getPhpDir("whitelabel")."/bak/*");
-
-    foreach($files as $file){
-        if(is_file($file)) unlink($file);
-    }
 
     return true;
 }
