@@ -31,23 +31,19 @@
  */
 class PluginTicketaiConfig extends CommonDBTM {
 
-    const DEFAULT_PROMPT = '
-    nous sommes une société de service en informatique, nous aidons les clients pour depanner leur probleme informatique.
-    il y a 4 services différents :
-    Le service support systeme
-    Le service support réseau
-    le service support materiel
-    Le service divers qui gere toutes les autres demandes.
-    Les clients sont partout en france et regroupé par département.
-    du coté des services support il y a une équipe support par département, par exemple, pour le département 75 , il a :
-    support_systeme_75
-    support_reseau_75
-    support_materiel_75
-    support_divers_75
+    const DEFAULT_PROMPT = "
+    Vous êtes mon assistant pour m'aider a résoudre mon problème.
+    Restez concis et gardez un format de réponse simple.
     
-    peux tu en fonction des demandes et de la ville du client me proposer la bonne équipe support.
-    Reponds moi un fichier au format JSON.
-    ';
+    Donnez moi des conseils pour résoudre mon problème.
+    Si je vous dis que vos conseils me fonctionnent pas, donnez moi une réponse contenant uniquement un json de la forme:
+    {
+    'name': '...',
+    'content': '...'
+    'itemType': '...'
+    }
+    ou name est le titre du ticket, content une description du problème en détails et itemType l'objet référencé dans le ticket.
+    Le message ne doit contenir que le json pour qu'il puisse être parse directement avec JSON.parse()";
 
     /**
      * Displays the configuration page for the plugin
