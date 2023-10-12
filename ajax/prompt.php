@@ -40,10 +40,9 @@ try {
         ]);
         $response['ticket_id'] = $ticket->getID();
         $ticket->update(['type' => $json_ticket->type]);
-        echo json_encode($response);
-    } else {
-        echo json_encode($response);
+        $response['content'] = "Votre ticket a bien été créé, son numéro est le " . $ticket->getID() . ".";
     }
+    echo json_encode($response);
 } catch (Exception $e) {
     echo json_encode($response);
 }
