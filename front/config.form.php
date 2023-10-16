@@ -42,7 +42,7 @@ if($plugin->isActivated("ticketai")) {
         $DB->request('UPDATE glpi_plugin_ticketai_config SET api_key = "'.$_POST["api_key"].'", prompt = "'.$_POST["prompt"].'" WHERE id = 1');
     }
 
-    Html::header("White Label", $_SERVER["PHP_SELF"], "config", "plugins");
+    Html::header("Ticket AI", $_SERVER["PHP_SELF"], "config", "plugins");
     $config->showConfigForm();
 } else {
     Html::header("settings", '', "config", "plugins");

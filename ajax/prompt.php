@@ -17,7 +17,7 @@ $config = $DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1")->
 $api_key = $config["api_key"];
 $prompt = $config["prompt"];
 
-array_unshift($messages, ['role' => 'user', 'content' => $prompt]);
+array_unshift($messages, ['role' => 'system', 'content' => $prompt]);
 
 $userOpenAiClient = OpenAi::client($api_key);
 
@@ -37,10 +37,17 @@ try {
             'name' => addslashes($json_ticket->name),
             'content' => addslashes($json_ticket->content),
             'type' => $json_ticket->type,
+            'users_id_recipient' => $json_ticket->user_id_assign,
         ]);
         $response['ticket_id'] = $ticket->getID();
         $ticket->update(['type' => $json_ticket->type]);
-        $response['content'] = "Votre ticket a bien été créé, son numéro est le " . $ticket->getID() . ".";
+        $DB->request('
+            INSERT INTO glpi_tickets_users
+            (tickets_id, users_id, type, use_notification)
+            VALUES
+            (' . $ticket->getID() . ', ' . $json_ticket->user_id_assign . ', 2, 1)'
+        );
+        //$response['content'] = "Votre ticket a bien été créé, son numéro est le " . $ticket->getID() . ".";
     }
     echo json_encode($response);
 } catch (Exception $e) {
