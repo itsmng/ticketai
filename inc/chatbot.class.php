@@ -119,6 +119,7 @@ class PluginTicketaiChatbot extends CommonDBTM
                 $("#chatContent").append("<p id='userMessage' class='bg-primary text-white ml-auto mb-1'>" + message + "</p>");
                 $("#chatContent").append("<p id='botMessage' class='loading bg-secondary text-white mb-1'>...</p>");
 
+                console.table(messages);
                 $.ajax({
                     type: "POST",
                     url: "../ajax/prompt.php",
@@ -128,11 +129,11 @@ class PluginTicketaiChatbot extends CommonDBTM
                     success: function (data) {
                         $("#chatContent").find("p:last").remove();
                         $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white mb-1'></p>");
+                        response = JSON.parse(data);
+                        messages.push({role: response.role, content: response.content})
                         // write the message character by character
                         var i = 0;
-                        response = JSON.parse(data).content;
-                        messages.push({role: data.role, content: data.content})
-                        for (const character of response) {
+                        for (const character of response.content) {
                             setTimeout(function () {
                                 $("#chatContent").find("p:last").append(character);
                             }, 10 * i);
