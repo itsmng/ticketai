@@ -36,10 +36,17 @@ $plugin = new Plugin();
 
 if($plugin->isActivated("ticketai")) {
     $config = new PluginTicketaiConfig();
-    if(isset($_POST["api_key"]) || isset($_POST["prompt"])) {
+    if(isset($_POST["action"])) {
         Session::checkRight("config", UPDATE);
         global $DB;
-        $DB->request('UPDATE glpi_plugin_ticketai_config SET api_key = "'.$_POST["api_key"].'", prompt = "'.$_POST["prompt"].'" WHERE id = 1');
+        $DB->request('UPDATE glpi_plugin_ticketai_config 
+        SET api_key = "'.$_POST["api_key"].
+        '", user_activated = "'.($_POST["user_activated"] ?? 0).
+        '", tech_activated = "'.($_POST["tech_activated"] ?? 0).
+        '", user_prompt = "'.$_POST["user_prompt"].
+        '", tech_prompt_followup = "'.$_POST["tech_prompt_followup"].
+        '", tech_prompt_close = "'.$_POST["tech_prompt_close"].
+        '"WHERE id = 1');
     }
 
     Html::header("Ticket AI", $_SERVER["PHP_SELF"], "config", "plugins");

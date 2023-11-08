@@ -31,7 +31,7 @@
  */
 class PluginTicketaiConfig extends CommonDBTM {
 
-    const DEFAULT_PROMPT = "
+    const DEFAULT_USER_PROMPT = "
 Vous êtes un assistant dédié au support informatique, offrant une assistance aux utilisateurs d'un parc informatique.
 Ces utilisateurs sont pris en charge par une équipe de techniciens du support technique.
 Il existe deux catégories de problèmes auxquelles les utilisateurs peuvent être confrontés : 'Incident' et 'Demande d'évolution'.
@@ -40,7 +40,15 @@ Si le problème est lié à un logiciel, vous devez attribuer le ticket au techn
 Si le problème est lié au matériel, vous devez attribuer le ticket au technicien de support matériel (ID 4).
 ";
 
-    const FORMAT_PROMPT = "
+    const DEFAULT_FOLLOWUP_PROMPT = "
+Vous êtes une aide technicien a la résolution de problème. Vous devez poser des questions au technicien pour resumer ses actions et les enregistrer dans le ticket.
+";
+
+    const DEFAULT_CLOSE_PROMPT = "
+Vous êtes une aide technicien a la résolution de problème. Vous devez poser des questions au technicien pour resumer ses actions et les enregistrer dans le ticket.
+";
+
+    const FORMAT_USER_PROMPT = "
 Si vous ne parvenez pas à trouver une solution directe, vous devez envoyer un message contenant UNIQUEMENT le JSON du ticket suivant :
 {
     'name': '...',
@@ -70,21 +78,85 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
         
         $config = ($DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1"))->next();
         $api_key = $config["api_key"];
-        $prompt = $config["prompt"];
+
+        $form = [
+            'action' => $form_action,
+            'method' => 'post',
+            'buttons' => [
+                [
+                    'type' => 'submit',
+                    'name' => 'update_config',
+                    'value' => __('Update'),
+                    'class' => 'submit-button btn btn-warning',
+                ],
+            ],
+            'content' => [
+                __('General configuration') => [
+                    'visible' => true,
+                    'inputs' => [
+                        $api_key_label => [
+                            'name' => 'api_key',
+                            'type' => 'text',
+                            'value' => $api_key
+                        ],
+                    ]
+                ],
+                __('User Prompt') => [
+                    'visible' => true,
+                    'inputs' => [
+                        __("Activated") => [
+                            'name' => 'user_activated',
+                            'type' => 'checkbox',
+                            'value' => 1,
+                            $config['user_activated'] ? 'checked' : '' => '',
+                        ],
+                        $prompt_label => [
+                            'name' => 'user_prompt',
+                            'type' => 'textarea',
+                            'value' => $config['user_prompt'],
+                            'rows' => 10,
+                        ],
+                    ]
+                ],
+                __('Technician Prompt') => [
+                    'visible' => true,
+                    'inputs' => [
+                        __('Activated') => [
+                            'name' => 'tech_activated',
+                            'type' => 'checkbox',
+                            'value' => 1,
+                            $config['tech_activated'] ? 'checked' : '' => '',
+                        ],
+                        $prompt_label . ' ' . __('Followup') => [
+                            'name' => 'tech_prompt_followup',
+                            'type' => 'textarea',
+                            'value' => $config['tech_prompt_followup'],
+                            'rows' => 10,
+                        ],
+                        $prompt_label . ' ' . __('Solution') => [
+                            'name' => 'tech_prompt_close',
+                            'type' => 'textarea',
+                            'value' => $config['tech_prompt_close'],
+                            'rows' => 10,
+                        ],
+                    ]
+                ],
+                '' => [
+                    'visible' => false,
+                    'inputs' => [
+                        'action' => [
+                            'name' => 'action',
+                            'type' => 'hidden',
+                            'value' => 'update'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        include_once GLPI_ROOT."/ng/form.utils.php";
+        renderTwigForm($form);
         
-        echo <<<HTML
-            <form class="container mx-auto text-center" action="$form_action" method="post">
-                <div class="mb-3 d-flex flex-column w-25 mx-auto">
-                    <label for="api_key_input">$api_key_label</label>
-                    <input type="text" name="api_key" id="api_key_input" value="$api_key"/>
-                </div>
-                <div class="mb-3 d-flex flex-column w-25 mx-auto">
-                    <label for="prompt_input">$prompt_label</label>
-                    <textarea name="prompt" id="prompt_input" rows="15">$prompt</textarea>
-                </div>
-                <button type="submit" class="btn btn-warning">Submit</button>
-            </form>
-        HTML;
     }
 
     public function updateConfig() {

@@ -40,12 +40,20 @@ function plugin_ticketai_install() {
         $query = "CREATE TABLE glpi_plugin_ticketai_config (
             id int(11) NOT NULL AUTO_INCREMENT,
             api_key varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-            prompt varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+            user_activated tinyint(1) COLLATE utf8_unicode_ci NOT NULL,
+            user_prompt varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+            tech_activated tinyint(1) COLLATE utf8_unicode_ci NOT NULL,
+            tech_prompt_followup varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+            tech_prompt_close varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
             PRIMARY KEY  (`id`))
             ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->queryOrDie($query, $DB->error());
 
-            $query = 'INSERT INTO `glpi_plugin_ticketai_config` (`id`, `api_key`, `prompt`) VALUES (1, "", "'.PluginTicketaiConfig::DEFAULT_PROMPT.'")';
+            $query = 'INSERT INTO `glpi_plugin_ticketai_config`
+            (`id`, `api_key`, `user_activated`, `user_prompt`, `tech_activated`, `tech_prompt_followup`, `tech_prompt_close`)
+            VALUES (1, "", 0,"'.PluginTicketaiConfig::DEFAULT_USER_PROMPT
+                .'", 0, "'.PluginTicketaiConfig::DEFAULT_FOLLOWUP_PROMPT.'", "'.PluginTicketaiConfig::DEFAULT_CLOSE_PROMPT.'")
+            ';
             $DB->queryOrDie($query, $DB->error());
     }
     return true;
