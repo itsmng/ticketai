@@ -34,7 +34,6 @@
 function plugin_ticketai_install() {
     global $DB;
 
-    $migration = new Migration(101);
     //get default values for fields 
     if (!$DB->tableExists("glpi_plugin_ticketai_config")) {        
         $query = "CREATE TABLE glpi_plugin_ticketai_config (
@@ -56,6 +55,23 @@ function plugin_ticketai_install() {
             ';
             $DB->queryOrDie($query, $DB->error());
     }
+
+    if (!$DB->tableExists("glpi_plugin_ticketai_profiles")) {
+        $query2 = "CREATE TABLE `glpi_plugin_ticketai_profiles` (
+        `id` int(11) NOT NULL default '0',
+        `right` char(1) collate utf8_unicode_ci default NULL,
+        PRIMARY KEY  (`id`)
+          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+    
+        $DB->queryOrDie($query2, $DB->error());
+    
+        include_once(GLPI_ROOT . "/plugins/ticketai/inc/profile.class.php");
+        PluginTicketaiProfile::createAdminAccess($_SESSION['glpiactiveprofile']['id']);
+    
+        foreach (PluginTicketaiProfile::getRightsGeneral() as $right) {
+            PluginTicketaiProfile::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'], [$right['field'] => $right['default']]);
+        }
+    } else $DB->queryOrDie("ALTER TABLE `glpi_plugin_ticketai_profiles` ENGINE = InnoDB", $DB->error());
     return true;
 }
 
@@ -66,25 +82,16 @@ function plugin_ticketai_uninstall() {
     if($DB->tableExists('glpi_plugin_ticketai_config')) {
         $DB->queryOrDie("DROP TABLE `glpi_plugin_ticketai_config`",$DB->error());
     }
+    if($DB->tableExists('glpi_plugin_ticketai_profiles')) {
+        $DB->queryOrDie("DROP TABLE `glpi_plugin_ticketai_profiles`",$DB->error());
+    }
+    foreach (PluginTicketaiProfile::getRightsGeneral() as $right) {
+        $query = "DELETE FROM `glpi_profilerights` WHERE `name` = '" . $right['field'] . "'";
+        $DB->query($query);
+    
+        if (isset($_SESSION['glpiactiveprofile'][$right['field']])) unset($_SESSION['glpiactiveprofile'][$right['field']]);
+    }
 
 
     return true;
-}
-
-
-function ticketai_timeline_actions($options) {
-    $item = $options['item'];
-    $rand = $options['rand'];
-    if (!$item->canDelete()) {
-        return;
-    }
-    
-    $label_followup = __('Followup'). ' ' . __('AI');
-    $label_close = __('Solution'). ' ' . __('AI');
-    $ticketId = $item->fields['id'];
-    $plugin_url = Plugin::getWebDir('ticketai').'/ajax/chatbots.php?ticket_id='.$ticketId;
-    echo <<<HTML
-        <button class="btn btn-sm btn-primary" onclick='viewChatbot("{$ticketId}", "{$rand}", "{$plugin_url}&context=followup")'>{$label_followup}</button>
-        <button class="btn btn-sm btn-secondary" onclick='viewChatbot("{$ticketId}", "{$rand}", "{$plugin_url}&context=solution")'>{$label_close}</button>
-    HTML;
 }

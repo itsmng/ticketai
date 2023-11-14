@@ -73,7 +73,7 @@ array_unshift($messages, $systemPrompt);
 $userOpenAiClient = OpenAi::client($api_key);
 
 $result = $userOpenAiClient->chat()->create([
-    "model" => "gpt-3.5-turbo",
+    "model" => "gpt-4",
     "messages" => $messages,
 ]);
 

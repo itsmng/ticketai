@@ -37,13 +37,15 @@ function plugin_init_ticketai() {
     $PLUGIN_HOOKS['change_profile']['ticketai'] = array('PluginWhitelabelProfile', 'changeProfile');
     $PLUGIN_HOOKS['add_javascript']['ticketai'] = 'js/scripts.js';
 
-    Plugin::registerClass('PluginTickeAiProfile', array('addtabon' => array('Profile')));
+    Plugin::registerClass('PluginTicketaiProfile', ['addtabon' => array('Profile')]);
 
-    if (Session::haveRight("profile", UPDATE)) {
+    $PLUGIN_HOOKS['change_profile']['ticketai'] = ['PluginTicketaiProfile','initProfile'];
+    if (Session::haveRight("plugin_ticketai_ticketai", UPDATE)) {
         $PLUGIN_HOOKS['config_page']['ticketai'] = 'front/config.form.php';
     }
 
-    if (Session::haveRight("profile", READ)) {
+    $plugin = new Plugin();
+    if (Session::haveRight("plugin_ticketai_ticketai", READ) && $plugin->isActivated("ticketai")) {
         $config = PluginTicketaiConfig::getConfig();
         if ($config['user_activated'])
             $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketaiChatbot');
