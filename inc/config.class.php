@@ -48,7 +48,7 @@ Vous êtes une aide technicien a la résolution de problème. Vous devez poser d
 Vous êtes une aide technicien a la résolution de problème. Vous devez poser des questions au technicien pour resumer ses actions et les enregistrer dans le ticket.
 ";
 
-    const FORMAT_USER_PROMPT = "
+    const USER_FORMAT_PROMPT = "
 Si vous ne parvenez pas à trouver une solution directe, vous devez envoyer un message contenant UNIQUEMENT le JSON du ticket suivant :
 {
     'name': '...',
@@ -165,5 +165,12 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
         $api_key = $_POST["api_key"];
         $prompt = $_POST["prompt"];
         $DB->request("UPDATE glpi_plugin_whitelabel_config SET api_key='$api_key', prompt='$prompt' WHERE id=1");
+    }
+
+    static public function getConfig() {
+        global $DB;
+
+        $config = ($DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1"))->next();
+        return $config;
     }
 }

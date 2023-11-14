@@ -35,6 +35,7 @@ function plugin_init_ticketai() {
 
     $PLUGIN_HOOKS['csrf_compliant']['ticketai'] = true;
     $PLUGIN_HOOKS['change_profile']['ticketai'] = array('PluginWhitelabelProfile', 'changeProfile');
+    $PLUGIN_HOOKS['add_javascript']['ticketai'] = 'js/scripts.js';
 
     Plugin::registerClass('PluginTickeAiProfile', array('addtabon' => array('Profile')));
 
@@ -42,7 +43,14 @@ function plugin_init_ticketai() {
         $PLUGIN_HOOKS['config_page']['ticketai'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketaiChatbot');
+    if (Session::haveRight("profile", READ)) {
+        $config = PluginTicketaiConfig::getConfig();
+        if ($config['user_activated'])
+            $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketaiChatbot');
+        if ($config['tech_activated'])
+            $PLUGIN_HOOKS['timeline_actions']['ticketai'] = 'ticketai_timeline_actions';
+    }
+
 }
 
 function plugin_version_ticketai() {

@@ -5,9 +5,8 @@ include('../vendor/autoload.php');
 
 global $DB;
 
-
 if (!isset($_POST['messages'])) {
-    die(json_encode(['message' => 'No messages provided', 'error' => true, 'code' => 400]));
+    $_POST['messages'] = [];
 }
 
 $messages = $_POST['messages'];
@@ -15,9 +14,32 @@ $messages = $_POST['messages'];
 // Initialize the OpenAI client for the user
 $config = $DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1")->next();
 $api_key = $config["api_key"];
-$prompt = $config["prompt"];
+$prompt = '';
+switch ($_POST['context']) {
+    case 'followup':
+        $prompt = $config["tech_prompt_followup"];
+        break;
+    case 'solution':
+        $prompt = $config["tech_prompt_close"];
+        break;
+    default:
+        $prompt = $config["user_prompt"];
+        break;
+}
 
-array_unshift($messages, ['role' => 'system', 'content' => $prompt . PluginTicketaiConfig::FORMAT_PROMPT]);
+$systemPrompt = [
+    'role' => 'system',
+    'content' => $prompt . ($_POST['context'] == 'helpdesk' ? PluginTicketaiConfig::USER_FORMAT_PROMPT : $_POST['ticket_id'])
+];
+
+if ($_POST['context'] != 'helpdesk') {
+    $ticket = new Ticket();
+    $ticket->getFromDB($_POST['ticket_id']);
+    $systemPrompt['content'] .= "ticket: \n";
+    $systemPrompt['content'] .= $ticket->fields['content'] . "\n";
+}
+
+array_unshift($messages, $systemPrompt);
 $userOpenAiClient = OpenAi::client($api_key);
 
 $result = $userOpenAiClient->chat()->create([

@@ -70,3 +70,21 @@ function plugin_ticketai_uninstall() {
 
     return true;
 }
+
+
+function ticketai_timeline_actions($options) {
+    $item = $options['item'];
+    $rand = $options['rand'];
+    if (!$item->canDelete()) {
+        return;
+    }
+    
+    $label_followup = __('Followup'). ' ' . __('AI');
+    $label_close = __('Solution'). ' ' . __('AI');
+    $ticketId = $item->fields['id'];
+    $plugin_url = Plugin::getWebDir('ticketai').'/ajax/chatbots.php?ticket_id='.$ticketId;
+    echo <<<HTML
+        <button class="btn btn-sm btn-primary" onclick='viewChatbot("{$ticketId}", "{$rand}", "{$plugin_url}&context=followup")'>{$label_followup}</button>
+        <button class="btn btn-sm btn-secondary" onclick='viewChatbot("{$ticketId}", "{$rand}", "{$plugin_url}&context=solution")'>{$label_close}</button>
+    HTML;
+}
