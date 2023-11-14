@@ -47,21 +47,33 @@ $ticket->getFromDB($_POST['ticket_id']);
 $content = $_POST['content'];
 
 // add messages to the ticket based on the context
-if ($_POST['context'] == 'followup') {
-    $DB->queryOrDie(<<<SQL
-    INSERT INTO 'glpi_itilfollowups'
-    ('itemtype', 'item_id', 'content', 'date', 'users_id') VALUES
-    (
-        'Ticket',
-        {$_POST['ticket_id']},
-        '{$content}',
-        NOW(),
-        {$_SESSION['glpiID']}
-    )
-    SQL);
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Message added to ticket'
-    ]);
+switch ($_POST['context']) {
+    case 'followup':
+        $followup = new ITILFollowup();
+        $followup->add([
+            'itemtype' => 'Ticket',
+            'items_id' => $ticket->getID(),
+            'content' => $content,
+            'date' => date('Y-m-d H:i:s'),
+            'users_id' => Session::getLoginUserID(),
+            'requesttypes_id' => $ticket->fields['requesttypes_id'],
+        ]);
+        break;
+    case 'solution':
+        $solution = new ITILSolution();
+        $solution->add([
+            'itemtype' => 'Ticket',
+            'items_id' => $ticket->getID(),
+            'content' => $content,
+            'date' => date('Y-m-d H:i:s'),
+            'users_id' => Session::getLoginUserID(),
+            'requesttypes_id' => $ticket->fields['requesttypes_id'],
+        ]);
+        break;
+
 }
+echo json_encode([
+    'status' => 'success',
+    'message' => 'Message added to ticket'
+]);
 ?>

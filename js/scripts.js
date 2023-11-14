@@ -81,18 +81,7 @@ function updateTicketWithPrompt(context, ticket_id, endpoint) {
             'content': content,
         },
         success: function (data) {
-            response = JSON.parse(data);
-            messages.push({role: response.role, content: response.content})
-            // write the message character by character
-            console.log(response);
-            var i = 0;
-            for (const character of response.content) {
-                setTimeout(function () {
-                    $("#chatContent").find("p:last").append(character);
-                }, 10 * i);
-                i++;
-            }
-            userInput.disabled = false;
+            window.location.reload();
         },
     });
 }
