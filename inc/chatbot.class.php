@@ -12,6 +12,7 @@ class PluginTicketaiChatbot extends CommonDBTM
                 'root' => Plugin::getWebDir('ticketai'),
                 'context' => $context,
                 'ticket_id' => $ticket_id,
+                'endpoint' => Plugin::getWebDir('ticketai') . '/ajax/updateTicket.php',
             ]);
         } catch (Exception $e) {
             echo $e->getMessage();

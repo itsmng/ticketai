@@ -4,8 +4,17 @@
     </div>
     <div id="inputBox" class="input-group">
         <input type="text" id="userInput" class="form-control">
+        <button class="input-group-text btn btn-primary" onclick="sendMessage('{{root}}/ajax/prompt.php', '{{context}}' {{ context == 'helpdesk' ? '' : ',' ~ ticket_id}})">
+            <i class="fas fa-paper-plane"></i>
+        </button>
         {% if context != 'helpdesk' %}
-            <button class="input-group-text btn btn-primary" onclick="updateTicketWithPrompt({{context}})">{{"Send"|trans ~ " " ~ context}}</button>
+            <button
+                class="input-group-text btn btn-warning"
+                onclick="
+                updateTicketWithPrompt('{{context}}', {{ticket_id}}, '{{endpoint}}')
+                ">
+                {{"Send"|trans ~ " " ~ context}}
+            </button>
         {% endif %}
     </div>
 </div>
