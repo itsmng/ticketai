@@ -38,13 +38,9 @@ Il existe deux catégories de problèmes auxquelles les utilisateurs peuvent êt
 Lorsqu'un utilisateur signale un problème, votre rôle consiste à poser des questions pour comprendre et résoudre le problème, en les guidant vers une solution.
 Si le problème est lié à un logiciel, vous devez attribuer le ticket au technicien de support logiciel (ID 2).
 Si le problème est lié au matériel, vous devez attribuer le ticket au technicien de support matériel (ID 4).
-";
+Reponds dans la langue du client.";
 
-    const DEFAULT_FOLLOWUP_PROMPT = "
-Vous êtes une aide technicien a la résolution de problème. Vous devez poser des questions au technicien pour resumer ses actions et les enregistrer dans le ticket.
-";
-
-    const DEFAULT_CLOSE_PROMPT = "
+    const DEFAULT_TECH_PROMPT = "
 Vous êtes une aide technicien a la résolution de problème. Vous devez poser des questions au technicien pour resumer ses actions et les enregistrer dans le ticket.
 ";
 
@@ -72,12 +68,80 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
     public function showConfigForm() {
         global $DB;
 
-        $api_key_label = __("API Key");
-        $prompt_label = __("Prompt");
         $form_action = Plugin::getWebDir("ticketai")."/front/config.form.php";
         
         $config = ($DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1"))->next();
-        $api_key = $config["api_key"];
+
+        $update_models = <<<JS
+            function formatNumber(number) {
+                const gigabyte = 1000000000;
+
+                if (number >= gigabyte) {
+                    return (number / gigabyte).toFixed(1) + ' GB';
+                } else {
+                    return number.toString() + ' Bytes';
+                }
+            }
+
+            function updateModels(id, value) {
+                var endpoint = document.getElementById('endpointTextInput').value;
+                var model = document.getElementById(id);
+                var url = endpoint + '/api/tags';
+                var xhr = new XMLHttpRequest();
+
+                if (!endpoint)
+                    return;
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            models = data.models;
+                            model.innerHTML = '';
+                            for (const singleModel of models) {
+                                var option = document.createElement('option');
+                                option.value = singleModel.name;
+                                option.innerHTML = singleModel.name + ' (' + formatNumber(singleModel.size) + ')';
+                                model.appendChild(option);
+                            }
+                            // select the model in config
+                            model.value = value;
+                        });
+
+            }
+            updateModels('userModelSelectInput', '{$config['user_model']}');
+            updateModels('techModelSelectInput', '{$config['tech_model']}');
+        JS;
+
+        $imgFile = Plugin::getWebDir('ticketai') . '/img/ticketai.png';
+
+        $disableInputs =  <<<JS
+            setTimeout(() => {
+                onPremiseConfig = [
+                    'endpointTextInput',
+                    'userModelSelectInput',
+                    'techModelSelectInput',
+                ];
+                onlineConfig = [
+                    'gptEndpointTextInput',
+                    'userPromptTextInput',
+                    'techPromptTextInput',
+                ];
+                if ($('#connectionTypeSelectInput').val() == 'online') {
+                    for (const input of onPremiseConfig) {
+                        document.getElementById(input).disabled = true;
+                    }
+                    for (const input of onlineConfig) {
+                        document.getElementById(input).disabled = false;
+                    }
+                } else {
+                    for (const input of onPremiseConfig) {
+                        document.getElementById(input).disabled = false;
+                    }
+                    for (const input of onlineConfig) {
+                        document.getElementById(input).disabled = true;
+                    }
+                }
+            }, 100);
+        JS;
 
         $form = [
             'action' => $form_action,
@@ -91,57 +155,110 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
                 ],
             ],
             'content' => [
+                '' => [
+                    'visible' => true,
+                    'inputs' => [
+                            'logo' => [
+                            'content' => <<<HTML
+                                <div class="text-center w-100" style="height: 10rem">
+                                    <img src="{$imgFile}" class="h-100" alt="ollama logo" />
+                                </div>
+                            HTML,
+                        ],
+                    ],
+                ],
                 __('General configuration') => [
                     'visible' => true,
                     'inputs' => [
-                        $api_key_label => [
-                            'name' => 'api_key',
-                            'type' => 'text',
-                            'value' => $api_key
-                        ],
-                    ]
-                ],
-                __('User Prompt') => [
-                    'visible' => true,
-                    'inputs' => [
-                        __("Activated") => [
+                        __("User Activation") => [
                             'name' => 'user_activated',
                             'type' => 'checkbox',
                             'value' => 1,
                             $config['user_activated'] ? 'checked' : '' => '',
                         ],
-                        $prompt_label => [
-                            'name' => 'user_prompt',
-                            'type' => 'textarea',
-                            'value' => $config['user_prompt'],
-                            'rows' => 10,
-                        ],
-                    ]
-                ],
-                __('Technician Prompt') => [
-                    'visible' => true,
-                    'inputs' => [
-                        __('Activated') => [
+                        __('Technician activation') => [
                             'name' => 'tech_activated',
                             'type' => 'checkbox',
                             'value' => 1,
                             $config['tech_activated'] ? 'checked' : '' => '',
                         ],
-                        $prompt_label . ' ' . __('Followup') => [
-                            'name' => 'tech_prompt_followup',
-                            'type' => 'textarea',
-                            'value' => $config['tech_prompt_followup'],
-                            'rows' => 10,
+                        __('Connection') => [
+                            'name' => 'connection_type',
+                            'type' => 'select',
+                            'value' => $config['connection_type'],
+                            'id' => 'connectionTypeSelectInput',
+                            'values' => [
+                                'on_premise' => __('On premise'),
+                                'online' => __('Online'),
+                            ],
+                            'init' => $disableInputs,
+                            'hooks' => [
+                                'change' => $disableInputs,
+                            ]
                         ],
-                        $prompt_label . ' ' . __('Solution') => [
-                            'name' => 'tech_prompt_close',
+
+                    ]
+                ],
+                __('On premise configuration') => [
+                    'visible' => true,
+                    'inputs' => [
+                        __("API Endpoint") => [
+                            'name' => 'endpoint',
+                            'id' => 'endpointTextInput',
+                            'type' => 'text',
+                            'value' => $config['endpoint'],
+                            'placeholder' => 'https://api.ticketai.com:1234',
+                            'col_lg' => 12,
+                        ],
+                        __("User Model") => [
+                            'name' => 'user_model',
+                            'id' => 'userModelSelectInput',
+                            'type' => 'select',
+                            'value' => $config['user_model'],
+                            'values' => [],
+                            'init' => $update_models,
+                            'col_lg' => 6,
+                        ],
+                        __("Technician Model") => [
+                            'name' => 'tech_model',
+                            'id' => 'techModelSelectInput',
+                            'type' => 'select',
+                            'value' => $config['tech_model'],
+                            'values' => [],
+                            'init' => $update_models,
+                            'col_lg' => 6,
+                        ]
+                    ]
+                ],
+                __('Online configuration (chatGPT)') => [
+                    'visible' => true,
+                    'inputs' => [
+                        __("API key") => [
+                            'name' => 'api_key',
+                            'id' => 'gptEndpointTextInput',
+                            'type' => 'text',
+                            'value' => $config['api_key'],
+                            'col_lg' => 12,
+                        ],
+                        __("User Prompt") => [
+                            'name' => 'user_prompt',
+                            'id' => 'userPromptTextInput',
                             'type' => 'textarea',
-                            'value' => $config['tech_prompt_close'],
+                            'value' => $config['user_prompt'],
                             'rows' => 10,
+                            'col_lg' => 6,
+                        ],
+                        __("Technician Prompt") => [
+                            'name' => 'tech_prompt',
+                            'id' => 'techPromptTextInput',
+                            'type' => 'textarea',
+                            'value' => $config['tech_prompt'],
+                            'rows' => 10,
+                            'col_lg' => 6,
                         ],
                     ]
                 ],
-                '' => [
+                'hidden_inputs' => [
                     'visible' => false,
                     'inputs' => [
                         'action' => [
@@ -159,12 +276,49 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
         
     }
 
-    public function updateConfig() {
+    public function updateConfig($params) {
         global $DB;
+        // Assign values to variables
+        $config = $this->getConfig();
+        $endpoint = $params["endpoint"] ?? $config['endpoint'];
+        $api_key = $params["api_key"] ?? $config['api_key'];
+        $connection_type = $params["connection_type"] ?? $config['connection_type'];
+        $user_model = $params["user_model"] ?? $config['user_model'];
+        $tech_model = $params["tech_model"] ?? $config['tech_model'];
+        $user_activated = $params["user_activated"] ?? 0;
+        $tech_activated = $params["tech_activated"] ?? 0;
+        $user_prompt = $params["user_prompt"] ?? $config['user_prompt'];
+        $tech_prompt = $params["tech_prompt"] ?? $config['tech_prompt'];
+    
+        // Prepare the statement
+        $stmt = $DB->prepare('
+            UPDATE glpi_plugin_ticketai_config 
+            SET 
+                endpoint = ?,
+                api_key = ?,
+                connection_type = ?,
+                user_model = ?,
+                tech_model = ?,
+                user_activated = ?,
+                tech_activated = ?,
+                user_prompt = ?,
+                tech_prompt = ?
+            WHERE id = 1');
 
-        $api_key = $_POST["api_key"];
-        $prompt = $_POST["prompt"];
-        $DB->request("UPDATE glpi_plugin_whitelabel_config SET api_key='$api_key', prompt='$prompt' WHERE id=1");
+    
+        $stmt->bind_param('sssssiiss',
+            $endpoint,
+            $api_key,
+            $connection_type,
+            $user_model,
+            $tech_model,
+            $user_activated,
+            $tech_activated,
+            $user_prompt,
+            $tech_prompt,
+        );
+        $stmt->execute();
+        $stmt->close();
     }
 
     static public function getConfig() {

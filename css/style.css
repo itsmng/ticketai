@@ -16,11 +16,11 @@
     overflow-y: scroll;
 }
 
-#userMessage {
+.userMessage {
     border-radius: 10px 10px 0 10px;
 }
 
-#botMessage {
+.botMessage {
     border-radius: 10px 10px 10px 0;
 }
 

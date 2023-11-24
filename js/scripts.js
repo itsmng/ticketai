@@ -34,54 +34,65 @@ function viewChatbot(id, rand, url) {
 
 }
 
-function sendMessage(ajaxurl, context, ticket_id = 0) {
-    const message = userInput.value;
+function sendMessage(endpoint, ajax_endpoint, model, prompt, context, displayUser = true) {
+    //ollama endpoint: 172.18.15.210:11434/api/
     userInput.value = '';
     userInput.disabled = true;
-    if (message !== '' ) {
-        messages.push({role: "user", content: message});
-        $("#chatContent").append("<p id='userMessage' class='bg-primary text-white ml-auto mb-1'>" + message + "</p>");
+    if (prompt !== '' && displayUser) {
+        $("#chatContent").append("<p class='bg-primary text-white ml-auto mb-1 userMessage'>" + prompt + "</p>");
     }
-    $("#chatContent").append("<p id='botMessage' class='loading bg-secondary text-white mb-1'>...</p>");
-    $.ajax({
-        type: "POST",
-        url: ajaxurl,
-        data: {
-            'messages': messages,
-            'context': context,
-            'ticket_id': ticket_id,
+    const unescapedPrompt = prompt.replace(/\\'/g, "'");
+    $("#chatContent").append("<p class='loading bg-secondary text-white mb-1 botMessage'>...</p>");
+    chatContent = document.getElementById("chatContent");
+    chatContent.scrollTop = chatContent.scrollHeight;
+    return fetch(endpoint + '/generate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        success: function (data) {
-            $("#chatContent").find("p:last").remove();
-            $("#chatContent").append("<p id='botMessage' class='bg-secondary text-white mb-1'></p>");
-            response = JSON.parse(data);
-            messages.push({role: response.role, content: response.content})
-            // write the message character by character
-            console.log(response);
-            var i = 0;
-            for (const character of response.content) {
-                setTimeout(function () {
-                    $("#chatContent").find("p:last").append(character);
-                }, 10 * i);
-                i++;
+        body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false, })
+    }).then(response => response.json()).then(data => {
+        const jsonregex = /\{.*\}/;
+        const match = data.response.match(jsonregex);
+        data.response = data.response.replace(jsonregex, "");
+
+        if (match) {
+            const jsonString = match[0]
+                .replace(/\\/g, "");
+            try {
+                body = JSON.parse(jsonString);
+                body.context = "new";
+                updateTicketWithPrompt(ajax_endpoint, body);
+            } catch (e) {
+                console.log(e);
             }
-            userInput.disabled = false;
-        },
+        }
+        return addMessageToChat(data);
     });
 }
 
-function updateTicketWithPrompt(context, ticket_id, endpoint) {
-    content = $("#chatContent").find("p:last")[0].outerText;
+function addMessageToChat(data) {
+    $("#chatContent").find("p:last").remove();
+    $("#chatContent").append("<p class='bg-secondary text-white mb-1 botMessage'></p>");
+    // add response character by character to botMessage while scrolling to bottom
+    for (let i = 0; i < data.response.length; i++) {
+        setTimeout(function (index) {
+            $("#chatContent").find("p:last").append(data.response[index]);
+            chatContent = document.getElementById("chatContent");
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }, i * 10, i);
+    }
+    userInput.disabled = false;
+    return data.context;
+}
+
+function updateTicketWithPrompt(endpoint, body) {
+    console.log(body);
     $.ajax({
         type: "POST",
         url: endpoint,
-        data: {
-            'context': context,
-            'ticket_id': ticket_id,
-            'content': content,
-        },
+        data: body,
         success: function (data) {
-            window.location.reload();
         },
     });
 }

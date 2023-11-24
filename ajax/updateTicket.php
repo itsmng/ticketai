@@ -35,36 +35,36 @@ include("../../../inc/includes.php");
 $ticket = new Ticket();
 global $DB;
 
-if (!isset($_POST['ticket_id']) || !isset($_POST['content'])) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Missing parameters'
-    ]);
-    return;
-}
-
-$ticket->getFromDB($_POST['ticket_id']);
-$content = $_POST['content'];
-
 // add messages to the ticket based on the context
 switch ($_POST['context']) {
-    case 'followup':
+    case 'new':
+        $ticket->add([
+            'add' => '',
+            'name' => addslashes($_POST['name']),
+            'content' => addslashes($_POST['content']),
+            'type' => $_POST['type'],
+            '_users_id_assign' => $_POST['user_id_assign'],
+        ]);
+        break;
+        case 'followup':
+        $ticket->getFromDB($_POST['ticket_id']);
         $followup = new ITILFollowup();
         $followup->add([
             'itemtype' => 'Ticket',
             'items_id' => $ticket->getID(),
-            'content' => $content,
+            'content' => $_POST['content'],
             'date' => date('Y-m-d H:i:s'),
             'users_id' => Session::getLoginUserID(),
             'requesttypes_id' => $ticket->fields['requesttypes_id'],
         ]);
         break;
     case 'solution':
+        $ticket->getFromDB($_POST['ticket_id']);
         $solution = new ITILSolution();
         $solution->add([
             'itemtype' => 'Ticket',
             'items_id' => $ticket->getID(),
-            'content' => $content,
+            'content' => $_POST['content'],
             'date' => date('Y-m-d H:i:s'),
             'users_id' => Session::getLoginUserID(),
             'requesttypes_id' => $ticket->fields['requesttypes_id'],

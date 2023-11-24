@@ -38,21 +38,46 @@ function plugin_ticketai_install() {
     if (!$DB->tableExists("glpi_plugin_ticketai_config")) {        
         $query = "CREATE TABLE glpi_plugin_ticketai_config (
             id int(11) NOT NULL AUTO_INCREMENT,
-            api_key varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             user_activated tinyint(1) COLLATE utf8_unicode_ci NOT NULL,
-            user_prompt varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
             tech_activated tinyint(1) COLLATE utf8_unicode_ci NOT NULL,
-            tech_prompt_followup varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
-            tech_prompt_close varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+            connection_type varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            endpoint varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            user_model varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            tech_model varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            api_key varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+            user_prompt LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
+            tech_prompt LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
             PRIMARY KEY  (`id`))
             ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->queryOrDie($query, $DB->error());
 
-            $query = 'INSERT INTO `glpi_plugin_ticketai_config`
-            (`id`, `api_key`, `user_activated`, `user_prompt`, `tech_activated`, `tech_prompt_followup`, `tech_prompt_close`)
-            VALUES (1, "", 0,"'.PluginTicketaiConfig::DEFAULT_USER_PROMPT
-                .'", 0, "'.PluginTicketaiConfig::DEFAULT_FOLLOWUP_PROMPT.'", "'.PluginTicketaiConfig::DEFAULT_CLOSE_PROMPT.'")
-            ';
+            $default_prompt = addslashes(PluginTicketaiConfig::DEFAULT_USER_PROMPT);
+            $default_tech_prompt = addslashes(PluginTicketaiConfig::DEFAULT_TECH_PROMPT);
+            $query = "INSERT INTO `glpi_plugin_ticketai_config`
+                (
+                    `id`,
+                    `user_activated`,
+                    `tech_activated`,
+                    `connection_type`,
+                    `endpoint`,
+                    `user_model`,
+                    `tech_model`,
+                    `api_key`,
+                    `user_prompt`,
+                    `tech_prompt`
+                ) VALUES (
+                    1,
+                    1,
+                    1,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '{$default_prompt}',
+                    '{$default_tech_prompt}'
+                )";
+                echo $query;
             $DB->queryOrDie($query, $DB->error());
     }
 

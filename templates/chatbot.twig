@@ -4,7 +4,7 @@
     </div>
     <div id="inputBox" class="input-group">
         <input type="text" id="userInput" class="form-control">
-        <button class="input-group-text btn btn-primary" onclick="sendMessage('{{root}}/ajax/prompt.php', '{{context}}' {{ context == 'helpdesk' ? '' : ',' ~ ticket_id}})">
+        <button class="input-group-text btn btn-primary" onclick="sendMessage('{{endpoint}}', '{{context}}' {{ context == 'helpdesk' ? '' : ',' ~ ticket_id}})">
             <i class="fas fa-paper-plane"></i>
         </button>
         {% if context != 'helpdesk' %}
@@ -20,11 +20,15 @@
 </div>
 <script src="{{root}}/js/scripts.js"></script>
 <script>
-var messages = [];
-sendMessage('{{root}}/ajax/prompt.php', '{{context}}' {{ context == 'helpdesk' ? '' : ',' ~ ticket_id}});
+context = []
+sendMessage('{{endpoint}}', '{{ajax_endpoint}}', '{{model}}', `{{"Bonjour"|trans}}`, [], false).then(newContext => {
+    context = newContext;
+});
 $('#userInput').on("keyup", function (event) {
     if (event.key === "Enter") {
-        sendMessage('{{root}}/ajax/prompt.php', '{{context}}' {{ context == 'helpdesk' ? '' : ',' ~ ticket_id}});
+        sendMessage('{{endpoint}}', '{{ajax_endpoint}}', '{{model}}', $('#userInput').val(), context, true).then(newContext => {
+            context = newContext;
+        });
     }
 });
 </script>

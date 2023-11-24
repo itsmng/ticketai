@@ -47,8 +47,10 @@ function plugin_init_ticketai() {
     $plugin = new Plugin();
     if (Session::haveRight("plugin_ticketai_ticketai", READ) && $plugin->isActivated("ticketai")) {
         $config = PluginTicketaiConfig::getConfig();
-        if ($config['user_activated'])
+        if ($config['user_activated']) {
             $PLUGIN_HOOKS['menu_toadd']['ticketai'] = array('helpdesk' => 'PluginTicketaiChatbot');
+            $PLUGIN_HOOKS['helpdesk_menu_entry']['ticketai'] = true;
+        }
         if ($config['tech_activated'])
             $PLUGIN_HOOKS['timeline_actions']['ticketai'] = 'ticketai_timeline_actions';
     }
