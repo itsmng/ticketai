@@ -113,6 +113,11 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
 
         $imgFile = Plugin::getWebDir('ticketai') . '/img/ticketai.png';
 
+        $order              = ['\\r', '\\n', "\\'", '\\"', "\\\\"];
+        $replace            = ["\r", "\n", "'", '"', "\\"];
+        $config['tech_prompt'] = str_replace($order, $replace, $config['tech_prompt']);
+        $config['user_prompt'] = str_replace($order, $replace, $config['user_prompt']);
+
         $disableInputs =  <<<JS
             setTimeout(() => {
                 onPremiseConfig = [
@@ -244,7 +249,7 @@ N'oubliez pas d'utiliser des guillemets doubles pour le format JSON. Le ticket s
                             'name' => 'user_prompt',
                             'id' => 'userPromptTextInput',
                             'type' => 'textarea',
-                            'value' => $config['user_prompt'],
+                            'value' => Html::cleanInputText($config['user_prompt']),
                             'rows' => 10,
                             'col_lg' => 6,
                         ],
