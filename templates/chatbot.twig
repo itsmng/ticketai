@@ -21,13 +21,14 @@
 <script src="{{root}}/js/scripts.js"></script>
 <script>
 context = []
-sendMessage('{{endpoint}}', '{{ajax_endpoint}}', '{{model}}', `{{"Bonjour"|trans}}`, [], false).then(newContext => {
-    context = newContext;
+{# function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model = '', displayUser = true) { #}
+sendMessage('{{connection_type}}', '{{ajax_endpoint}}', context, `{{"Bonjour"|trans}}`, '{{endpoint|default("")}}', '{{model|default("")}}', false)
+    .then(newContext => { context = newContext;
 });
 $('#userInput').on("keyup", function (event) {
     if (event.key === "Enter") {
-        sendMessage('{{endpoint}}', '{{ajax_endpoint}}', '{{model}}', $('#userInput').val(), context, true).then(newContext => {
-            context = newContext;
+        sendMessage('{{connection_type}}', '{{ajax_endpoint}}', context, $('#userInput').val(), '{{endpoint|default("")}}', '{{model|default("")}}', true)
+        .then(newContext => { context = newContext; 
         });
     }
 });

@@ -34,8 +34,7 @@ function viewChatbot(id, rand, url) {
 
 }
 
-function sendMessage(endpoint, ajax_endpoint, model, prompt, context, displayUser = true) {
-    //ollama endpoint: 172.18.15.210:11434/api/
+function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model = '', displayUser = true) {
     userInput.value = '';
     userInput.disabled = true;
     if (prompt !== '' && displayUser) {
@@ -45,45 +44,73 @@ function sendMessage(endpoint, ajax_endpoint, model, prompt, context, displayUse
     $("#chatContent").append("<p class='loading bg-secondary text-white mb-1 botMessage'>...</p>");
     chatContent = document.getElementById("chatContent");
     chatContent.scrollTop = chatContent.scrollHeight;
-    return fetch(endpoint + '/generate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false, })
-    }).then(response => response.json()).then(data => {
-        const jsonregex = /\{.*\}/;
-        const match = data.response.match(jsonregex);
-        data.response = data.response.replace(jsonregex, "");
-
-        if (match) {
-            const jsonString = match[0]
-                .replace(/\\/g, "");
-            try {
-                body = JSON.parse(jsonString);
-                body.context = "new";
-                updateTicketWithPrompt(ajax_endpoint, body);
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        return addMessageToChat(data);
-    });
+    switch (mode) {
+        case 'on_premise':
+            return fetch(endpoint + '/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
+            }).then(response => response.json()).then(data => {
+                data.response = extractJsonForTicket(data.response);
+                addMessageToChat(data.response);
+                return data.context;
+            });
+            break;
+        default:
+            context.push({role: 'user', 'content': unescapedPrompt});
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: endpoint,
+                    data: { messages: context },
+                    success: function (data) {
+                        jsonData = JSON.parse(data);
+                        jsonData = extractJsonForTicket(jsonData.content);
+                        addMessageToChat(jsonData);
+                        context.push({role: 'assistant', 'content': jsonData})
+                        // Resolve the Promise with the updated context
+                        resolve(context);
+                    },
+                    error: function (error) {
+                        // Reject the Promise with an error
+                        reject(error);
+                    }
+                });
+            });
+    }
 }
 
 function addMessageToChat(data) {
     $("#chatContent").find("p:last").remove();
     $("#chatContent").append("<p class='bg-secondary text-white mb-1 botMessage'></p>");
     // add response character by character to botMessage while scrolling to bottom
-    for (let i = 0; i < data.response.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         setTimeout(function (index) {
-            $("#chatContent").find("p:last").append(data.response[index]);
+            $("#chatContent").find("p:last").append(data[index]);
             chatContent = document.getElementById("chatContent");
             chatContent.scrollTop = chatContent.scrollHeight;
         }, i * 10, i);
     }
     userInput.disabled = false;
-    return data.context;
+}
+
+function extractJsonForTicket(message) {
+    const jsonregex = /\{.*\}/;
+    const match = message.match(jsonregex);
+    
+    if (match) {
+        message = message.replace(jsonregex, "");
+        const jsonString = match[0]
+            .replace(/\\/g, "");
+        try {
+            body = JSON.parse(jsonString);
+            body.context = "new";
+            updateTicketWithPrompt(ajax_endpoint, body);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    return message;
 }
 
 function updateTicketWithPrompt(endpoint, body) {
