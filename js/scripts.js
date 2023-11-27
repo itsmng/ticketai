@@ -115,12 +115,12 @@ function extractJsonForTicket(ajax_endpoint, message) {
 }
 
 function updateTicketWithPrompt(endpoint, body) {
-    console.log(body);
     $.ajax({
         type: "POST",
         url: endpoint,
         data: body,
         success: function (data) {
+            window.location.reload();
         },
     });
 }

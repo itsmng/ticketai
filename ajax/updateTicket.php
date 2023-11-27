@@ -43,7 +43,7 @@ switch ($_POST['context']) {
             'name' => addslashes($_POST['name']),
             'content' => addslashes($_POST['content']),
             'type' => $_POST['type'],
-            '_users_id_assign' => $_POST['user_id_assign'],
+            '_groups_id_assign' => $_POST['group_id_assign'],
         ]);
         break;
         case 'followup':
