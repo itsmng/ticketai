@@ -51,7 +51,7 @@ if (!isset($_POST['context']) || $_POST['context'] == 'helpdesk') {
 
 $systemPrompt = [
     'role' => 'system',
-    'content' => $prompt . ($messages == 'helpdesk' ? ' ' . PluginTicketaiConfig::USER_FORMAT_PROMPT : '')
+    'content' => $prompt,
 ];
 
 if ($messages != 'helpdesk' && isset($_POST['ticket_id'])) {

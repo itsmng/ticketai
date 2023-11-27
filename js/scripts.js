@@ -51,7 +51,7 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
             }).then(response => response.json()).then(data => {
-                data.response = extractJsonForTicket(data.response);
+                data.response = extractJsonForTicket(ajax_endpoint, data.response);
                 addMessageToChat(data.response);
                 return data.context;
             });
@@ -65,7 +65,7 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                     data: { messages: context },
                     success: function (data) {
                         jsonData = JSON.parse(data);
-                        jsonData = extractJsonForTicket(jsonData.content);
+                        jsonData = extractJsonForTicket(ajax_endpoint, jsonData.content);
                         addMessageToChat(jsonData);
                         context.push({role: 'assistant', 'content': jsonData})
                         // Resolve the Promise with the updated context
@@ -94,9 +94,10 @@ function addMessageToChat(data) {
     userInput.disabled = false;
 }
 
-function extractJsonForTicket(message) {
+function extractJsonForTicket(ajax_endpoint, message) {
     const jsonregex = /\{.*\}/;
     const match = message.match(jsonregex);
+    console.log(ajax_endpoint);
     
     if (match) {
         message = message.replace(jsonregex, "");
