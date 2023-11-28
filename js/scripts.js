@@ -31,7 +31,6 @@
 function viewChatbot(id, rand, url) {
     $('#viewitem' + id + rand).load(url);
     setTimeout(function () { grid.resizeToContent($('#ContentForTabs > div').first()[0]); }, 100);
-
 }
 
 function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model = '', displayUser = true) {

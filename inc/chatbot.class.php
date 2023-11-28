@@ -4,7 +4,7 @@ require_once(Plugin::getPhpDir('ticketai') . '/vendor/autoload.php');
 class PluginTicketaiChatbot extends CommonDBTM
 {
 
-    static function getChatWindow(string $context, string $mode = 'user', int $ticket_id = null) {
+    static function getChatWindow(string $context, string $mode = 'user', string $initPrompt = 'Bonjour', int $ticket_id = null) {
         require_once GLPI_ROOT . "/ng/twig.class.php";
         
         $config = PluginTicketaiConfig::getConfig();
@@ -14,6 +14,7 @@ class PluginTicketaiChatbot extends CommonDBTM
             'ticket_id' => $ticket_id,
             'connection_type' => $config['connection_type'],
             'ajax_endpoint' => Plugin::getWebDir('ticketai') . '/ajax/updateTicket.php',
+            'init_prompt' => $initPrompt
         ];
         $twig = Twig::load(Plugin::getPhpDir('ticketai') . "/templates", false);
         try {

@@ -33,5 +33,16 @@
 include("../../../inc/includes.php");
 include("../inc/chatbot.class.php");
 
+Session::checkLoginUser();
+
+
 $chatbot = new PluginTicketaiChatbot();
-$chatbot->getChatWindow($_REQUEST['context'] , $_REQUEST['ticket_id'] ?? null);
+$ticket = new Ticket();
+$ticket->getFromDB($_REQUEST['ticket_id']);
+
+$init_prompt = __("I am technician looking to write a %s for the ticket %s which state:
+%s: %s
+Could you help me with that ?");
+$chatbot->getChatWindow($_REQUEST['context'], $_REQUEST['mode'],
+    sprintf($init_prompt, $_REQUEST['context'], $_REQUEST['ticket_id'], $ticket->fields['name'], $ticket->fields['content']),
+    $_REQUEST['ticket_id'] ?? null);
