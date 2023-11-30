@@ -419,7 +419,7 @@ class PluginTicketaiConfig extends CommonDBTM {
         // Assign values to variables
         $config = $this->getConfig();
         $endpoint = $params["endpoint"] ?? $config['endpoint'];
-        $api_key = Toolbox::sodiumEncrypt($params["api_key"]) ?? $config['api_key'];
+        $api_key = isset($params["api_key"]) ? Toolbox::sodiumEncrypt($params["api_key"]) : $config['api_key'];
         $connection_type = $params["connection_type"] ?? $config['connection_type'];
         $user_model = $params["user_model"] ?? $config['user_model'];
         $tech_model = $params["tech_model"] ?? $config['tech_model'];

@@ -55,9 +55,10 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
-            }).then(response => response.json()).then(data => {
-                return extractJsonForTicket(ajax_endpoint, data.response).then(data =>
-                    ({response: data.response, context: data.context}));
+            }).then(response => response.json()).then(response => {
+                    return extractJsonForTicket(ajax_endpoint, response.response).then(data => {
+                    return {response: data, context: response.context};
+                })
             });
         default:
             context.push({role: 'user', 'content': unescapedPrompt});
