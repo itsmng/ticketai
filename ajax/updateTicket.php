@@ -40,8 +40,8 @@ switch ($_POST['context']) {
     case 'new':
         $ticket->add([
             'add' => '',
-            'name' => addslashes($_POST['name']),
-            'content' => addslashes($_POST['content']),
+            'name' => $_POST['name'],
+            'content' => $_POST['content'],
             'type' => $_POST['type'],
             '_groups_id_assign' => $_POST['group_id_assign'],
         ]);
