@@ -28,21 +28,27 @@
  * along with ITSM-NG. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  */
+
 function viewChatbot(id, rand, url) {
     $('#viewitem' + id + rand).load(url);
-    setTimeout(function () { grid.resizeToContent($('#ContentForTabs > div').first()[0]); }, 100);
+    setTimeout(function () { 
+        grid.resizeToContent($('#ContentForTabs > div').first()[0]); 
+    }, 100);
 }
 
 function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model = '', displayUser = true) {
     userInput.value = '';
     userInput.disabled = true;
+
     if (prompt !== '' && displayUser) {
         $("#chatContent").append("<p class='bg-primary text-white ml-auto mb-1 userMessage'>" + prompt + "</p>");
     }
+
     const unescapedPrompt = prompt.replace(/\\'/g, "'");
     $("#chatContent").append("<p class='loading bg-secondary text-white mb-1 botMessage'>...</p>");
     chatContent = document.getElementById("chatContent");
     chatContent.scrollTop = chatContent.scrollHeight;
+
     switch (mode) {
         case 'on_premise':
             return fetch(endpoint + '/generate', {
@@ -50,11 +56,9 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
             }).then(response => response.json()).then(data => {
-                data.response = extractJsonForTicket(ajax_endpoint, data.response);
-                addMessageToChat(data.response);
-                return data.context;
+                return extractJsonForTicket(ajax_endpoint, data.response).then(data =>
+                    ({response: data.response, context: data.context}));
             });
-            break;
         default:
             context.push({role: 'user', 'content': unescapedPrompt});
             return new Promise((resolve, reject) => {
@@ -64,14 +68,15 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                     data: { messages: context },
                     success: function (data) {
                         jsonData = JSON.parse(data);
-                        jsonData = extractJsonForTicket(ajax_endpoint, jsonData.content);
-                        addMessageToChat(jsonData);
-                        context.push({role: 'assistant', 'content': jsonData})
-                        // Resolve the Promise with the updated context
-                        resolve(context);
+                        context.push({role: 'assistant', 'content': jsonData.content});
+                        resolve(extractJsonForTicket(ajax_endpoint, jsonData.content).then(data => {
+                            return {
+                                response: data,
+                                context: context
+                            }
+                        }));
                     },
                     error: function (error) {
-                        // Reject the Promise with an error
                         reject(error);
                     }
                 });
@@ -82,10 +87,10 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
 function addMessageToChat(data) {
     $("#chatContent").find("p:last").remove();
     $("#chatContent").append("<p class='bg-secondary text-white mb-1 botMessage'></p>");
-    // add response character by character to botMessage while scrolling to bottom
+
     for (let i = 0; i < data.length; i++) {
         setTimeout(function (index) {
-            $("#chatContent").find("p:last").append(data[index]);
+            $("#chatContent").find("p:last").html(data.slice(0, index));
             chatContent = document.getElementById("chatContent");
             chatContent.scrollTop = chatContent.scrollHeight;
         }, i * 10, i);
@@ -96,30 +101,35 @@ function addMessageToChat(data) {
 function extractJsonForTicket(ajax_endpoint, message) {
     const jsonregex = /\{.*\}/;
     const match = message.match(jsonregex);
-    console.log(ajax_endpoint);
-    
+
     if (match) {
         message = message.replace(jsonregex, "");
-        const jsonString = match[0]
-            .replace(/\\/g, "");
+        const jsonString = match[0].replace(/\\/g, "");
+
         try {
             body = JSON.parse(jsonString);
             body.context = "new";
-            updateTicketWithPrompt(ajax_endpoint, body);
+            return updateTicketWithPrompt(ajax_endpoint, body).then(data => data);
         } catch (e) {
             console.log(e);
+            return new Promise((resolve, reject) => {
+                reject(e);
+            });
         }
+    } else {
+        return new Promise((resolve, reject) => {
+            resolve(message);
+        });
     }
-    return message;
 }
 
 function updateTicketWithPrompt(endpoint, body) {
-    $.ajax({
+    return $.ajax({
         type: "POST",
         url: endpoint,
         data: body,
         success: function (data) {
-            window.location.reload();
+            return data;
         },
     });
 }

@@ -74,6 +74,9 @@ switch ($_POST['context']) {
 }
 echo json_encode([
     'status' => 'success',
-    'message' => 'Message added to ticket'
+    'message' => 'Message added to ticket',
+    'ticket_id' => $ticket->getID(),
+    'ticket_name' => $ticket->fields['name'],
+    'ticket_url' => $ticket->getLinkURL(),
 ]);
 ?>
