@@ -40,7 +40,7 @@ if (!Plugin::isPluginActive('ticketai')) {
 }
 
 $config = PluginTicketaiConfig::getConfig();
-$api_key = $config['api_key'];
+$api_key = Toolbox::sodiumDecrypt($config['api_key']);
 $messages = $_POST['messages'];
 $prompt = '';
 if (!isset($_POST['context']) || $_POST['context'] == 'helpdesk') {
