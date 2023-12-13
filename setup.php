@@ -34,7 +34,7 @@ function plugin_init_ticketai() {
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS['csrf_compliant']['ticketai'] = true;
-    $PLUGIN_HOOKS['change_profile']['ticketai'] = array('PluginWhitelabelProfile', 'changeProfile');
+    $PLUGIN_HOOKS['change_profile']['ticketai'] = array('PluginTicketailProfile', 'changeProfile');
     $PLUGIN_HOOKS['add_javascript']['ticketai'] = 'js/scripts.js';
 
     Plugin::registerClass('PluginTicketaiProfile', ['addtabon' => array('Profile')]);
