@@ -77,7 +77,6 @@ function plugin_ticketai_install() {
                     '{$default_prompt}',
                     '{$default_tech_prompt}'
                 )";
-                echo $query;
             $DB->queryOrDie($query, $DB->error());
     }
 
