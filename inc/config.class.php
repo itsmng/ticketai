@@ -283,7 +283,6 @@ class PluginTicketaiConfig extends CommonDBTM {
 
         $form = [
             'action' => $form_action,
-            'method' => 'post',
             'buttons' => [
                 [
                     'type' => 'submit',
@@ -296,12 +295,14 @@ class PluginTicketaiConfig extends CommonDBTM {
                 '' => [
                     'visible' => true,
                     'inputs' => [
-                            'logo' => [
+                            '' => [
                             'content' => <<<HTML
                                 <div class="text-center w-100" style="height: 10rem">
                                     <img src="{$imgFile}" class="h-100" alt="ollama logo" />
                                 </div>
                             HTML,
+                            'col_lg' => 12,
+                            'col_md' => 12,
                         ],
                     ],
                 ],
@@ -375,7 +376,7 @@ class PluginTicketaiConfig extends CommonDBTM {
                             'name' => 'api_key',
                             'id' => 'gptEndpointTextInput',
                             'type' => 'text',
-                            'value' => $config['api_key'],
+                            'value' => Toolbox::sodiumDecrypt($config['api_key']),
                             'col_lg' => 12,
                         ],
                         __("User Prompt") => [
@@ -409,7 +410,6 @@ class PluginTicketaiConfig extends CommonDBTM {
             ]
         ];
 
-        include_once GLPI_ROOT."/ng/form.utils.php";
         renderTwigForm($form);
         
     }

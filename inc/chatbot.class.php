@@ -5,8 +5,6 @@ class PluginTicketaiChatbot extends CommonDBTM
 {
 
     static function getChatWindow(string $context, string $mode = 'user', string $initPrompt = 'Bonjour', int $ticket_id = null) {
-        require_once GLPI_ROOT . "/ng/twig.class.php";
-        
         $config = PluginTicketaiConfig::getConfig();
         $twig_vars = [
             'root' => Plugin::getWebDir('ticketai'),
@@ -16,23 +14,18 @@ class PluginTicketaiChatbot extends CommonDBTM
             'ajax_endpoint' => Plugin::getWebDir('ticketai') . '/ajax/updateTicket.php',
             'init_prompt' => $initPrompt
         ];
-        $twig = Twig::load(Plugin::getPhpDir('ticketai') . "/templates", false);
-        try {
-            switch ($config['connection_type']) {
-                case 'on_premise':
-                    $twig_vars['endpoint'] = $config['endpoint'] . '/api';
-                    $twig_vars['model'] = $config[$mode . '_model'];
-                    break;
-                default:
-                    $twig_vars['endpoint'] = Plugin::getWebDir('ticketai') . '/ajax/promptOpenai.php';
-                    $twig_vars['api_key'] = $config['api_key'];
-                    $twig_vars['mode'] = $mode;
-                    break;
-            } 
-            echo $twig->render('chatbot.twig', $twig_vars);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        switch ($config['connection_type']) {
+            case 'on_premise':
+                $twig_vars['endpoint'] = $config['endpoint'] . '/api';
+                $twig_vars['model'] = $config[$mode . '_model'];
+                break;
+            default:
+                $twig_vars['endpoint'] = Plugin::getWebDir('ticketai') . '/ajax/promptOpenai.php';
+                $twig_vars['api_key'] = $config['api_key'];
+                $twig_vars['mode'] = $mode;
+                break;
+        } 
+        renderTwigTemplate('chatbot.twig', $twig_vars, Plugin::getPhpDir('ticketai', false) . '/templates/');
     }
 
     static function getMenuContent()
