@@ -1,0 +1,45 @@
+name: Release workflow
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release on GitHub
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Build project
+        run: |
+          cd /home/runner/work/ticketai/
+          cd ticketai && composer install --no-dev && cd ..
+          rm -r ticketai/.git* ticketai/composer.*
+          tar -zcvf ticketai-${{ github.ref_name }}.tgz tag
+
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ticketai-${{ github.ref_name }}.tgz
+          path: /home/runner/work/ticketai/ticketai-${{ github.ref_name }}.tgz
+      
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /home/runner/work/ticketai/ticketai-${{ github.ref_name }}.tgz
+          body: "New release is available"
+          name: ${{ github.ref_name }}
+          draft: true
+          generate_release_notes: true
