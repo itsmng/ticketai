@@ -35,7 +35,7 @@ require_once("../inc/config.class.php");
 $plugin = new Plugin();
 if($plugin->isActivated("ticketai")) {
     $config = new PluginTicketaiConfig();
-    if(isset($_POST["action"])) {
+    if(isset($_POST["update"])) {
         Session::checkRight("config", UPDATE);
         $config->updateConfig($_POST);
         $configContent = $config->getConfig();

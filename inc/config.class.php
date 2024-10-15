@@ -205,45 +205,6 @@ class PluginTicketaiConfig extends CommonDBTM {
         
         $config = ($DB->request("SELECT * FROM glpi_plugin_ticketai_config WHERE id=1"))->next();
 
-        $update_models = <<<JS
-            function formatNumber(number) {
-                const gigabyte = 1000000000;
-
-                if (number >= gigabyte) {
-                    return (number / gigabyte).toFixed(1) + ' GB';
-                } else {
-                    return number.toString() + ' Bytes';
-                }
-            }
-
-            function updateModels(id, value) {
-                var endpoint = document.getElementById('endpointTextInput').value;
-                var model = document.getElementById(id);
-                var url = endpoint + '/api/tags';
-                var xhr = new XMLHttpRequest();
-
-                if (!endpoint)
-                    return;
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            models = data.models;
-                            model.innerHTML = '';
-                            for (const singleModel of models) {
-                                var option = document.createElement('option');
-                                option.value = singleModel.name;
-                                option.innerHTML = singleModel.name + ' (' + formatNumber(singleModel.size) + ')';
-                                model.appendChild(option);
-                            }
-                            // select the model in config
-                            model.value = value;
-                        });
-
-            }
-            updateModels('userModelSelectInput', '{$config['user_model']}');
-            updateModels('techModelSelectInput', '{$config['tech_model']}');
-        JS;
-
         $imgFile = Plugin::getWebDir('ticketai') . '/img/ticketai.png';
 
         $order              = ['\\r', '\\n', "\\'", '\\"', "\\\\"];
@@ -251,167 +212,138 @@ class PluginTicketaiConfig extends CommonDBTM {
         $config['tech_prompt'] = str_replace($order, $replace, $config['tech_prompt']);
         $config['user_prompt'] = str_replace($order, $replace, $config['user_prompt']);
 
-        $disableInputs =  <<<JS
-            setTimeout(() => {
-                onPremiseConfig = [
-                    'endpointTextInput',
-                    'userModelSelectInput',
-                    'techModelSelectInput',
-                ];
-                onlineConfig = [
-                    'gptEndpointTextInput',
-                    'userPromptTextInput',
-                    'techPromptTextInput',
-                ];
-                if ($('#connectionTypeSelectInput').val() == 'online') {
-                    for (const input of onPremiseConfig) {
-                        document.getElementById(input).disabled = true;
-                    }
-                    for (const input of onlineConfig) {
-                        document.getElementById(input).disabled = false;
-                    }
-                } else {
-                    for (const input of onPremiseConfig) {
-                        document.getElementById(input).disabled = false;
-                    }
-                    for (const input of onlineConfig) {
-                        document.getElementById(input).disabled = true;
-                    }
+?>
+<div class="center" style="height: 10rem; width: 100%;">
+    <img src="<?php echo $imgFile ?>" alt="ticketai logo" style="height: 100%;">
+    </div>
+    <form action="<?php echo $form_action ?>" class="tab_cadre" method="post" style="width: 70%; min-width: 30rem; margin-inline: auto; padding-inline: 2rem; text-align: center">
+        <h2><?php echo __('General Configuration') ?></h2>
+        <div style="display: flex; flex-wrap: wrap; margin-inline: auto;padding-bottom: 2rem; justify-content: space-evenly;">
+            <div>
+            <label for="userActivated" style="margin-right: .5rem"><?php echo __('User Activation') ?></label>
+                <input type="hidden" name="user_activated" value="0"/>
+                <input type="checkbox" name="user_activated" id="userActivated" value="1" <?php echo $config['user_activated'] ? 'checked' : '' ?> />
+            </div>
+            <div>
+            <label for="techActivated" style="margin-right: .5rem"><?php echo __('Technician Activation') ?></label>
+                <input type="hidden" name="tech_activated" value="0"/>
+                <input type="checkbox" name="tech_activated" id="techActivated" value="1" <?php echo $config['tech_activated'] ? 'checked' : '' ?> />
+            </div>
+            <div>
+            <label for="connectionType" style="margin-right: .5rem"><?php echo __('Connection') ?></label>
+                <select name="connection_type" id="connectionType"/>
+                    <option value="on_premise" <?php echo ($config['connection_type'] == 'on_premise') ? 'selected' : '' ?>><?php echo __('On premise') ?></option>
+                    <option value="online" <?php echo ($config['connection_type'] == 'online') ? 'selected' : '' ?>><?php echo __('Online') ?></option>
+                </select>
+            </div>
+        </div>
+        <h2><?php echo __('On premise configuration') ?></h2>
+        <div style="display: flex; flex-wrap: wrap; margin-inline: auto;padding-bottom: 2rem; justify-content: space-evenly;">
+            <div>
+                <label for="connectionType" style="margin-right: .5rem"><?php echo __('API Endpoint') ?></label>
+                <input type="text" name="endpoint" id="endpointTextInput" value="<?php echo $config['endpoint'] ?>" placeholder="https://api.ticketai.com:1234"/>
+            </div>
+            <div>
+                <label for="userModelSelectInput" style="margin-right: .5rem"><?php echo __('User Model') ?></label>
+                <select name="user_model" id="userModelSelectInput"></select>
+            </div>
+            <div>
+                <label for="techModelSelectInput" style="margin-right: .5rem"><?php echo __('Technician Model') ?></label>
+                <select name="tech_model" id="techModelSelectInput"></select>
+            </div>
+        </div>
+        <h2><?php echo __('Online Configuration (chatGPT)') ?></h2>
+        <div style="display: flex; flex-wrap: wrap; margin-inline: auto;padding-bottom: 2rem; justify-content: space-evenly;">
+            <div>
+                <label for="gptEndpointTextInput" style="margin-right: .5rem"><?php echo __('API key') ?></label>
+                <input name="api_key" id="gptEndpointTextInput" type="text" value="<?php echo empty($config['api_key']) ? '' : @ToolBox::sodiumDecrypt($config['api_key']) ?>"/>
+            </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; margin-inline: auto;padding-bottom: 2rem; justify-content: space-evenly;">
+            <div style="display:flex; flex-direction: column; width: 45%; min-width: 20rem">
+                <label for="userPromptTextInput" style="margin-right: .5rem"><?php echo __('User prompt') ?></label>
+                <textarea name="user_prompt" id="userPromptTextInput" rows="10"/><?php echo Html::cleanInputText($config['user_prompt']) ?></textarea>
+            </div>
+            <div style="display:flex; flex-direction: column; width: 45%; min-width: 20rem">
+                <label for="techPromptTextInput" style="margin-right: .5rem"><?php echo __('Technician prompt') ?></label>
+                <textarea name="tech_prompt" id="techPromptTextInput" rows="10"/><?php echo Html::cleanInputText($config['user_prompt']) ?></textarea>
+            </div>
+        </div>
+        <input type="hidden" name="_glpi_csrf_token" value="<?php echo Session::getNewCSRFToken(); ?>"/>
+        <input type="submit" class="submit" name="update" value="<?php echo __('Update') ?>" style="margin-bottom: 1rem;margin-inline: auto"/>
+    </form>
+    <script>
+        function disableInputs() {
+            onPremiseConfig = [
+                'endpointTextInput',
+                'userModelSelectInput',
+                'techModelSelectInput',
+            ];
+            onlineConfig = [
+                'gptEndpointTextInput',
+                'userPromptTextInput',
+                'techPromptTextInput',
+            ];
+            console.log($('#connectionType'));
+            if ($('#connectionType').val() == 'online') {
+                for (const input of onPremiseConfig) {
+                    document.getElementById(input).disabled = true;
                 }
-            }, 100);
-        JS;
+                for (const input of onlineConfig) {
+                    document.getElementById(input).disabled = false;
+                }
+            } else {
+                for (const input of onPremiseConfig) {
+                    document.getElementById(input).disabled = false;
+                }
+                for (const input of onlineConfig) {
+                    document.getElementById(input).disabled = true;
+                }
+            }
+        }
+        function formatNumber(number) {
+            const gigabyte = 1000000000;
 
-        $form = [
-            'action' => $form_action,
-            'buttons' => [
-                [
-                    'type' => 'submit',
-                    'name' => 'update_config',
-                    'value' => __('Update'),
-                    'class' => 'submit-button btn btn-warning',
-                ],
-            ],
-            'content' => [
-                '' => [
-                    'visible' => true,
-                    'inputs' => [
-                            '' => [
-                            'content' => <<<HTML
-                                <div class="text-center w-100" style="height: 10rem">
-                                    <img src="{$imgFile}" class="h-100" alt="ollama logo" />
-                                </div>
-                            HTML,
-                            'col_lg' => 12,
-                            'col_md' => 12,
-                        ],
-                    ],
-                ],
-                __('General configuration') => [
-                    'visible' => true,
-                    'inputs' => [
-                        __("User Activation") => [
-                            'name' => 'user_activated',
-                            'type' => 'checkbox',
-                            'value' => 1,
-                            $config['user_activated'] ? 'checked' : '' => '',
-                        ],
-                        __('Technician activation') => [
-                            'name' => 'tech_activated',
-                            'type' => 'checkbox',
-                            'value' => 1,
-                            $config['tech_activated'] ? 'checked' : '' => '',
-                        ],
-                        __('Connection') => [
-                            'name' => 'connection_type',
-                            'type' => 'select',
-                            'value' => $config['connection_type'],
-                            'id' => 'connectionTypeSelectInput',
-                            'values' => [
-                                'on_premise' => __('On premise'),
-                                'online' => __('Online'),
-                            ],
-                            'init' => $disableInputs,
-                            'hooks' => [
-                                'change' => $disableInputs,
-                            ]
-                        ],
+            if (number >= gigabyte) {
+                return (number / gigabyte).toFixed(1) + ' GB';
+            } else {
+                return number.toString() + ' Bytes';
+            }
+        }
 
-                    ]
-                ],
-                __('On premise configuration') => [
-                    'visible' => true,
-                    'inputs' => [
-                        __("API Endpoint") => [
-                            'name' => 'endpoint',
-                            'id' => 'endpointTextInput',
-                            'type' => 'text',
-                            'value' => $config['endpoint'],
-                            'placeholder' => 'https://api.ticketai.com:1234',
-                            'col_lg' => 12,
-                        ],
-                        __("User Model") => [
-                            'name' => 'user_model',
-                            'id' => 'userModelSelectInput',
-                            'type' => 'select',
-                            'value' => $config['user_model'],
-                            'values' => [],
-                            'init' => $update_models,
-                            'col_lg' => 6,
-                        ],
-                        __("Technician Model") => [
-                            'name' => 'tech_model',
-                            'id' => 'techModelSelectInput',
-                            'type' => 'select',
-                            'value' => $config['tech_model'],
-                            'values' => [],
-                            'init' => $update_models,
-                            'col_lg' => 6,
-                        ]
-                    ]
-                ],
-                __('Online configuration (chatGPT)') => [
-                    'visible' => true,
-                    'inputs' => [
-                        __("API key") => [
-                            'name' => 'api_key',
-                            'id' => 'gptEndpointTextInput',
-                            'type' => 'text',
-                            'value' => Toolbox::sodiumDecrypt($config['api_key']),
-                            'col_lg' => 12,
-                        ],
-                        __("User Prompt") => [
-                            'name' => 'user_prompt',
-                            'id' => 'userPromptTextInput',
-                            'type' => 'textarea',
-                            'value' => Html::cleanInputText($config['user_prompt']),
-                            'rows' => 10,
-                            'col_lg' => 6,
-                        ],
-                        __("Technician Prompt") => [
-                            'name' => 'tech_prompt',
-                            'id' => 'techPromptTextInput',
-                            'type' => 'textarea',
-                            'value' => $config['tech_prompt'],
-                            'rows' => 10,
-                            'col_lg' => 6,
-                        ],
-                    ]
-                ],
-                'hidden_inputs' => [
-                    'visible' => false,
-                    'inputs' => [
-                        'action' => [
-                            'name' => 'action',
-                            'type' => 'hidden',
-                            'value' => 'update'
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        function updateModels(id, value) {
+            var endpoint = document.getElementById('endpointTextInput').value;
+            var model = document.getElementById(id);
+            var url = endpoint + '/api/tags';
+            var xhr = new XMLHttpRequest();
 
-        renderTwigForm($form);
-        
+            if (!endpoint)
+                return;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        models = data.models;
+                        model.innerHTML = '';
+                        for (const singleModel of models) {
+                            var option = document.createElement('option');
+                            option.value = singleModel.name;
+                            option.innerHTML = singleModel.name + ' (' + formatNumber(singleModel.size) + ')';
+                            model.appendChild(option);
+                        }
+                        // select the model in config
+                        model.value = value;
+                    });
+
+        }
+        $(function() {
+            disableInputs();
+            updateModels('userModelSelectInput', '<?php echo $config['user_model'] ?>');
+            updateModels('techModelSelectInput', '<?php echo $config['tech_model'] ?>');
+        });
+        $('#connectionType').on('change', function() {disableInputs()});
+    </script>
+
+<?php
     }
 
     public function updateConfig($params) {
