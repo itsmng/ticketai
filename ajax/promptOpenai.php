@@ -28,6 +28,7 @@
  * ---------------------------------------------------------------------
  */
 
+$AJAX_INCLUDE = 1;
 include('../../../inc/includes.php');
 include('../vendor/autoload.php');
 

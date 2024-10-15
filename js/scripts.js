@@ -36,7 +36,7 @@ function viewChatbot(id, rand, url) {
     }, 100);
 }
 
-function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model = '', displayUser = true) {
+async function sendMessage(mode, ajax_endpoint, context, prompt, token, endpoint = '', model = '', displayUser = true) {
     userInput.value = '';
     userInput.disabled = true;
 
@@ -45,7 +45,7 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
     }
 
     const unescapedPrompt = prompt.replace(/\\'/g, "'");
-    $("#chatContent").append("<p class='loading bg-secondary text-white mb-1 botMessage'>...</p>");
+    $("#chatContent").append("<p class='loading mb-1 botMessage'>...</p>");
     chatContent = document.getElementById("chatContent");
     chatContent.scrollTop = chatContent.scrollHeight;
 
@@ -53,7 +53,10 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
         case 'on_premise':
             return fetch(endpoint + '/generate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Glpi-Csrf-Token': token
+                },
                 body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
             }).then(response => response.json()).then(response => {
                     return extractJsonForTicket(ajax_endpoint, response.response).then(data => {
@@ -66,6 +69,9 @@ function sendMessage(mode, ajax_endpoint, context, prompt, endpoint = '', model 
                 $.ajax({
                     type: "POST",
                     url: endpoint,
+                    headers: {
+                        'X-Glpi-Csrf-Token': token
+                    },
                     data: { messages: context },
                     success: function (data) {
                         jsonData = JSON.parse(data);

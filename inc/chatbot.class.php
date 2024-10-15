@@ -1,4 +1,5 @@
 <?php
+
 require_once(Plugin::getPhpDir('ticketai') . '/vendor/autoload.php');
 
 class PluginTicketaiChatbot extends CommonDBTM
@@ -6,26 +7,87 @@ class PluginTicketaiChatbot extends CommonDBTM
 
     static function getChatWindow(string $context, string $mode = 'user', string $initPrompt = 'Bonjour', int $ticket_id = null) {
         $config = PluginTicketaiConfig::getConfig();
-        $twig_vars = [
-            'root' => Plugin::getWebDir('ticketai'),
-            'context' => $context,
-            'ticket_id' => $ticket_id,
-            'connection_type' => $config['connection_type'],
-            'ajax_endpoint' => Plugin::getWebDir('ticketai') . '/ajax/updateTicket.php',
-            'init_prompt' => $initPrompt
-        ];
+        $ajax_endpoint = Plugin::getWebDir('ticketai') . '/ajax/updateTicket.php';
         switch ($config['connection_type']) {
             case 'on_premise':
-                $twig_vars['endpoint'] = $config['endpoint'] . '/api';
-                $twig_vars['model'] = $config[$mode . '_model'];
+                $endpoint = $config['endpoint'] . '/api';
+                $model = $config[$mode . '_model'];
                 break;
             default:
-                $twig_vars['endpoint'] = Plugin::getWebDir('ticketai') . '/ajax/promptOpenai.php';
-                $twig_vars['api_key'] = $config['api_key'];
-                $twig_vars['mode'] = $mode;
+                $endpoint = Plugin::getWebDir('ticketai') . '/ajax/promptOpenai.php';
                 break;
         } 
-        renderTwigTemplate('chatbot.twig', $twig_vars, Plugin::getPhpDir('ticketai', false) . '/templates/');
+?>
+<link rel="stylesheet" href="<?php echo Plugin::getWebDir('ticketai') ?>/css/style.css">
+<div id="chat" class="tab_cadre_fixe" style="display: flex; flex-direction: column; height: 100%">
+    <div id="chatContent">
+    </div>
+    <div id="inputBox" style="width:100%;display:flex;flex-direction:row;justify-content:center;align-items:center">
+        <input type="text" id="userInput" style="flex-grow:1;padding:5px;border-radius:5px;border:1px solid #ccc;">
+        <button onclick="sendMessage('<?php echo $config['connection_type'] ?>', '<?php echo $endpoint ?>', '<?php echo $context ?>' <?php echo ($context == 'helpdesk') ? '' : ','.$ticket_id ?>)"
+            style="
+            padding: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer
+            "
+        >
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        <?php if ($context != 'helpdesk') { ?>
+            <button
+                onclick="
+                updateTicketWithPrompt('<? echo $context ?>', <?php echo $ticket_id ?>, '<?php echo $endpoint ?>')
+                ">
+                <?php echo __("Send") . " " . $context ?>
+            </button>
+        <?php } ?>
+    </div>
+</div>
+<script src="<?php echo Plugin::getWebDir('ticketai') ?>/js/scripts.js"></script>
+<script>
+    const ticketCreatedMessage = '<?php __("I have created the ticket with the id <a class='text-light' href='%url%'>%id%: %name%</a>") ?>'
+    context = []
+    sendMessage('<?php echo $config['connection_type'] ?>',
+        '<?pgp echo $ajax_endpoint ?>',
+        context,
+        `<?php echo $initPrompt ?>`,
+        '<?php echo Session::getNewCSRFToken() ?>',
+        '<?php echo $endpoint ?? "" ?> ',
+        '<?php echo $model ?? "" ?>', false)
+        .then(data => {
+            context = data.context;
+            addMessageToChat(data.response)
+        }
+    );
+    $('#userInput').on("keyup", function (event) {
+        if (event.key === "Enter") {
+            sendMessage('<?php echo $config['connection_type']?>',
+                '<?php echo $ajax_endpoint ?>',
+                context,
+                $('#userInput').val(),
+                '<?php echo Session::getNewCSRFToken() ?>',
+                '<?php echo $endpoint ?? "" ?>',
+                '<?php echo $model ?? "" ?>', true)
+                .then(data => {
+                    context = data.context;
+                    const jsonregex = /\{.*\}/;
+                    const match = data.response.match(jsonregex);
+                    if (match) {
+                        const json = JSON.parse(match);
+                        var message = ticketCreatedMessage
+                            .replace('%url%', json.ticket_url)
+                            .replace('%id%', json.ticket_id)
+                            .replace('%name%', json.ticket_name);
+                        addMessageToChat(message);
+                    } else {
+                        addMessageToChat(data.response)
+                    }
+                });
+        }
+    });
+</script>
+<?php
     }
 
     static function getMenuContent()

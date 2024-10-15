@@ -18,10 +18,13 @@
 
 .userMessage {
     border-radius: 10px 10px 0 10px;
+    background-color: #777;
+    color: white;
 }
 
 .botMessage {
     border-radius: 10px 10px 10px 0;
+    background-color: #ccc;
 }
 
 

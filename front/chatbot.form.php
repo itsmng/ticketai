@@ -38,7 +38,6 @@ if($plugin->isActivated("ticketai")) {
     $config = new PluginTicketaiChatbot();
     if(isset($_POST["api_key"]) || isset($_POST["prompt"])) {
         Session::checkRight("config", UPDATE);
-
     }
 
     Html::header("Ticket AI", $_SERVER["PHP_SELF"], "config", "plugins");

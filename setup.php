@@ -44,6 +44,8 @@ function plugin_init_ticketai() {
         $PLUGIN_HOOKS['config_page']['ticketai'] = 'front/config.form.php';
     }
 
+    $PLUGIN_HOOKS['add_css']['ticketai'] = ['css/styles.css'];
+
     $plugin = new Plugin();
     if (Session::haveRight("plugin_ticketai_ticketai", READ) && $plugin->isActivated("ticketai")) {
         $config = PluginTicketaiConfig::getConfig();
