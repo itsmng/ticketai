@@ -27,7 +27,7 @@ jobs:
           cd /home/runner/work/ticketai/
           cd ticketai && composer install --no-dev && cd ..
           rm -r ticketai/.git* ticketai/composer.*
-          tar -zcvf ticketai-${{ github.ref_name }}.tgz tag
+          tar -zcvf ticketai-${{ github.ref_name }}.tgz ticketai
 
       - name: Upload release
         uses: actions/upload-artifact@v4
