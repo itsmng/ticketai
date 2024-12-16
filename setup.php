@@ -62,7 +62,7 @@ function plugin_init_ticketai() {
 function plugin_version_ticketai() {
     return array(
         'name'           => "Ticketing AI",
-        'version'        => '0.1.0',
+        'version'        => '1.0.0',
         'author'         => 'ITSM Dev Team, AntoineLemarchand',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/AntoineLemarchand/ticketai',
