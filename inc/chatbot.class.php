@@ -53,7 +53,7 @@ class PluginTicketaiChatbot extends CommonDBTM
         context,
         `<?php echo $initPrompt ?>`,
         '<?php echo Session::getNewCSRFToken() ?>',
-        '<?php echo $endpoint ?? "" ?> ',
+        '<?php echo $endpoint ?? "" ?>',
         '<?php echo $model ?? "" ?>', false)
         .then(data => {
             context = data.context;

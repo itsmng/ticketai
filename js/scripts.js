@@ -55,7 +55,6 @@ async function sendMessage(mode, ajax_endpoint, context, prompt, token, endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Glpi-Csrf-Token': token
                 },
                 body: JSON.stringify({ model, prompt: unescapedPrompt, context, stream: false })
             }).then(response => response.json()).then(response => {
