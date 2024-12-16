@@ -24,7 +24,7 @@ class PluginTicketaiChatbot extends CommonDBTM
     </div>
     <div id="inputBox" style="width:100%;display:flex;flex-direction:row;justify-content:center;align-items:center">
         <input type="text" id="userInput" style="flex-grow:1;padding:5px;border-radius:5px;border:1px solid #ccc;">
-        <button onclick="sendMessage('<?php echo $config['connection_type'] ?>', '<?php echo $endpoint ?>', '<?php echo $context ?>' <?php echo ($context == 'helpdesk') ? '' : ','.$ticket_id ?>)"
+        <button onclick="sendNewMessage()"
             style="
             padding: 5px;
             border-radius: 5px;
@@ -34,18 +34,35 @@ class PluginTicketaiChatbot extends CommonDBTM
         >
             <i class="fas fa-paper-plane"></i>
         </button>
-        <?php if ($context != 'helpdesk') { ?>
-            <button
-                onclick="
-                updateTicketWithPrompt('<? echo $context ?>', <?php echo $ticket_id ?>, '<?php echo $endpoint ?>')
-                ">
-                <?php echo __("Send") . " " . $context ?>
-            </button>
-        <?php } ?>
     </div>
 </div>
 <script src="<?php echo Plugin::getWebDir('ticketai') ?>/js/scripts.js"></script>
 <script>
+    function sendNewMessage() {
+        sendMessage(
+            '<?php echo $config['connection_type']?>',
+            '<?php echo $ajax_endpoint ?>',
+            context,
+            $('#userInput').val(),
+            '<?php echo Session::getNewCSRFToken() ?>',
+            '<?php echo $endpoint ?? "" ?>',
+            '<?php echo $model ?? "" ?>', true)
+            .then(data => {
+                context = data.context;
+                const jsonregex = /\{.*\}/;
+                const match = data.response.match(jsonregex);
+                if (match) {
+                    const json = JSON.parse(match);
+                    var message = ticketCreatedMessage
+                        .replace('%url%', json.ticket_url)
+                        .replace('%id%', json.ticket_id)
+                        .replace('%name%', json.ticket_name);
+                    addMessageToChat(message);
+                } else {
+                    addMessageToChat(data.response)
+                }
+            });
+    }
     const ticketCreatedMessage = '<?php __("I have created the ticket with the id <a class='text-light' href='%url%'>%id%: %name%</a>") ?>'
     context = []
     sendMessage('<?php echo $config['connection_type'] ?>',
@@ -62,28 +79,7 @@ class PluginTicketaiChatbot extends CommonDBTM
     );
     $('#userInput').on("keyup", function (event) {
         if (event.key === "Enter") {
-            sendMessage('<?php echo $config['connection_type']?>',
-                '<?php echo $ajax_endpoint ?>',
-                context,
-                $('#userInput').val(),
-                '<?php echo Session::getNewCSRFToken() ?>',
-                '<?php echo $endpoint ?? "" ?>',
-                '<?php echo $model ?? "" ?>', true)
-                .then(data => {
-                    context = data.context;
-                    const jsonregex = /\{.*\}/;
-                    const match = data.response.match(jsonregex);
-                    if (match) {
-                        const json = JSON.parse(match);
-                        var message = ticketCreatedMessage
-                            .replace('%url%', json.ticket_url)
-                            .replace('%id%', json.ticket_id)
-                            .replace('%name%', json.ticket_name);
-                        addMessageToChat(message);
-                    } else {
-                        addMessageToChat(data.response)
-                    }
-                });
+            sendNewMessage();
         }
     });
 </script>
